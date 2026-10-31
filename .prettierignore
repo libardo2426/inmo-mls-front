@@ -3,7 +3,7 @@ node_modules
 pnpm-lock.yaml
 src/lib/api/generated
 src/routeTree.gen.ts
-docs/backend/openapi.json
+docs
 playwright-report
 test-results
 .superpowers
