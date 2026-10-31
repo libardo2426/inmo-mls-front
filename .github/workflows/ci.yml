@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Instalar dependencias
+        run: pnpm install --frozen-lockfile --ignore-scripts
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Formato
+        run: pnpm format:check
+
+      - name: Tipos
+        run: pnpm typecheck
+
+      - name: Tests (Vitest + MSW)
+        run: pnpm test
+
+      - name: Build
+        run: pnpm build
+
+      - name: El código generado del contrato está al día
+        run: |
+          pnpm api:generate
+          git diff --exit-code src/lib/api/generated
+
+      - name: Auditoría de dependencias
+        run: pnpm audit --audit-level=high
+
+      - name: Construir la imagen Docker
+        run: docker build -t inmo-mls-front:ci .
