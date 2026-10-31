@@ -1,0 +1,22 @@
+# Se combina con el compose base: docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+services:
+  web:
+    environment:
+      APP_ENV: production
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /var/cache/nginx
+      - /var/run
+    healthcheck:
+      test: ['CMD', 'wget', '-qO-', 'http://127.0.0.1:8080/health']
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 128M
