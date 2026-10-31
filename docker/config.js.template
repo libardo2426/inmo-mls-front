@@ -1,0 +1,8 @@
+// Generado al arrancar el contenedor. Solo contiene datos públicos (ADR-0005).
+window.__APP_CONFIG__ = {
+  "APP_ENV": "${APP_ENV}",
+  "API_BASE_PATH": "${API_BASE_PATH}",
+  "PLATFORM_API_BASE_PATH": "${PLATFORM_API_BASE_PATH}",
+  "TENANT_CODE": "${TENANT_CODE}",
+  "SENTRY_DSN": "${SENTRY_DSN}"
+};

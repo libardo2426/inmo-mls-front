@@ -1,0 +1,73 @@
+# Plantilla procesada por envsubst al arrancar (solo variables API_*, PLATFORM_API_*, DNS_*).
+gzip on;
+gzip_comp_level 5;
+gzip_min_length 1024;
+gzip_vary on;
+gzip_types text/css application/javascript text/javascript application/json image/svg+xml;
+
+server {
+    listen 8080;
+    server_name _;
+    root /usr/share/nginx/html;
+    index index.html;
+    server_tokens off;
+
+    # Resolución diferida: Nginx arranca aunque el backend aún no exista.
+    resolver ${DNS_RESOLVER} valid=10s ipv6=off;
+
+    include /etc/nginx/snippets/security-headers.conf;
+
+    location = /health {
+        access_log off;
+        default_type text/plain;
+        return 200 "ok\n";
+    }
+
+    # La configuración de runtime nunca cae al fallback de la SPA ni se cachea.
+    location = /config.js {
+        alias /tmp/runtime/config.js;
+        default_type application/javascript;
+        add_header Cache-Control "no-store" always;
+        include /etc/nginx/snippets/security-headers.conf;
+    }
+
+    # API del país: el proxy fija el Host (el país se resuelve por Host en producción).
+    location /v1/ {
+        set $api_upstream ${API_UPSTREAM};
+        proxy_pass $api_upstream;
+        proxy_set_header Host ${API_TENANT_HOST};
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_connect_timeout 5s;
+        proxy_read_timeout 60s;
+        include /etc/nginx/snippets/security-headers.conf;
+    }
+
+    # API de plataforma (admin.api): se reescribe /plataforma/v1/* a /v1/*.
+    location /plataforma/v1/ {
+        # `set` debe ir antes de `rewrite ... break`: después, Nginx deja de evaluar `set`.
+        set $platform_upstream ${PLATFORM_API_UPSTREAM};
+        rewrite ^/plataforma/(v1/.*)$ /$1 break;
+        proxy_pass $platform_upstream;
+        proxy_set_header Host ${PLATFORM_API_HOST};
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_connect_timeout 5s;
+        proxy_read_timeout 60s;
+        include /etc/nginx/snippets/security-headers.conf;
+    }
+
+    # Assets con hash: cacheables un año.
+    location /assets/ {
+        try_files $uri =404;
+        add_header Cache-Control "public, max-age=31536000, immutable" always;
+        include /etc/nginx/snippets/security-headers.conf;
+    }
+
+    # Resto: fallback de SPA. index.html nunca se cachea.
+    location / {
+        try_files $uri /index.html;
+        add_header Cache-Control "no-cache" always;
+        include /etc/nginx/snippets/security-headers.conf;
+    }
+}
