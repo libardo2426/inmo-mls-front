@@ -1,0 +1,5065 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/health": {
+      "get": {
+        "operationId": "HealthController_health",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "health"
+        ]
+      }
+    },
+    "/ready": {
+      "get": {
+        "operationId": "HealthController_ready",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "health"
+        ]
+      }
+    },
+    "/v1/me": {
+      "get": {
+        "operationId": "MeController_me",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MeResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "me"
+        ]
+      }
+    },
+    "/v1/auth/{path}": {
+      "get": {
+        "operationId": "AuthController_handle_get",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      },
+      "post": {
+        "operationId": "AuthController_handle_post",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      },
+      "put": {
+        "operationId": "AuthController_handle_put",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      },
+      "delete": {
+        "operationId": "AuthController_handle_delete",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      },
+      "patch": {
+        "operationId": "AuthController_handle_patch",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      },
+      "options": {
+        "operationId": "AuthController_handle_options",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      },
+      "head": {
+        "operationId": "AuthController_handle_head",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/v1/admin/tenants/{code}/config": {
+      "get": {
+        "operationId": "TenantsController_getConfig",
+        "parameters": [
+          {
+            "name": "code",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "admin"
+        ]
+      },
+      "put": {
+        "operationId": "TenantsController_publishConfig",
+        "parameters": [
+          {
+            "name": "code",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TenantConfigBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "admin"
+        ]
+      }
+    },
+    "/v1/territory/units/{country}/{level}": {
+      "get": {
+        "operationId": "TerritoryController_list",
+        "parameters": [
+          {
+            "name": "country",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "level",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "cursor",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minLength": 1,
+              "maxLength": 512,
+              "type": "string"
+            }
+          },
+          {
+            "name": "parent",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minLength": 1,
+              "maxLength": 32,
+              "type": "string"
+            }
+          },
+          {
+            "name": "q",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minLength": 3,
+              "maxLength": 100,
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TerritoryPageResponse"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "El `If-None-Match` coincide con el `ETag`."
+          }
+        },
+        "tags": [
+          "territory"
+        ]
+      }
+    },
+    "/v1/me/tenants": {
+      "get": {
+        "operationId": "MeTenantsController_list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MeTenantResponse"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "me"
+        ]
+      }
+    },
+    "/v1/agencies": {
+      "post": {
+        "operationId": "AgenciesController_register",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterAgencyBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgencyWithWarningsResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "agencies"
+        ]
+      },
+      "get": {
+        "operationId": "AgenciesController_list",
+        "parameters": [
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "cursor",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minLength": 1,
+              "maxLength": 512,
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "pending",
+                "changes_requested",
+                "active",
+                "rejected",
+                "suspended",
+                "terminated"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgencyPageResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "agencies"
+        ]
+      }
+    },
+    "/v1/agencies/{id}": {
+      "get": {
+        "operationId": "AgenciesController_get",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgencyApplicationResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "agencies"
+        ]
+      },
+      "patch": {
+        "operationId": "AgenciesController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAgencyBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgencyWithWarningsResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "agencies"
+        ]
+      }
+    },
+    "/v1/agencies/{id}/resubmit": {
+      "post": {
+        "operationId": "AgenciesController_resubmit",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "agencies"
+        ]
+      }
+    },
+    "/v1/agencies/{id}/approve": {
+      "post": {
+        "operationId": "AgenciesController_approve",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "agencies"
+        ]
+      }
+    },
+    "/v1/agencies/{id}/request-changes": {
+      "post": {
+        "operationId": "AgenciesController_requestChanges",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewReasonBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "agencies"
+        ]
+      }
+    },
+    "/v1/agencies/{id}/reject": {
+      "post": {
+        "operationId": "AgenciesController_reject",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewReasonBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "agencies"
+        ]
+      }
+    },
+    "/v1/agencies/{agencyId}/invitations": {
+      "post": {
+        "operationId": "AgencyInvitationsController_invite",
+        "parameters": [
+          {
+            "name": "agencyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InviteMemberBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvitationWithWarningsResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "invitations"
+        ]
+      },
+      "get": {
+        "operationId": "AgencyInvitationsController_list",
+        "parameters": [
+          {
+            "name": "agencyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "cursor",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minLength": 1,
+              "maxLength": 512,
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "pending",
+                "accepted",
+                "cancelled",
+                "expired"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvitationPageResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "invitations"
+        ]
+      }
+    },
+    "/v1/agencies/{agencyId}/invitations/{invitationId}/resend": {
+      "post": {
+        "operationId": "AgencyInvitationsController_resend",
+        "parameters": [
+          {
+            "name": "agencyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "invitationId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvitationWithWarningsResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "invitations"
+        ]
+      }
+    },
+    "/v1/agencies/{agencyId}/invitations/{invitationId}/cancel": {
+      "post": {
+        "operationId": "AgencyInvitationsController_cancel",
+        "parameters": [
+          {
+            "name": "agencyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "invitationId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "invitations"
+        ]
+      }
+    },
+    "/v1/invitations/preview": {
+      "post": {
+        "operationId": "InvitationsController_preview",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InvitationTokenBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvitationPreviewResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "invitations"
+        ]
+      }
+    },
+    "/v1/invitations/accept": {
+      "post": {
+        "operationId": "InvitationsController_accept",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InvitationTokenBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AcceptedInvitationResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "invitations"
+        ]
+      }
+    },
+    "/v1/members/me/leave": {
+      "post": {
+        "operationId": "MembersController_leave",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "members"
+        ]
+      }
+    },
+    "/v1/agencies/{agencyId}/members": {
+      "get": {
+        "operationId": "MembersController_list",
+        "parameters": [
+          {
+            "name": "agencyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MemberResponse"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "members"
+        ]
+      }
+    },
+    "/v1/members/{memberId}/role": {
+      "patch": {
+        "operationId": "MembersController_changeRole",
+        "parameters": [
+          {
+            "name": "memberId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeMemberRoleBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "members"
+        ]
+      }
+    },
+    "/v1/members/{memberId}/terminate": {
+      "post": {
+        "operationId": "MembersController_terminate",
+        "parameters": [
+          {
+            "name": "memberId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TerminateMemberBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "members"
+        ]
+      }
+    },
+    "/v1/properties": {
+      "post": {
+        "operationId": "PropertiesController_register",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterPropertyBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegisterPropertyResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "properties"
+        ]
+      },
+      "get": {
+        "operationId": "PropertiesController_list",
+        "parameters": [
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "cursor",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minLength": 1,
+              "maxLength": 512,
+              "type": "string"
+            }
+          },
+          {
+            "name": "propertyType",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "draft",
+                "active",
+                "reserved",
+                "closed",
+                "suspended",
+                "withdrawn",
+                "expired"
+              ]
+            }
+          },
+          {
+            "name": "territorialUnitCode",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          {
+            "name": "agencyId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "properties"
+        ]
+      }
+    },
+    "/v1/properties/{id}": {
+      "get": {
+        "operationId": "PropertiesController_get",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PropertyDetailResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "properties"
+        ]
+      },
+      "patch": {
+        "operationId": "PropertiesController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePropertyBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "properties"
+        ]
+      }
+    },
+    "/v1/properties/{id}/media": {
+      "get": {
+        "operationId": "PropertiesController_media",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "properties"
+        ]
+      }
+    },
+    "/v1/properties/{id}/list-prices/{operation}": {
+      "put": {
+        "operationId": "PropertiesController_setListPrice",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ListPriceBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "properties"
+        ]
+      }
+    },
+    "/v1/properties/{id}/mandates": {
+      "post": {
+        "operationId": "PropertiesController_linkMandate",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LinkMandateBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LinkMandateResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "properties"
+        ]
+      }
+    },
+    "/v1/property-types": {
+      "get": {
+        "operationId": "PropertyTypesController_list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PropertyTypesResponse"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "El `If-None-Match` coincide con la versión vigente."
+          }
+        },
+        "tags": [
+          "properties"
+        ]
+      }
+    },
+    "/v1/property-types/{code}/definitions": {
+      "get": {
+        "operationId": "PropertyTypesController_definitions",
+        "parameters": [
+          {
+            "name": "code",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PropertyDefinitionsResponse"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "El `If-None-Match` coincide con la versión vigente."
+          }
+        },
+        "tags": [
+          "properties"
+        ]
+      }
+    },
+    "/v1/mandates/{id}/private-terms": {
+      "patch": {
+        "operationId": "MandatesController_updatePrivateTerms",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PrivateTermsBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "properties"
+        ]
+      }
+    },
+    "/v1/mandates/{id}/terminate": {
+      "post": {
+        "operationId": "MandatesController_terminate",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "properties"
+        ]
+      }
+    },
+    "/v1/properties/{id}/media/uploads": {
+      "post": {
+        "operationId": "MediaController_requestUpload",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MediaUploadBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadTicketResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "media"
+        ]
+      }
+    },
+    "/v1/media/{id}/complete": {
+      "post": {
+        "operationId": "MediaController_complete",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "media"
+        ]
+      }
+    },
+    "/v1/properties/{id}/media/order": {
+      "put": {
+        "operationId": "MediaController_reorder",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MediaOrderBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "media"
+        ]
+      }
+    },
+    "/v1/media/{id}": {
+      "delete": {
+        "operationId": "MediaController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "media"
+        ]
+      }
+    },
+    "/v1/properties/{id}/media-links": {
+      "put": {
+        "operationId": "MediaController_setLinks",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MediaLinksBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "media"
+        ]
+      }
+    },
+    "/v1/properties/{id}/documents/uploads": {
+      "post": {
+        "operationId": "DocumentsController_requestUpload",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DocumentUploadBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadTicketResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "documents"
+        ]
+      }
+    },
+    "/v1/documents/{id}/complete": {
+      "post": {
+        "operationId": "DocumentsController_complete",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "documents"
+        ]
+      }
+    },
+    "/v1/documents/{id}/download": {
+      "get": {
+        "operationId": "DocumentsController_download",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentDownloadResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "documents"
+        ]
+      }
+    },
+    "/v1/documents/{id}": {
+      "delete": {
+        "operationId": "DocumentsController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "documents"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Innmo MLS — core-api",
+    "description": "API de cada país en `<país>.api.<dominio>` y del plano de control en `admin.api.<dominio>`. La autenticación (Better Auth) está bajo `/v1/auth`. Los errores siguen RFC 9457.",
+    "version": "v1",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "cookie": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "better-auth.session_token"
+      },
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      }
+    },
+    "schemas": {
+      "MeResponse": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+              },
+              "email": {
+                "type": "string",
+                "format": "email",
+                "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+              },
+              "name": {
+                "type": "string"
+              },
+              "twoFactorEnabled": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "id",
+              "email",
+              "name",
+              "twoFactorEnabled"
+            ]
+          },
+          "tenant": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "configVersion": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "code",
+              "name",
+              "configVersion"
+            ]
+          },
+          "membership": {
+            "nullable": true,
+            "type": "object",
+            "properties": {
+              "role": {
+                "type": "string"
+              },
+              "agencyId": {
+                "nullable": true,
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+              },
+              "agencyStatus": {
+                "nullable": true,
+                "type": "string"
+              },
+              "permissions": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string",
+                  "enum": [
+                    "own",
+                    "agency",
+                    "network"
+                  ]
+                }
+              },
+              "twoFactorRequired": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "role",
+              "agencyId",
+              "agencyStatus",
+              "permissions",
+              "twoFactorRequired"
+            ]
+          },
+          "config": {
+            "type": "object",
+            "properties": {
+              "currency": {
+                "type": "string"
+              },
+              "timezone": {
+                "type": "string"
+              },
+              "locale": {
+                "type": "string"
+              },
+              "areaUnit": {
+                "type": "string",
+                "enum": [
+                  "m2",
+                  "ft2"
+                ]
+              },
+              "uniqueIdentifierLabel": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "currency",
+              "timezone",
+              "locale",
+              "areaUnit",
+              "uniqueIdentifierLabel"
+            ]
+          }
+        },
+        "required": [
+          "user",
+          "tenant",
+          "membership",
+          "config"
+        ]
+      },
+      "TenantConfigBody": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "pattern": "^[a-z]{2}$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "currency": {
+            "type": "string"
+          },
+          "timezone": {
+            "type": "string"
+          },
+          "locale": {
+            "type": "string"
+          },
+          "formats": {
+            "type": "object",
+            "properties": {
+              "date": {
+                "type": "string",
+                "minLength": 1
+              },
+              "number": {
+                "type": "object",
+                "properties": {
+                  "decimalSeparator": {
+                    "type": "string",
+                    "enum": [
+                      ",",
+                      "."
+                    ]
+                  },
+                  "thousandsSeparator": {
+                    "type": "string",
+                    "enum": [
+                      ".",
+                      ",",
+                      " ",
+                      ""
+                    ]
+                  }
+                },
+                "required": [
+                  "decimalSeparator",
+                  "thousandsSeparator"
+                ]
+              }
+            },
+            "required": [
+              "date",
+              "number"
+            ]
+          },
+          "units": {
+            "type": "object",
+            "properties": {
+              "area": {
+                "type": "string",
+                "enum": [
+                  "m2",
+                  "ft2"
+                ]
+              },
+              "distance": {
+                "type": "string",
+                "enum": [
+                  "km",
+                  "mi"
+                ]
+              }
+            },
+            "required": [
+              "area",
+              "distance"
+            ]
+          },
+          "uniqueIdentifier": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string",
+                "minLength": 1
+              },
+              "pattern": {
+                "type": "string",
+                "minLength": 1
+              },
+              "normalize": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "trim",
+                    "removeSpaces",
+                    "removeDashes",
+                    "upper"
+                  ]
+                }
+              },
+              "provisional": {
+                "type": "object",
+                "properties": {
+                  "pattern": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "pattern"
+                ]
+              },
+              "alternate": {
+                "type": "object",
+                "properties": {
+                  "requiresApproval": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "requiresApproval"
+                ]
+              }
+            },
+            "required": [
+              "label",
+              "pattern",
+              "normalize",
+              "provisional",
+              "alternate"
+            ]
+          },
+          "documentTypes": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9_-]+$"
+                },
+                "name": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "pattern": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "checkDigit": {
+                  "type": "string",
+                  "enum": [
+                    "dian"
+                  ]
+                }
+              },
+              "required": [
+                "code",
+                "name"
+              ]
+            }
+          },
+          "agencyTaxIdTypes": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "territorialDivision": {
+            "type": "object",
+            "properties": {
+              "levels": {
+                "minItems": 1,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9_-]+$"
+                    },
+                    "name": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "name"
+                  ]
+                }
+              },
+              "catalog": {
+                "type": "string",
+                "minLength": 1
+              },
+              "source": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "url": {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "updatedAt": {
+                    "type": "string",
+                    "format": "date",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                  }
+                },
+                "required": [
+                  "name",
+                  "url",
+                  "updatedAt"
+                ]
+              }
+            },
+            "required": [
+              "levels",
+              "catalog"
+            ]
+          },
+          "fieldGroups": {
+            "default": [],
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9_-]+$"
+                },
+                "name": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "resoList": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "help": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "code",
+                "name"
+              ]
+            }
+          },
+          "catalogs": {
+            "type": "object",
+            "properties": {
+              "propertyTypes": {
+                "minItems": 1,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9_-]+$"
+                    },
+                    "name": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "name"
+                  ]
+                }
+              },
+              "features": {
+                "default": [],
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9_-]+$"
+                    },
+                    "name": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "group": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9_-]+$"
+                    },
+                    "appliesTo": {
+                      "minItems": 1,
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "pattern": "^[A-Za-z0-9_-]+$"
+                      }
+                    },
+                    "resoList": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "name",
+                    "group",
+                    "appliesTo"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "propertyTypes"
+            ]
+          },
+          "operations": {
+            "default": [
+              "sale"
+            ],
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "sale",
+                "lease"
+              ]
+            }
+          },
+          "propertyFields": {
+            "default": {},
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9_-]+$"
+                  },
+                  "name": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "text",
+                      "integer",
+                      "number",
+                      "boolean",
+                      "enum",
+                      "date"
+                    ]
+                  },
+                  "required": {
+                    "default": false,
+                    "type": "boolean"
+                  },
+                  "min": {
+                    "type": "number"
+                  },
+                  "max": {
+                    "type": "number"
+                  },
+                  "maxLength": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "exclusiveMinimum": true,
+                    "maximum": 9007199254740991
+                  },
+                  "options": {
+                    "minItems": 1,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "pattern": "^[A-Za-z0-9_-]+$"
+                        },
+                        "name": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "name"
+                      ]
+                    }
+                  },
+                  "resoField": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "group": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9_-]+$"
+                  }
+                },
+                "required": [
+                  "code",
+                  "name",
+                  "type",
+                  "group"
+                ]
+              }
+            }
+          },
+          "agencyFields": {
+            "default": [],
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9_-]+$"
+                },
+                "name": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "text",
+                    "integer",
+                    "number",
+                    "boolean",
+                    "enum",
+                    "date"
+                  ]
+                },
+                "required": {
+                  "default": false,
+                  "type": "boolean"
+                },
+                "min": {
+                  "type": "number"
+                },
+                "max": {
+                  "type": "number"
+                },
+                "maxLength": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "exclusiveMinimum": true,
+                  "maximum": 9007199254740991
+                },
+                "options": {
+                  "minItems": 1,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "code": {
+                        "type": "string",
+                        "pattern": "^[A-Za-z0-9_-]+$"
+                      },
+                      "name": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "required": [
+                      "code",
+                      "name"
+                    ]
+                  }
+                },
+                "resoField": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "code",
+                "name",
+                "type"
+              ]
+            }
+          },
+          "legalTexts": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "rules": {
+            "type": "object",
+            "properties": {
+              "listingUploadBusinessDays": {
+                "type": "integer",
+                "minimum": 0,
+                "exclusiveMinimum": true,
+                "maximum": 9007199254740991
+              },
+              "minMandateValidityDays": {
+                "type": "integer",
+                "minimum": 0,
+                "exclusiveMinimum": true,
+                "maximum": 9007199254740991
+              },
+              "statusUpdateMaxHours": {
+                "type": "integer",
+                "minimum": 0,
+                "exclusiveMinimum": true,
+                "maximum": 9007199254740991
+              },
+              "closingReportDays": {
+                "type": "integer",
+                "minimum": 0,
+                "exclusiveMinimum": true,
+                "maximum": 9007199254740991
+              },
+              "correctionResponseDays": {
+                "type": "integer",
+                "minimum": 0,
+                "exclusiveMinimum": true,
+                "maximum": 9007199254740991
+              },
+              "certificateMaxAgeDays": {
+                "type": "integer",
+                "minimum": 0,
+                "exclusiveMinimum": true,
+                "maximum": 9007199254740991
+              },
+              "minPhotos": {
+                "type": "object",
+                "properties": {
+                  "default": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "byPropertyType": {
+                    "default": {},
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    }
+                  }
+                },
+                "required": [
+                  "default"
+                ]
+              }
+            },
+            "required": [
+              "listingUploadBusinessDays",
+              "minMandateValidityDays",
+              "statusUpdateMaxHours",
+              "closingReportDays",
+              "correctionResponseDays",
+              "certificateMaxAgeDays",
+              "minPhotos"
+            ]
+          },
+          "database": {
+            "default": {},
+            "type": "object",
+            "properties": {
+              "cluster": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        "required": [
+          "code",
+          "name",
+          "currency",
+          "timezone",
+          "locale",
+          "formats",
+          "units",
+          "uniqueIdentifier",
+          "documentTypes",
+          "agencyTaxIdTypes",
+          "territorialDivision",
+          "catalogs",
+          "legalTexts",
+          "rules"
+        ]
+      },
+      "TerritoryPageResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "level": {
+                  "type": "string"
+                },
+                "parentCode": {
+                  "nullable": true,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "code",
+                "name",
+                "level",
+                "parentCode"
+              ]
+            }
+          },
+          "nextCursor": {
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "required": [
+          "items",
+          "nextCursor"
+        ]
+      },
+      "MeTenantResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "apiHost": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "name",
+          "apiHost"
+        ]
+      },
+      "RegisterAgencyBody": {
+        "type": "object",
+        "properties": {
+          "tradeName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "legalName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300
+          },
+          "taxIdType": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20
+          },
+          "taxId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 30
+          },
+          "email": {
+            "nullable": true,
+            "type": "string",
+            "maxLength": 254,
+            "format": "email",
+            "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+          },
+          "phone": {
+            "nullable": true,
+            "type": "string",
+            "maxLength": 30
+          },
+          "attributes": {
+            "type": "object",
+            "additionalProperties": {}
+          },
+          "mainOffice": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "territorialUnitCode": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20
+              },
+              "address": {
+                "nullable": true,
+                "type": "string",
+                "maxLength": 300
+              },
+              "phone": {
+                "nullable": true,
+                "type": "string",
+                "maxLength": 30
+              },
+              "location": {
+                "nullable": true,
+                "type": "object",
+                "properties": {
+                  "lat": {
+                    "type": "number",
+                    "minimum": -90,
+                    "maximum": 90
+                  },
+                  "lng": {
+                    "type": "number",
+                    "minimum": -180,
+                    "maximum": 180
+                  }
+                },
+                "required": [
+                  "lat",
+                  "lng"
+                ]
+              }
+            },
+            "required": [
+              "name",
+              "territorialUnitCode"
+            ]
+          }
+        },
+        "required": [
+          "tradeName",
+          "legalName",
+          "taxIdType",
+          "taxId",
+          "mainOffice"
+        ]
+      },
+      "AgencyWithWarningsResponse": {
+        "type": "object",
+        "properties": {
+          "agency": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+              },
+              "tradeName": {
+                "type": "string"
+              },
+              "legalName": {
+                "type": "string"
+              },
+              "taxIdType": {
+                "type": "string"
+              },
+              "taxId": {
+                "type": "string"
+              },
+              "email": {
+                "nullable": true,
+                "type": "string"
+              },
+              "phone": {
+                "nullable": true,
+                "type": "string"
+              },
+              "attributes": {
+                "type": "object",
+                "additionalProperties": {}
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "pending",
+                  "changes_requested",
+                  "active",
+                  "rejected",
+                  "suspended",
+                  "terminated"
+                ]
+              },
+              "reviewReason": {
+                "nullable": true,
+                "type": "string"
+              },
+              "reviewedAt": {
+                "nullable": true,
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+              },
+              "submittedAt": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+              },
+              "approvedAt": {
+                "nullable": true,
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+              },
+              "mainOffice": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "territorialUnitCode": {
+                    "type": "string"
+                  },
+                  "address": {
+                    "nullable": true,
+                    "type": "string"
+                  },
+                  "phone": {
+                    "nullable": true,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "name",
+                  "territorialUnitCode",
+                  "address",
+                  "phone"
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "tradeName",
+              "legalName",
+              "taxIdType",
+              "taxId",
+              "email",
+              "phone",
+              "attributes",
+              "status",
+              "reviewReason",
+              "reviewedAt",
+              "submittedAt",
+              "approvedAt",
+              "mainOffice"
+            ]
+          },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "enum": [
+                    "trade_name_in_use"
+                  ]
+                }
+              },
+              "required": [
+                "code"
+              ]
+            }
+          }
+        },
+        "required": [
+          "agency",
+          "warnings"
+        ]
+      },
+      "AgencyApplicationResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "tradeName": {
+            "type": "string"
+          },
+          "legalName": {
+            "type": "string"
+          },
+          "taxIdType": {
+            "type": "string"
+          },
+          "taxId": {
+            "type": "string"
+          },
+          "email": {
+            "nullable": true,
+            "type": "string"
+          },
+          "phone": {
+            "nullable": true,
+            "type": "string"
+          },
+          "attributes": {
+            "type": "object",
+            "additionalProperties": {}
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "changes_requested",
+              "active",
+              "rejected",
+              "suspended",
+              "terminated"
+            ]
+          },
+          "reviewReason": {
+            "nullable": true,
+            "type": "string"
+          },
+          "reviewedAt": {
+            "nullable": true,
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+          },
+          "submittedAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+          },
+          "approvedAt": {
+            "nullable": true,
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+          },
+          "mainOffice": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+              },
+              "name": {
+                "type": "string"
+              },
+              "territorialUnitCode": {
+                "type": "string"
+              },
+              "address": {
+                "nullable": true,
+                "type": "string"
+              },
+              "phone": {
+                "nullable": true,
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "territorialUnitCode",
+              "address",
+              "phone"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "tradeName",
+          "legalName",
+          "taxIdType",
+          "taxId",
+          "email",
+          "phone",
+          "attributes",
+          "status",
+          "reviewReason",
+          "reviewedAt",
+          "submittedAt",
+          "approvedAt",
+          "mainOffice"
+        ]
+      },
+      "UpdateAgencyBody": {
+        "type": "object",
+        "properties": {
+          "tradeName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "legalName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300
+          },
+          "taxIdType": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20
+          },
+          "taxId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 30
+          },
+          "email": {
+            "nullable": true,
+            "type": "string",
+            "maxLength": 254,
+            "format": "email",
+            "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+          },
+          "phone": {
+            "nullable": true,
+            "type": "string",
+            "maxLength": 30
+          },
+          "attributes": {
+            "type": "object",
+            "additionalProperties": {}
+          },
+          "mainOffice": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "territorialUnitCode": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20
+              },
+              "address": {
+                "nullable": true,
+                "type": "string",
+                "maxLength": 300
+              },
+              "phone": {
+                "nullable": true,
+                "type": "string",
+                "maxLength": 30
+              },
+              "location": {
+                "nullable": true,
+                "type": "object",
+                "properties": {
+                  "lat": {
+                    "type": "number",
+                    "minimum": -90,
+                    "maximum": 90
+                  },
+                  "lng": {
+                    "type": "number",
+                    "minimum": -180,
+                    "maximum": 180
+                  }
+                },
+                "required": [
+                  "lat",
+                  "lng"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "AgencyPageResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                "tradeName": {
+                  "type": "string"
+                },
+                "legalName": {
+                  "type": "string"
+                },
+                "taxIdType": {
+                  "type": "string"
+                },
+                "taxId": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "pending",
+                    "changes_requested",
+                    "active",
+                    "rejected",
+                    "suspended",
+                    "terminated"
+                  ]
+                },
+                "submittedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+                }
+              },
+              "required": [
+                "id",
+                "tradeName",
+                "legalName",
+                "taxIdType",
+                "taxId",
+                "status",
+                "submittedAt"
+              ]
+            }
+          },
+          "nextCursor": {
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "required": [
+          "items",
+          "nextCursor"
+        ]
+      },
+      "ReviewReasonBody": {
+        "type": "object",
+        "properties": {
+          "reason": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          }
+        },
+        "required": [
+          "reason"
+        ]
+      },
+      "InviteMemberBody": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "maxLength": 254
+          },
+          "fullName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "admin",
+              "compliance",
+              "broker",
+              "agent",
+              "assistant",
+              "read_only"
+            ]
+          },
+          "officeId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          }
+        },
+        "required": [
+          "email",
+          "fullName",
+          "role"
+        ]
+      },
+      "InvitationWithWarningsResponse": {
+        "type": "object",
+        "properties": {
+          "invitation": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+              },
+              "agencyId": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+              },
+              "officeId": {
+                "nullable": true,
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+              },
+              "email": {
+                "type": "string"
+              },
+              "fullName": {
+                "type": "string"
+              },
+              "role": {
+                "type": "string",
+                "enum": [
+                  "admin",
+                  "compliance",
+                  "broker",
+                  "agent",
+                  "assistant",
+                  "read_only"
+                ]
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "pending",
+                  "accepted",
+                  "cancelled",
+                  "expired"
+                ]
+              },
+              "expiresAt": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+              },
+              "invitedByUserId": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+              },
+              "createdAt": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+              }
+            },
+            "required": [
+              "id",
+              "agencyId",
+              "officeId",
+              "email",
+              "fullName",
+              "role",
+              "status",
+              "expiresAt",
+              "invitedByUserId",
+              "createdAt"
+            ]
+          },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "enum": [
+                    "email_not_sent"
+                  ]
+                }
+              },
+              "required": [
+                "code"
+              ]
+            }
+          }
+        },
+        "required": [
+          "invitation",
+          "warnings"
+        ]
+      },
+      "InvitationPageResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                "agencyId": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                "officeId": {
+                  "nullable": true,
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                "email": {
+                  "type": "string"
+                },
+                "fullName": {
+                  "type": "string"
+                },
+                "role": {
+                  "type": "string",
+                  "enum": [
+                    "admin",
+                    "compliance",
+                    "broker",
+                    "agent",
+                    "assistant",
+                    "read_only"
+                  ]
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "pending",
+                    "accepted",
+                    "cancelled",
+                    "expired"
+                  ]
+                },
+                "expiresAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+                },
+                "invitedByUserId": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+                }
+              },
+              "required": [
+                "id",
+                "agencyId",
+                "officeId",
+                "email",
+                "fullName",
+                "role",
+                "status",
+                "expiresAt",
+                "invitedByUserId",
+                "createdAt"
+              ]
+            }
+          },
+          "nextCursor": {
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "required": [
+          "items",
+          "nextCursor"
+        ]
+      },
+      "InvitationTokenBody": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          }
+        },
+        "required": [
+          "token"
+        ]
+      },
+      "InvitationPreviewResponse": {
+        "type": "object",
+        "properties": {
+          "agencyName": {
+            "type": "string"
+          },
+          "officeName": {
+            "nullable": true,
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "admin",
+              "compliance",
+              "broker",
+              "agent",
+              "assistant",
+              "read_only"
+            ]
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+          }
+        },
+        "required": [
+          "agencyName",
+          "officeName",
+          "email",
+          "fullName",
+          "role",
+          "expiresAt"
+        ]
+      },
+      "AcceptedInvitationResponse": {
+        "type": "object",
+        "properties": {
+          "memberId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "agencyId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "admin",
+              "compliance",
+              "broker",
+              "agent",
+              "assistant",
+              "read_only"
+            ]
+          }
+        },
+        "required": [
+          "memberId",
+          "agencyId",
+          "role"
+        ]
+      },
+      "MemberResponse": {
+        "type": "object",
+        "properties": {
+          "memberId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "admin",
+              "compliance",
+              "broker",
+              "agent",
+              "assistant",
+              "read_only"
+            ]
+          },
+          "officeId": {
+            "nullable": true,
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "suspended",
+              "terminated"
+            ]
+          },
+          "since": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+          }
+        },
+        "required": [
+          "memberId",
+          "userId",
+          "fullName",
+          "email",
+          "role",
+          "officeId",
+          "status",
+          "since"
+        ]
+      },
+      "ChangeMemberRoleBody": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "admin",
+              "compliance",
+              "broker",
+              "agent",
+              "assistant",
+              "read_only"
+            ]
+          }
+        },
+        "required": [
+          "role"
+        ]
+      },
+      "TerminateMemberBody": {
+        "type": "object",
+        "properties": {
+          "reason": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1000
+          }
+        }
+      },
+      "RegisterPropertyBody": {
+        "type": "object",
+        "properties": {
+          "propertyType": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50
+          },
+          "territorialUnitCode": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20
+          },
+          "address": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 300
+          },
+          "addressVisibility": {
+            "type": "string",
+            "enum": [
+              "exact",
+              "approximate",
+              "hidden"
+            ]
+          },
+          "location": {
+            "nullable": true,
+            "type": "object",
+            "properties": {
+              "latitude": {
+                "type": "number",
+                "minimum": -90,
+                "maximum": 90
+              },
+              "longitude": {
+                "type": "number",
+                "minimum": -180,
+                "maximum": 180
+              }
+            },
+            "required": [
+              "latitude",
+              "longitude"
+            ]
+          },
+          "builtArea": {
+            "nullable": true,
+            "type": "number",
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "maximum": 10000000
+          },
+          "landArea": {
+            "nullable": true,
+            "type": "number",
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "maximum": 1000000000
+          },
+          "attributes": {
+            "type": "object",
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "boolean"
+                }
+              ]
+            }
+          },
+          "features": {
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 50
+            }
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 10000
+          },
+          "uniqueIdentifier": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "listPriceMinor": {
+            "type": "string",
+            "pattern": "^\\d{1,18}$"
+          },
+          "mandate": {
+            "type": "object",
+            "properties": {
+              "operation": {
+                "type": "string",
+                "enum": [
+                  "sale",
+                  "lease"
+                ]
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "exclusive",
+                  "non_exclusive"
+                ]
+              },
+              "startDate": {
+                "type": "string",
+                "format": "date",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+              },
+              "endDate": {
+                "type": "string",
+                "format": "date",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+              },
+              "visitInstructions": {
+                "nullable": true,
+                "type": "string",
+                "maxLength": 2000
+              },
+              "memberNotes": {
+                "nullable": true,
+                "type": "string",
+                "maxLength": 2000
+              },
+              "privateTerms": {
+                "type": "object",
+                "properties": {
+                  "netPriceMinor": {
+                    "nullable": true,
+                    "type": "string",
+                    "pattern": "^\\d{1,18}$"
+                  },
+                  "minPriceMinor": {
+                    "nullable": true,
+                    "type": "string",
+                    "pattern": "^\\d{1,18}$"
+                  },
+                  "commission": {
+                    "nullable": true,
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "type": "string",
+                        "enum": [
+                          "percent",
+                          "amount"
+                        ]
+                      },
+                      "value": {
+                        "type": "string",
+                        "pattern": "^\\d+(\\.\\d{1,4})?$"
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "value"
+                    ]
+                  },
+                  "ownerContact": {
+                    "nullable": true,
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200
+                      },
+                      "phone": {
+                        "type": "string",
+                        "maxLength": 30
+                      },
+                      "email": {
+                        "type": "string",
+                        "format": "email",
+                        "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+                      }
+                    },
+                    "required": [
+                      "name"
+                    ]
+                  }
+                }
+              }
+            },
+            "required": [
+              "operation",
+              "type",
+              "startDate",
+              "endDate"
+            ]
+          }
+        },
+        "required": [
+          "propertyType",
+          "territorialUnitCode",
+          "address",
+          "uniqueIdentifier",
+          "listPriceMinor",
+          "mandate"
+        ]
+      },
+      "RegisterPropertyResponse": {
+        "type": "object",
+        "properties": {
+          "propertyId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "mandateId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "possibleDuplicates": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            }
+          }
+        },
+        "required": [
+          "propertyId",
+          "mandateId",
+          "possibleDuplicates"
+        ]
+      },
+      "PropertyDetailResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "uniqueIdentifier": {
+            "type": "string"
+          },
+          "identifierLabel": {
+            "type": "string"
+          },
+          "identifierStatus": {
+            "type": "string",
+            "enum": [
+              "definitive",
+              "provisional",
+              "alternate"
+            ]
+          },
+          "propertyType": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "draft",
+              "active",
+              "reserved",
+              "closed",
+              "suspended",
+              "withdrawn",
+              "expired"
+            ]
+          },
+          "territorialUnitCode": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "addressVisibility": {
+            "type": "string",
+            "enum": [
+              "exact",
+              "approximate",
+              "hidden"
+            ]
+          },
+          "location": {
+            "nullable": true,
+            "type": "object",
+            "properties": {
+              "latitude": {
+                "type": "number",
+                "minimum": -90,
+                "maximum": 90
+              },
+              "longitude": {
+                "type": "number",
+                "minimum": -180,
+                "maximum": 180
+              }
+            },
+            "required": [
+              "latitude",
+              "longitude"
+            ]
+          },
+          "builtArea": {
+            "nullable": true,
+            "type": "number"
+          },
+          "landArea": {
+            "nullable": true,
+            "type": "number"
+          },
+          "areaUnit": {
+            "type": "string",
+            "enum": [
+              "m2",
+              "ft2"
+            ]
+          },
+          "attributes": {
+            "type": "object",
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "boolean"
+                }
+              ]
+            }
+          },
+          "features": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "description": {
+            "type": "string"
+          },
+          "editor": {
+            "nullable": true,
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "name"
+            ]
+          },
+          "listPrices": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "operation": {
+                  "type": "string",
+                  "enum": [
+                    "sale",
+                    "lease"
+                  ]
+                },
+                "price": {
+                  "type": "object",
+                  "properties": {
+                    "amountMinor": {
+                      "type": "string"
+                    },
+                    "currency": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "amountMinor",
+                    "currency"
+                  ]
+                }
+              },
+              "required": [
+                "operation",
+                "price"
+              ]
+            }
+          },
+          "mandates": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                "agency": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "name": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name"
+                  ]
+                },
+                "operation": {
+                  "type": "string",
+                  "enum": [
+                    "sale",
+                    "lease"
+                  ]
+                },
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "exclusive",
+                    "non_exclusive"
+                  ]
+                },
+                "startDate": {
+                  "type": "string",
+                  "format": "date",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                },
+                "endDate": {
+                  "type": "string",
+                  "format": "date",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "active",
+                    "terminated"
+                  ]
+                },
+                "active": {
+                  "type": "boolean"
+                },
+                "mine": {
+                  "type": "boolean"
+                },
+                "visitInstructions": {
+                  "nullable": true,
+                  "type": "string"
+                },
+                "memberNotes": {
+                  "nullable": true,
+                  "type": "string"
+                },
+                "privateTerms": {
+                  "type": "object",
+                  "properties": {
+                    "currency": {
+                      "type": "string"
+                    },
+                    "netPrice": {
+                      "nullable": true,
+                      "type": "object",
+                      "properties": {
+                        "amountMinor": {
+                          "type": "string"
+                        },
+                        "currency": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "amountMinor",
+                        "currency"
+                      ]
+                    },
+                    "minPrice": {
+                      "nullable": true,
+                      "type": "object",
+                      "properties": {
+                        "amountMinor": {
+                          "type": "string"
+                        },
+                        "currency": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "amountMinor",
+                        "currency"
+                      ]
+                    },
+                    "commission": {
+                      "nullable": true,
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "enum": [
+                            "percent",
+                            "amount"
+                          ]
+                        },
+                        "value": {
+                          "type": "string",
+                          "pattern": "^\\d+(\\.\\d{1,4})?$"
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "value"
+                      ]
+                    },
+                    "ownerContact": {
+                      "nullable": true,
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 200
+                        },
+                        "phone": {
+                          "type": "string",
+                          "maxLength": 30
+                        },
+                        "email": {
+                          "type": "string",
+                          "format": "email",
+                          "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+                        }
+                      },
+                      "required": [
+                        "name"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "currency",
+                    "netPrice",
+                    "minPrice",
+                    "commission",
+                    "ownerContact"
+                  ]
+                },
+                "allowedActions": {
+                  "type": "object",
+                  "properties": {
+                    "terminate": {
+                      "type": "boolean"
+                    },
+                    "updatePrivateTerms": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "terminate",
+                    "updatePrivateTerms"
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "agency",
+                "operation",
+                "type",
+                "startDate",
+                "endDate",
+                "status",
+                "active",
+                "mine",
+                "visitInstructions",
+                "memberNotes",
+                "allowedActions"
+              ]
+            }
+          },
+          "history": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "field": {
+                  "type": "string",
+                  "enum": [
+                    "list_price",
+                    "status",
+                    "editor"
+                  ]
+                },
+                "oldValue": {},
+                "newValue": {},
+                "agencyId": {
+                  "nullable": true,
+                  "type": "string"
+                },
+                "userId": {
+                  "nullable": true,
+                  "type": "string"
+                },
+                "changedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+                }
+              },
+              "required": [
+                "field",
+                "oldValue",
+                "newValue",
+                "agencyId",
+                "userId",
+                "changedAt"
+              ]
+            }
+          },
+          "media": {
+            "type": "object",
+            "properties": {
+              "photos": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "kind": {
+                      "type": "string",
+                      "enum": [
+                        "photo",
+                        "floor_plan"
+                      ]
+                    },
+                    "position": {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    },
+                    "width": {
+                      "nullable": true,
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    },
+                    "height": {
+                      "nullable": true,
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    },
+                    "variants": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "width": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          "url": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "width",
+                          "url"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "kind",
+                    "position",
+                    "width",
+                    "height",
+                    "variants"
+                  ]
+                }
+              },
+              "floorPlans": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "kind": {
+                      "type": "string",
+                      "enum": [
+                        "photo",
+                        "floor_plan"
+                      ]
+                    },
+                    "position": {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    },
+                    "width": {
+                      "nullable": true,
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    },
+                    "height": {
+                      "nullable": true,
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    },
+                    "variants": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "width": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          "url": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "width",
+                          "url"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "kind",
+                    "position",
+                    "width",
+                    "height",
+                    "variants"
+                  ]
+                }
+              },
+              "links": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "type": "string",
+                      "enum": [
+                        "video",
+                        "virtual_tour"
+                      ]
+                    },
+                    "url": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "kind",
+                    "url"
+                  ]
+                }
+              },
+              "photoRequirement": {
+                "type": "object",
+                "properties": {
+                  "min": {
+                    "type": "integer",
+                    "minimum": -9007199254740991,
+                    "maximum": 9007199254740991
+                  },
+                  "current": {
+                    "type": "integer",
+                    "minimum": -9007199254740991,
+                    "maximum": 9007199254740991
+                  },
+                  "met": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "min",
+                  "current",
+                  "met"
+                ]
+              },
+              "pending": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "kind": {
+                      "type": "string",
+                      "enum": [
+                        "photo",
+                        "floor_plan"
+                      ]
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "pending",
+                        "processing",
+                        "ready",
+                        "rejected"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "kind",
+                    "status"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "photos",
+              "floorPlans",
+              "links",
+              "photoRequirement",
+              "pending"
+            ]
+          },
+          "documents": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "mandate_support",
+                    "property_certificate",
+                    "deed",
+                    "cadastral",
+                    "other"
+                  ]
+                },
+                "mandateId": {
+                  "nullable": true,
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                "visibility": {
+                  "type": "string",
+                  "enum": [
+                    "agency",
+                    "property_agencies"
+                  ]
+                },
+                "fileName": {
+                  "type": "string"
+                },
+                "contentType": {
+                  "type": "string"
+                },
+                "size": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "agencyId": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                "mine": {
+                  "type": "boolean"
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+                },
+                "allowedActions": {
+                  "type": "object",
+                  "properties": {
+                    "remove": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "remove"
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "kind",
+                "mandateId",
+                "visibility",
+                "fileName",
+                "contentType",
+                "size",
+                "agencyId",
+                "mine",
+                "createdAt",
+                "allowedActions"
+              ]
+            }
+          },
+          "allowedActions": {
+            "type": "object",
+            "properties": {
+              "update": {
+                "type": "boolean"
+              },
+              "manageMedia": {
+                "type": "boolean"
+              },
+              "manageDocuments": {
+                "type": "boolean"
+              },
+              "linkMandate": {
+                "type": "boolean"
+              },
+              "setListPrice": {
+                "type": "object",
+                "properties": {
+                  "sale": {
+                    "type": "boolean"
+                  },
+                  "lease": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "sale",
+                  "lease"
+                ]
+              }
+            },
+            "required": [
+              "update",
+              "manageMedia",
+              "manageDocuments",
+              "linkMandate",
+              "setListPrice"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "uniqueIdentifier",
+          "identifierLabel",
+          "identifierStatus",
+          "propertyType",
+          "status",
+          "territorialUnitCode",
+          "address",
+          "addressVisibility",
+          "location",
+          "builtArea",
+          "landArea",
+          "areaUnit",
+          "attributes",
+          "features",
+          "description",
+          "editor",
+          "listPrices",
+          "mandates",
+          "history",
+          "media",
+          "documents",
+          "allowedActions"
+        ]
+      },
+      "UpdatePropertyBody": {
+        "type": "object",
+        "properties": {
+          "propertyType": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50
+          },
+          "territorialUnitCode": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20
+          },
+          "address": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 300
+          },
+          "addressVisibility": {
+            "type": "string",
+            "enum": [
+              "exact",
+              "approximate",
+              "hidden"
+            ]
+          },
+          "location": {
+            "nullable": true,
+            "type": "object",
+            "properties": {
+              "latitude": {
+                "type": "number",
+                "minimum": -90,
+                "maximum": 90
+              },
+              "longitude": {
+                "type": "number",
+                "minimum": -180,
+                "maximum": 180
+              }
+            },
+            "required": [
+              "latitude",
+              "longitude"
+            ]
+          },
+          "builtArea": {
+            "nullable": true,
+            "type": "number",
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "maximum": 10000000
+          },
+          "landArea": {
+            "nullable": true,
+            "type": "number",
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "maximum": 1000000000
+          },
+          "attributes": {
+            "type": "object",
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "boolean"
+                }
+              ]
+            }
+          },
+          "features": {
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 50
+            }
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 10000
+          }
+        }
+      },
+      "ListPriceBody": {
+        "type": "object",
+        "properties": {
+          "amountMinor": {
+            "type": "string",
+            "pattern": "^\\d{1,18}$"
+          }
+        },
+        "required": [
+          "amountMinor"
+        ]
+      },
+      "LinkMandateBody": {
+        "type": "object",
+        "properties": {
+          "operation": {
+            "type": "string",
+            "enum": [
+              "sale",
+              "lease"
+            ]
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "exclusive",
+              "non_exclusive"
+            ]
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+          },
+          "visitInstructions": {
+            "nullable": true,
+            "type": "string",
+            "maxLength": 2000
+          },
+          "memberNotes": {
+            "nullable": true,
+            "type": "string",
+            "maxLength": 2000
+          },
+          "privateTerms": {
+            "type": "object",
+            "properties": {
+              "netPriceMinor": {
+                "nullable": true,
+                "type": "string",
+                "pattern": "^\\d{1,18}$"
+              },
+              "minPriceMinor": {
+                "nullable": true,
+                "type": "string",
+                "pattern": "^\\d{1,18}$"
+              },
+              "commission": {
+                "nullable": true,
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "percent",
+                      "amount"
+                    ]
+                  },
+                  "value": {
+                    "type": "string",
+                    "pattern": "^\\d+(\\.\\d{1,4})?$"
+                  }
+                },
+                "required": [
+                  "kind",
+                  "value"
+                ]
+              },
+              "ownerContact": {
+                "nullable": true,
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "phone": {
+                    "type": "string",
+                    "maxLength": 30
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+                  }
+                },
+                "required": [
+                  "name"
+                ]
+              }
+            }
+          }
+        },
+        "required": [
+          "operation",
+          "type",
+          "startDate",
+          "endDate"
+        ]
+      },
+      "LinkMandateResponse": {
+        "type": "object",
+        "properties": {
+          "mandateId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          }
+        },
+        "required": [
+          "mandateId"
+        ]
+      },
+      "PropertyTypesResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "code",
+                "label"
+              ]
+            }
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
+      "PropertyDefinitionsResponse": {
+        "type": "object",
+        "properties": {
+          "propertyType": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "label": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "label"
+            ]
+          },
+          "groups": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                },
+                "help": {
+                  "type": "string"
+                },
+                "fields": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "code": {
+                        "type": "string"
+                      },
+                      "label": {
+                        "type": "string"
+                      },
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "text",
+                          "integer",
+                          "number",
+                          "boolean",
+                          "enum",
+                          "date"
+                        ]
+                      },
+                      "required": {
+                        "type": "boolean"
+                      },
+                      "min": {
+                        "type": "number"
+                      },
+                      "max": {
+                        "type": "number"
+                      },
+                      "maxLength": {
+                        "type": "number"
+                      },
+                      "options": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string"
+                            },
+                            "label": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "code",
+                            "label"
+                          ]
+                        }
+                      }
+                    },
+                    "required": [
+                      "code",
+                      "label",
+                      "type",
+                      "required"
+                    ]
+                  }
+                },
+                "features": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "code": {
+                        "type": "string"
+                      },
+                      "label": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "code",
+                      "label"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "code",
+                "label",
+                "fields",
+                "features"
+              ]
+            }
+          }
+        },
+        "required": [
+          "propertyType",
+          "groups"
+        ]
+      },
+      "PrivateTermsBody": {
+        "type": "object",
+        "properties": {
+          "netPriceMinor": {
+            "nullable": true,
+            "type": "string",
+            "pattern": "^\\d{1,18}$"
+          },
+          "minPriceMinor": {
+            "nullable": true,
+            "type": "string",
+            "pattern": "^\\d{1,18}$"
+          },
+          "commission": {
+            "nullable": true,
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "percent",
+                  "amount"
+                ]
+              },
+              "value": {
+                "type": "string",
+                "pattern": "^\\d+(\\.\\d{1,4})?$"
+              }
+            },
+            "required": [
+              "kind",
+              "value"
+            ]
+          },
+          "ownerContact": {
+            "nullable": true,
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "phone": {
+                "type": "string",
+                "maxLength": 30
+              },
+              "email": {
+                "type": "string",
+                "format": "email",
+                "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+              }
+            },
+            "required": [
+              "name"
+            ]
+          }
+        }
+      },
+      "MediaUploadBody": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "photo",
+              "floor_plan"
+            ]
+          },
+          "contentType": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "size": {
+            "type": "integer",
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "kind",
+          "contentType",
+          "size"
+        ]
+      },
+      "UploadTicketResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "uploadUrl": {
+            "type": "string",
+            "format": "uri"
+          },
+          "headers": {
+            "type": "object",
+            "properties": {
+              "content-type": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "content-type"
+            ]
+          },
+          "expiresInSeconds": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "id",
+          "uploadUrl",
+          "headers",
+          "expiresInSeconds"
+        ]
+      },
+      "MediaOrderBody": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "photo",
+              "floor_plan"
+            ]
+          },
+          "mediaIds": {
+            "maxItems": 200,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            }
+          }
+        },
+        "required": [
+          "kind",
+          "mediaIds"
+        ]
+      },
+      "MediaLinksBody": {
+        "type": "object",
+        "properties": {
+          "links": {
+            "maxItems": 10,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "video",
+                    "virtual_tour"
+                  ]
+                },
+                "url": {
+                  "type": "string",
+                  "maxLength": 2000,
+                  "format": "uri"
+                }
+              },
+              "required": [
+                "kind",
+                "url"
+              ]
+            }
+          }
+        },
+        "required": [
+          "links"
+        ]
+      },
+      "DocumentUploadBody": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "mandate_support",
+              "property_certificate",
+              "deed",
+              "cadastral",
+              "other"
+            ]
+          },
+          "mandateId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "visibility": {
+            "type": "string",
+            "enum": [
+              "agency",
+              "property_agencies"
+            ]
+          },
+          "fileName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "contentType": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "size": {
+            "type": "integer",
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "kind",
+          "fileName",
+          "contentType",
+          "size"
+        ]
+      },
+      "DocumentDownloadResponse": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "expiresInSeconds": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "fileName": {
+            "type": "string"
+          },
+          "contentType": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "url",
+          "expiresInSeconds",
+          "fileName",
+          "contentType"
+        ]
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "status": {
+            "type": "integer",
+            "minimum": 100,
+            "maximum": 599
+          },
+          "instance": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string",
+            "enum": [
+              "bad_request",
+              "validation_failed",
+              "invalid_cursor",
+              "unauthorized",
+              "forbidden",
+              "no_membership",
+              "platform_operator_required",
+              "two_factor_required",
+              "role_not_allowed",
+              "agency_not_active",
+              "not_found",
+              "tenant_not_found",
+              "territory_level_not_found",
+              "tenant_unavailable",
+              "method_not_allowed",
+              "conflict",
+              "payload_too_large",
+              "unsupported_media_type",
+              "rate_limited",
+              "unavailable",
+              "internal",
+              "property_not_found",
+              "mandate_not_found",
+              "property_already_registered",
+              "invalid_identifier",
+              "unknown_property_type",
+              "operation_not_enabled",
+              "unknown_territorial_unit",
+              "invalid_attributes",
+              "invalid_features",
+              "invalid_agency_attributes",
+              "office_not_found",
+              "main_office_closed",
+              "office_closed",
+              "role_level_mismatch",
+              "already_member",
+              "tax_id_in_use",
+              "invalid_tax_id",
+              "agency_not_reviewable",
+              "agency_not_editable",
+              "review_reason_required",
+              "agency_not_found",
+              "invitation_not_found",
+              "invitation_not_pending",
+              "invitation_expired",
+              "invitation_email_mismatch",
+              "invitation_already_pending",
+              "invalid_invitation_email",
+              "role_not_invitable",
+              "office_not_available",
+              "last_broker",
+              "member_not_found",
+              "member_not_active",
+              "termination_reason_required",
+              "insufficient_role",
+              "mandate_too_short",
+              "mandate_not_started",
+              "mandate_already_expired",
+              "mandate_already_active",
+              "exclusive_mandate_conflict",
+              "mandate_conflict_with_exclusive",
+              "mandate_not_active",
+              "not_property_editor",
+              "not_operation_leader",
+              "not_mandate_creator",
+              "not_mandate_owner",
+              "media_not_found",
+              "document_not_found",
+              "unsupported_file_type",
+              "file_too_large",
+              "upload_missing",
+              "upload_mismatch",
+              "invalid_media_link",
+              "invalid_media_order",
+              "document_not_ready"
+            ]
+          },
+          "requestId": {
+            "type": "string"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "path": {
+                  "type": "string"
+                },
+                "code": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "path",
+                "code",
+                "message"
+              ]
+            }
+          },
+          "details": {
+            "type": "object",
+            "additionalProperties": {}
+          }
+        },
+        "required": [
+          "type",
+          "title",
+          "status",
+          "instance",
+          "code",
+          "requestId"
+        ]
+      }
+    }
+  }
+}
