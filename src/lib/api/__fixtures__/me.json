@@ -1,0 +1,27 @@
+{
+  "user": {
+    "id": "0192a3b4-5c6d-7e8f-9a0b-1c2d3e4f5a6b",
+    "email": "broker@demo.test",
+    "name": "Ana Demo",
+    "twoFactorEnabled": false
+  },
+  "tenant": { "code": "co", "name": "Colombia", "configVersion": 1 },
+  "membership": {
+    "role": "broker",
+    "agencyId": "0192a3b4-5c6d-7e8f-9a0b-1c2d3e4f5a6c",
+    "agencyStatus": "active",
+    "permissions": {
+      "agency.read": "agency",
+      "property.create": "agency",
+      "property.read": "network"
+    },
+    "twoFactorRequired": false
+  },
+  "config": {
+    "currency": "COP",
+    "timezone": "America/Bogota",
+    "locale": "es-CO",
+    "areaUnit": "m2",
+    "uniqueIdentifierLabel": "Matrícula inmobiliaria"
+  }
+}
