@@ -61,6 +61,11 @@ export default tseslint.config(
     rules: { 'react-refresh/only-export-components': 'off' },
   },
   {
+    // Los archivos de ruta exportan `Route` junto al componente (convención de TanStack Router).
+    files: ['src/routes/**/*.tsx'],
+    rules: { 'react-refresh/only-export-components': 'off' },
+  },
+  {
     files: ['public/**/*.js'],
     languageOptions: { sourceType: 'script', globals: globals.browser },
   },

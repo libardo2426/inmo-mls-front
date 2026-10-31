@@ -4,6 +4,8 @@ import { afterAll, afterEach, beforeAll } from 'vitest';
 import { server } from '@/test/server';
 
 beforeAll(() => {
+  // jsdom no implementa scrollTo; el router lo invoca al navegar.
+  window.scrollTo = () => undefined;
   server.listen({ onUnhandledFrame: 'error' });
 });
 

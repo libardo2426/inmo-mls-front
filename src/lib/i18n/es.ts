@@ -2,6 +2,10 @@ export const es = {
   app: {
     name: 'Innmo MLS',
   },
+  notFound: {
+    title: 'Página no encontrada',
+    help: 'La dirección no existe o fue movida.',
+  },
   theme: {
     toggle: 'Cambiar tema',
   },
