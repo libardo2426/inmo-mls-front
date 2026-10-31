@@ -45,5 +45,24 @@ export default tseslint.config(
     files: ['*.config.{js,ts}', 'eslint-rules/**/*.js', 'scripts/**/*.{js,mjs}', 'e2e/**/*.ts'],
     languageOptions: { globals: globals.node },
   },
+  {
+    files: ['src/**/*.{ts,tsx}'],
+    ignores: ['src/lib/http/**'],
+    rules: {
+      'no-restricted-globals': [
+        'error',
+        { name: 'fetch', message: 'Usa el cliente HTTP único de `@/lib/http`.' },
+      ],
+    },
+  },
+  {
+    // Código generado por la CLI de shadcn: exporta variantes junto al componente.
+    files: ['src/components/ui/**/*.tsx'],
+    rules: { 'react-refresh/only-export-components': 'off' },
+  },
+  {
+    files: ['public/**/*.js'],
+    languageOptions: { sourceType: 'script', globals: globals.browser },
+  },
   ...featureBoundaryConfig(features),
 );
