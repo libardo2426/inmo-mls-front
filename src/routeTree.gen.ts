@@ -13,6 +13,8 @@ import { Route as ProtegidoRouteImport } from './routes/_protegido'
 import { Route as Activar2faRouteImport } from './routes/activar-2fa'
 import { Route as IniciarSesionRouteImport } from './routes/iniciar-sesion'
 import { Route as MantenimientoRouteImport } from './routes/mantenimiento'
+import { Route as RecuperarRouteImport } from './routes/recuperar'
+import { Route as RestablecerRouteImport } from './routes/restablecer'
 import { Route as SinConexionRouteImport } from './routes/sin-conexion'
 import { Route as VerificarRouteImport } from './routes/verificar'
 import { Route as ProtegidoIndexRouteImport } from './routes/_protegido/index'
@@ -36,6 +38,16 @@ const MantenimientoRoute = MantenimientoRouteImport.update({
   path: '/mantenimiento',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RecuperarRoute = RecuperarRouteImport.update({
+  id: '/recuperar',
+  path: '/recuperar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RestablecerRoute = RestablecerRouteImport.update({
+  id: '/restablecer',
+  path: '/restablecer',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SinConexionRoute = SinConexionRouteImport.update({
   id: '/sin-conexion',
   path: '/sin-conexion',
@@ -57,6 +69,8 @@ export interface FileRoutesByFullPath {
   '/activar-2fa': typeof Activar2faRoute
   '/iniciar-sesion': typeof IniciarSesionRoute
   '/mantenimiento': typeof MantenimientoRoute
+  '/recuperar': typeof RecuperarRoute
+  '/restablecer': typeof RestablecerRoute
   '/sin-conexion': typeof SinConexionRoute
   '/verificar': typeof VerificarRoute
 }
@@ -64,6 +78,8 @@ export interface FileRoutesByTo {
   '/activar-2fa': typeof Activar2faRoute
   '/iniciar-sesion': typeof IniciarSesionRoute
   '/mantenimiento': typeof MantenimientoRoute
+  '/recuperar': typeof RecuperarRoute
+  '/restablecer': typeof RestablecerRoute
   '/sin-conexion': typeof SinConexionRoute
   '/verificar': typeof VerificarRoute
   '/': typeof ProtegidoIndexRoute
@@ -74,6 +90,8 @@ export interface FileRoutesById {
   '/activar-2fa': typeof Activar2faRoute
   '/iniciar-sesion': typeof IniciarSesionRoute
   '/mantenimiento': typeof MantenimientoRoute
+  '/recuperar': typeof RecuperarRoute
+  '/restablecer': typeof RestablecerRoute
   '/sin-conexion': typeof SinConexionRoute
   '/verificar': typeof VerificarRoute
   '/_protegido/': typeof ProtegidoIndexRoute
@@ -85,6 +103,8 @@ export interface FileRouteTypes {
     | '/activar-2fa'
     | '/iniciar-sesion'
     | '/mantenimiento'
+    | '/recuperar'
+    | '/restablecer'
     | '/sin-conexion'
     | '/verificar'
   fileRoutesByTo: FileRoutesByTo
@@ -92,6 +112,8 @@ export interface FileRouteTypes {
     | '/activar-2fa'
     | '/iniciar-sesion'
     | '/mantenimiento'
+    | '/recuperar'
+    | '/restablecer'
     | '/sin-conexion'
     | '/verificar'
     | '/'
@@ -101,6 +123,8 @@ export interface FileRouteTypes {
     | '/activar-2fa'
     | '/iniciar-sesion'
     | '/mantenimiento'
+    | '/recuperar'
+    | '/restablecer'
     | '/sin-conexion'
     | '/verificar'
     | '/_protegido/'
@@ -111,6 +135,8 @@ export interface RootRouteChildren {
   Activar2faRoute: typeof Activar2faRoute
   IniciarSesionRoute: typeof IniciarSesionRoute
   MantenimientoRoute: typeof MantenimientoRoute
+  RecuperarRoute: typeof RecuperarRoute
+  RestablecerRoute: typeof RestablecerRoute
   SinConexionRoute: typeof SinConexionRoute
   VerificarRoute: typeof VerificarRoute
 }
@@ -143,6 +169,20 @@ declare module '@tanstack/react-router' {
       path: '/mantenimiento'
       fullPath: '/mantenimiento'
       preLoaderRoute: typeof MantenimientoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/recuperar': {
+      id: '/recuperar'
+      path: '/recuperar'
+      fullPath: '/recuperar'
+      preLoaderRoute: typeof RecuperarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/restablecer': {
+      id: '/restablecer'
+      path: '/restablecer'
+      fullPath: '/restablecer'
+      preLoaderRoute: typeof RestablecerRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sin-conexion': {
@@ -186,6 +226,8 @@ const rootRouteChildren: RootRouteChildren = {
   Activar2faRoute: Activar2faRoute,
   IniciarSesionRoute: IniciarSesionRoute,
   MantenimientoRoute: MantenimientoRoute,
+  RecuperarRoute: RecuperarRoute,
+  RestablecerRoute: RestablecerRoute,
   SinConexionRoute: SinConexionRoute,
   VerificarRoute: VerificarRoute,
 }

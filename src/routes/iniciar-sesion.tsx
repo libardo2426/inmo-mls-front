@@ -3,7 +3,11 @@ import { z } from 'zod';
 import { enforce } from '@/features/auth/session/enforce';
 import { LoginPage } from '@/features/auth/screens/LoginPage';
 
-const searchSchema = z.object({ redirect: z.string().optional() });
+const searchSchema = z.object({
+  redirect: z.string().optional(),
+  // El router convierte "1" en número al leer la URL; se acepta de ambas formas.
+  restablecida: z.coerce.string().optional(),
+});
 
 export const Route = createFileRoute('/iniciar-sesion')({
   validateSearch: (search) => searchSchema.catch({}).parse(search),
@@ -12,6 +16,6 @@ export const Route = createFileRoute('/iniciar-sesion')({
 });
 
 function LoginRoute() {
-  const { redirect } = Route.useSearch();
-  return <LoginPage redirectTo={redirect} />;
+  const { redirect, restablecida } = Route.useSearch();
+  return <LoginPage redirectTo={redirect} passwordChanged={restablecida === '1'} />;
 }

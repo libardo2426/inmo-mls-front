@@ -195,4 +195,24 @@ describe('LoginPage', () => {
     await waitFor(() => expect(history.location.pathname).toBe('/'));
     expect(await screen.findByRole('heading', { name: es.app.name })).toBeInTheDocument();
   });
+
+  it('ofrece un enlace a /recuperar', async () => {
+    backend({ signIn: session });
+    const { history } = mountApp('/iniciar-sesion');
+    await userEvent.click(await screen.findByRole('link', { name: es.auth.login.forgot }));
+    await waitFor(() => expect(history.location.pathname).toBe('/recuperar'));
+  });
+
+  it('con ?restablecida=1 muestra el aviso de contraseña cambiada', async () => {
+    backend({ signIn: session });
+    mountApp('/iniciar-sesion?restablecida=1');
+    expect(await screen.findByText(es.auth.reset.done)).toBeInTheDocument();
+  });
+
+  it('sin ?restablecida no muestra ese aviso', async () => {
+    backend({ signIn: session });
+    mountApp('/iniciar-sesion');
+    await screen.findByRole('heading', { level: 1, name: es.auth.login.title });
+    expect(screen.queryByText(es.auth.reset.done)).not.toBeInTheDocument();
+  });
 });

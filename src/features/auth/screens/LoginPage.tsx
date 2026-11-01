@@ -1,4 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query';
+import { Link } from '@tanstack/react-router';
 import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
 import { z } from 'zod';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -23,7 +24,9 @@ const credentialsSchema = z.object({
 
 type Feedback = { kind: 'text'; text: string } | { kind: 'rate' } | null;
 
-export function LoginPage({ redirectTo }: { redirectTo?: string | undefined }) {
+type LoginPageProps = { redirectTo?: string | undefined; passwordChanged?: boolean };
+
+export function LoginPage({ redirectTo, passwordChanged = false }: LoginPageProps) {
   const api = useAuthApi();
   const queryClient = useQueryClient();
   const { go, goHref } = useAuthNavigation();
@@ -88,6 +91,11 @@ export function LoginPage({ redirectTo }: { redirectTo?: string | undefined }) {
     <AuthCard title={es.auth.login.title}>
       <form onSubmit={(event) => void onSubmit(event)} noValidate>
         <FieldGroup>
+          {passwordChanged ? (
+            <Alert role="status">
+              <AlertDescription>{es.auth.reset.done}</AlertDescription>
+            </Alert>
+          ) : null}
           {message ? (
             <Alert variant="destructive" ref={alertRef} tabIndex={-1}>
               <AlertDescription>{message}</AlertDescription>
@@ -117,6 +125,9 @@ export function LoginPage({ redirectTo }: { redirectTo?: string | undefined }) {
             {pending ? <Spinner data-icon="inline-start" /> : null}
             {pending ? es.auth.login.pending : es.auth.login.submit}
           </Button>
+          <Link to="/recuperar" className="text-sm underline underline-offset-4">
+            {es.auth.login.forgot}
+          </Link>
         </FieldGroup>
       </form>
     </AuthCard>
