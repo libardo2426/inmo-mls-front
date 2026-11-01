@@ -212,6 +212,7 @@ Estado: ✅ viable · ⚠️ viable con límites · 🚫 bloqueada por el backen
 | B-15 | `allowedActions` en agencia, miembros e invitaciones (ya pendiente en el contexto, §7) | F3/F4 |
 | B-16 | Consulta de nombre por `territorialUnitCode` | F3/F5 |
 | B-17 | Publicación versionada del `openapi.json` fuera del artefacto de CI | F0 |
+| B-18 | `GET /me` (o un campo `platformRole`) en `admin.api`: el `platform_operator` inicia sesión por la misma ruta `/v1/auth/sign-in/email`, pero hoy el frontend no puede saber su rol ni sus países sin probar endpoints. Precisa B-14 | F6 |
 
 > La numeración continúa la serie del contexto (B-1…B-10). Es **Mi propuesta**; se confirma al registrarlos.
 
@@ -222,15 +223,15 @@ Estado: ✅ viable · ⚠️ viable con límites · 🚫 bloqueada por el backen
 | # | Pregunta | Afecta |
 |---|---|---|
 | Q1 | ¿Cuál es el conjunto exacto de permisos de `admin` y `compliance`? Se confirma leyendo `/me` de usuarios reales. | F2, F3, F4, F5 |
-| Q2 | Nombres y cuerpos exactos de las rutas de Better Auth (`two-factor/enable`, `verify-totp`, `generate-backup-codes`, reset). Forma de un 429 de auth. | F1 |
+| Q2 | ~~Nombres y cuerpos exactos de las rutas de Better Auth (`two-factor/enable`, `verify-totp`, `generate-backup-codes`, reset). Forma de un 429 de auth.~~ **Resuelta en F1** leyendo `better-auth@1.7.14` y con la sesión `backend`: `enable` y `generate-backup-codes` exigen `{password}`; los errores llegan como `{code, message}`; el 429 de auth es `{message}` con cabecera `X-Retry-After` (no problem+json). *Pendiente: confirmarlo contra el backend en marcha (`e2e/auth.spec.ts`).* | F1 |
 | Q3 | ¿Cómo establece sesión y se identifica el `platform_operator` en `admin.api`? No hay `/me` allí. ¿La cookie con `Domain=<BASE_DOMAIN>` sirve en ambos hosts (parece que sí, sin verificar)? | F1, F6 |
-| Q4 | Con el proxy de mismo origen, ¿qué `Origin` ve Better Auth? Debe estar en `FRONTEND_ORIGINS`. La cookie es `SameSite=lax` (no `strict` como asumía el prompt original). | F1, ADR-0003 |
-| Q5 | Duración de la sesión (¿por defecto de Better Auth, 7 días con renovación?) y política de expiración en el panel. | F1 |
+| Q4 | ~~Con el proxy de mismo origen, ¿qué `Origin` ve Better Auth?~~ **Resuelta en F1:** Better Auth valida el `Origin` que envía el navegador contra `FRONTEND_ORIGINS` (lista separada por comas; en producción, orígenes https). Un origen ajeno recibe 403 `INVALID_ORIGIN`. La cookie es `SameSite=lax`. *Pendiente: comprobar el 403 con `curl` contra el backend en marcha (CA19).* | F1, ADR-0003 |
+| Q5 | ~~Duración de la sesión~~ **Resuelta en F1:** valores por defecto de Better Auth (7 días, renovación diaria); el panel no gestiona la expiración: un 401 lleva a login con la ruta de retorno. *Pendiente: confirmarlo con `get-session` en vivo.* | F1 |
 | Q6 | Cómo mostrar el nombre de un `territorialUnitCode` guardado (no hay endpoint de consulta por código). | F3, F5 |
 | Q7 | Cadencia de polling: no aplica al admin MLS (no sube multimedia); solo relevante en F10. | F10 |
 | Q8 | Cómo obtiene el frontend el `openapi.json` versionado (artefacto de CI, release o copia manual). **Mi propuesta:** copia versionada en el repo + script, hasta que el backend publique (B-17). | F0 |
 | Q9 | Sentry (o similar) para monitoreo de errores: ¿se usa? El contexto lo menciona sin spec. | F9 |
-| Q10 | Cómo se crean las cuentas de admin: no hay seeds ni registro de personal MLS por API (`ops-cli`). Para dev y e2e hace falta un procedimiento documentado. | F1, F9 |
+| Q10 | ~~Cómo se crean las cuentas de admin.~~ **Resuelta en F1:** `ops-cli` no crea usuarios; se registra la cuenta con `POST /v1/auth/sign-up/email` y se le da membresía con `pnpm ops member add co <correo> --role admin`. Procedimiento en el README. | F1, F9 |
 
 ---
 
@@ -240,7 +241,7 @@ Estado: ✅ viable · ⚠️ viable con límites · 🚫 bloqueada por el backen
 |---|---|---|
 | [0001](../adr/0001-estructura-del-proyecto.md) | Estructura del proyecto | Propuesto |
 | [0002](../adr/0002-router.md) | Router | Propuesto |
-| [0003](../adr/0003-autenticacion-y-sesion.md) | Autenticación y sesión | Propuesto |
+| [0003](../adr/0003-autenticacion-y-sesion.md) | Autenticación y sesión | Aceptado (F1) |
 | [0004](../adr/0004-modelo-de-permisos.md) | Modelo de permisos | Propuesto |
 | [0005](../adr/0005-configuracion-de-runtime-docker.md) | Configuración de runtime en Docker | Propuesto |
 

@@ -111,7 +111,44 @@ pnpm install   # el contenedor usa el node_modules del host
 docker compose -f docker-compose.yml -f docker-compose.e2e.yml run --rm --build playwright
 ```
 
-El humo de F0 no necesita backend. El e2e con login y 2FA llega en F1 y requerirá cuentas de prueba creadas con `ops-cli` del backend.
+El humo (`e2e/smoke.spec.ts`) y los vectores TOTP (`e2e/totp.spec.ts`) no necesitan backend. El flujo de autenticación (`e2e/auth.spec.ts`) **solo corre contra un backend real** y se omite si faltan las variables:
+
+```bash
+E2E_BACKEND=1 E2E_ADMIN_EMAIL=admin@ejemplo.test E2E_ADMIN_PASSWORD='una-clave-larga-1' \
+  docker compose -f docker-compose.yml -f docker-compose.e2e.yml run --rm playwright
+```
+
+Requisitos del backend para ese e2e:
+
+- Un admin MLS **sin 2FA** (el test lo activa). Ver «Crear una cuenta de admin».
+- `FRONTEND_ORIGINS` debe incluir `http://app.localtest.me:8080`: el navegador del contenedor entra por ese host (alias de `web`), de modo que el `Origin` y la cookie (`Domain=<BASE_DOMAIN>`) coinciden con lo que acepta Better Auth.
+- `API_UPSTREAM` debe apuntar al backend (en el host, la IP de la pasarela de Docker, p. ej. `http://172.17.0.1:3000`).
+
+> Estado: el flujo contra el backend en marcha **aún no se ha verificado**; el e2e de humo y el de TOTP sí corren en Docker.
+
+Los resultados de Playwright se escriben en `/tmp/pw-results` dentro del contenedor (`PW_OUTPUT_DIR`), así no quedan archivos de root en el repositorio.
+
+## Crear una cuenta de admin (desarrollo y e2e)
+
+`ops-cli` no crea usuarios. Con el backend en marcha (`pnpm dev:up`, migraciones, `ops tenant provision co` y `ops tenant activate co`, `pnpm nx serve core-api`):
+
+```bash
+# 1) Registrar la cuenta
+curl -X POST http://localhost:3000/v1/auth/sign-up/email \
+  -H 'Content-Type: application/json' -H 'X-Tenant: co' -H 'Origin: http://app.localtest.me:5173' \
+  -d '{"email":"admin@ejemplo.test","name":"Admin","password":"una-clave-larga-1"}'
+
+# 2) Darle membresía de admin en el país (desde el repositorio del backend)
+pnpm ops member add co admin@ejemplo.test --role admin
+```
+
+El admin empieza **sin 2FA**: al iniciar sesión el panel lo lleva a `/activar-2fa`, donde escanea el QR con una app de autenticación y guarda los códigos de respaldo. Los correos de recuperación de contraseña llegan a Mailpit (`http://localhost:8025`).
+
+## Despliegue: autenticación
+
+- `FRONTEND_ORIGINS` (backend): lista separada por comas de los orígenes https desde los que se sirve el panel; Better Auth rechaza con 403 cualquier otro `Origin`.
+- `PASSWORD_RESET_URL` (backend): `https://<panel>/restablecer`; el correo añade `#token=…` y el panel lo lee y lo borra de la URL.
+- `TRUST_PROXY_HOPS=1` (backend) cuando hay un proxy delante, para que el límite de intentos use la IP real del cliente.
 
 ## CI
 

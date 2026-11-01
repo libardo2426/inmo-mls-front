@@ -1,7 +1,40 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
+
+// `/` es una ruta protegida: el humo no necesita backend, así que simula una sesión válida en /me.
+async function mockSession(page: Page) {
+  await page.route('**/v1/me', (route) =>
+    route.fulfill({
+      contentType: 'application/json',
+      body: JSON.stringify({
+        user: {
+          id: '0192a3b4-5c6d-7e8f-9a0b-1c2d3e4f5a6b',
+          email: 'admin@innmo.test',
+          name: 'Admin',
+          twoFactorEnabled: true,
+        },
+        tenant: { code: 'co', name: 'Colombia', configVersion: 1 },
+        membership: {
+          role: 'admin',
+          agencyId: null,
+          agencyStatus: null,
+          permissions: {},
+          twoFactorRequired: true,
+        },
+        config: {
+          currency: 'COP',
+          timezone: 'America/Bogota',
+          locale: 'es-CO',
+          areaUnit: 'm2',
+          uniqueIdentifierLabel: 'Matrícula inmobiliaria',
+        },
+      }),
+    }),
+  );
+}
 
 test.describe('humo de la imagen servida por Nginx', () => {
   test('carga la página base sin errores de consola ni violaciones de CSP', async ({ page }) => {
+    await mockSession(page);
     const problems: string[] = [];
     page.on('console', (message) => {
       if (message.type() === 'error') problems.push(`consola: ${message.text()}`);
@@ -20,6 +53,7 @@ test.describe('humo de la imagen servida por Nginx', () => {
   });
 
   test('el conmutador alterna a oscuro y la preferencia persiste al recargar', async ({ page }) => {
+    await mockSession(page);
     await page.goto('/');
     const html = page.locator('html');
     await expect(html).not.toHaveClass(/dark/);

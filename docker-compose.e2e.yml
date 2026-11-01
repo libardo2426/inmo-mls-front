@@ -1,4 +1,10 @@
 # e2e local: docker compose -f docker-compose.yml -f docker-compose.e2e.yml run --rm playwright
+#
+# El e2e de autenticación (e2e/auth.spec.ts) solo corre con un backend real y estas variables:
+#   E2E_BACKEND=1 E2E_ADMIN_EMAIL=<correo> E2E_ADMIN_PASSWORD=<clave>
+# El navegador entra por http://app.localtest.me:8080 (alias de `web` en la red de Docker) para que la
+# cookie de sesión (Domain=<BASE_DOMAIN>) y el Origin coincidan con lo que acepta el backend, que debe
+# arrancar con FRONTEND_ORIGINS que incluya http://app.localtest.me:8080.
 services:
   web:
     healthcheck:
@@ -6,6 +12,10 @@ services:
       interval: 2s
       timeout: 2s
       retries: 15
+    networks:
+      default:
+        aliases:
+          - app.localtest.me
 
   playwright:
     image: mcr.microsoft.com/playwright:v1.64.1-noble
@@ -13,8 +23,12 @@ services:
     volumes:
       - ./:/work
     environment:
-      BASE_URL: http://web:8080
+      BASE_URL: http://app.localtest.me:8080
       CI: 'true'
+      PW_OUTPUT_DIR: /tmp/pw-results
+      E2E_BACKEND: ${E2E_BACKEND:-}
+      E2E_ADMIN_EMAIL: ${E2E_ADMIN_EMAIL:-}
+      E2E_ADMIN_PASSWORD: ${E2E_ADMIN_PASSWORD:-}
     depends_on:
       web:
         condition: service_healthy
