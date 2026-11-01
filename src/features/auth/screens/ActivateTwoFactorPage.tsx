@@ -41,9 +41,17 @@ export function ActivateTwoFactorPage() {
   const otpRef = useRef<HTMLInputElement>(null);
   const [refocus, setRefocus] = useState(0);
 
+  const alertRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (refocus > 0 && !pending) otpRef.current?.focus();
   }, [refocus, pending]);
+
+  // En el paso de contraseña el foco pasa a la alerta; en el de escaneo vuelve al campo del código.
+  const onPasswordStep = step.name === 'password';
+  useEffect(() => {
+    if (feedback !== null && onPasswordStep) alertRef.current?.focus();
+  }, [feedback, onPasswordStep]);
 
   async function run(action: () => Promise<void>) {
     if (submitting.current) return;
@@ -120,7 +128,7 @@ export function ActivateTwoFactorPage() {
   }
 
   const alert = feedback ? (
-    <Alert variant="destructive">
+    <Alert variant="destructive" ref={alertRef} tabIndex={-1}>
       <AlertDescription>
         {feedback.text}
         {feedback.alreadyEnabled ? (
