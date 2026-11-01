@@ -5,12 +5,15 @@ import react from '@vitejs/plugin-react';
 import { loadEnv } from 'vite';
 import { configDefaults, defineConfig } from 'vitest/config';
 import { buildProxy } from './vite.proxy.ts';
+import { zodJitlessFirst } from './vite.zod.ts';
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
 
   return {
     plugins: [
+      // Garantiza que `zod-config` (jitless) se evalúe antes que cualquier esquema de Zod.
+      zodJitlessFirst(fileURLToPath(new URL('./src/lib/zod-config.ts', import.meta.url))),
       // Debe ir antes de react(): genera `src/routeTree.gen.ts` y divide el código por ruta.
       tanstackRouter({ target: 'react', autoCodeSplitting: true }),
       react(),
@@ -37,6 +40,8 @@ export default defineConfig(({ mode }) => {
       // Los *.spec.ts de e2e/ son de Playwright (corren en Docker), no de Vitest.
       exclude: [...configDefaults.exclude, 'e2e/**', '.claude/**', '.superpowers/**'],
       globals: false,
+      // Debe superar a `asyncUtilTimeout` (src/test/setup.ts) para que el fallo sea el de la aserción.
+      testTimeout: 15_000,
     },
   };
 });

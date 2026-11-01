@@ -11,5 +11,12 @@
     "skipLibCheck": true,
     "types": ["node"]
   },
-  "include": ["vite.config.ts", "vite.proxy.ts", "vite.proxy.test.ts", "e2e/**/*.ts"]
+  "include": [
+    "vite.config.ts",
+    "vite.proxy.ts",
+    "vite.proxy.test.ts",
+    "vite.zod.ts",
+    "vite.zod.test.ts",
+    "e2e/**/*.ts"
+  ]
 }
