@@ -39,6 +39,18 @@ describe('renderApp', () => {
     expect(screen.queryByRole('heading', { name: es.app.name })).toBeNull();
   });
 
-  // Se completa en la pantalla de inicio de sesión (Task 5).
-  it.todo('sin sesión, / redirige a /iniciar-sesion');
+  it('sin sesión, / redirige a /iniciar-sesion', async () => {
+    server.use(
+      http.get('*/v1/me', () =>
+        HttpResponse.json(
+          { title: 'x', status: 401, code: 'unauthorized' },
+          { status: 401, headers: { 'content-type': 'application/problem+json' } },
+        ),
+      ),
+    );
+    mount({ __APP_CONFIG__: validConfig }, '/');
+    expect(
+      await screen.findByRole('heading', { level: 1, name: es.auth.login.title }),
+    ).toBeInTheDocument();
+  });
 });

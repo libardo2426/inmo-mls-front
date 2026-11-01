@@ -1,4 +1,4 @@
-import { createMemoryHistory } from '@tanstack/react-router';
+import { createMemoryHistory, type RouterHistory } from '@tanstack/react-router';
 import { act } from '@testing-library/react';
 import { afterEach } from 'vitest';
 import { renderApp } from '@/app/bootstrap';
@@ -19,19 +19,23 @@ afterEach(() => {
   });
 });
 
-/** Monta la app completa (config, router, providers) en una ruta; los tests mockean la red con MSW. */
-export function mountApp(path: string): { container: HTMLElement; unmount: () => void } {
+/**
+ * Monta la app completa (config, router, providers) en una ruta; los tests mockean la red con MSW.
+ * `history.location` permite comprobar a qué ruta terminó navegando la app.
+ */
+export function mountApp(path: string): {
+  container: HTMLElement;
+  history: RouterHistory;
+  unmount: () => void;
+} {
   const container = document.createElement('div');
   document.body.appendChild(container);
-  const unrender = renderApp(
-    container,
-    { __APP_CONFIG__: validConfig },
-    createMemoryHistory({ initialEntries: [path] }),
-  );
+  const history = createMemoryHistory({ initialEntries: [path] });
+  const unrender = renderApp(container, { __APP_CONFIG__: validConfig }, history);
   const unmount = () => {
     unrender();
     container.remove();
   };
   mounted.push(unmount);
-  return { container, unmount };
+  return { container, history, unmount };
 }

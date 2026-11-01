@@ -14,6 +14,14 @@ export const es = {
     errorHelp: 'La aplicación no puede iniciar. Revise las variables de entorno del despliegue.',
   },
   auth: {
+    login: {
+      title: 'Iniciar sesión',
+      email: 'Correo electrónico',
+      password: 'Contraseña',
+      submit: 'Entrar',
+      pending: 'Entrando…',
+      validation: 'Ingrese su correo y su contraseña.',
+    },
     status: {
       maintenanceTitle: 'Servicio en mantenimiento',
       maintenanceHelp:
