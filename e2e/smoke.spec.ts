@@ -65,6 +65,84 @@ test.describe('humo de la imagen servida por Nginx', () => {
     await expect(html).toHaveClass(/dark/);
   });
 
+  test('el QR de activación de 2FA se dibuja bajo la CSP, con la clave en texto (CA7)', async ({
+    page,
+  }) => {
+    const problems: string[] = [];
+    page.on('console', (message) => {
+      const text = message.text();
+      if (message.type() === 'error' && !text.startsWith('Failed to load resource')) {
+        problems.push(`consola: ${text}`);
+      }
+    });
+    page.on('pageerror', (error) => problems.push(`pageerror: ${error.message}`));
+    await page.addInitScript(() => {
+      document.addEventListener('securitypolicyviolation', (event) => {
+        console.error(`CSP: ${event.violatedDirective} ${event.blockedURI}`);
+      });
+    });
+    await page.route('**/v1/me', (route) =>
+      route.fulfill({
+        status: 403,
+        contentType: 'application/problem+json',
+        body: JSON.stringify({
+          title: 'Se requiere 2FA',
+          status: 403,
+          code: 'two_factor_required',
+        }),
+      }),
+    );
+    await page.route('**/v1/auth/two-factor/enable', (route) =>
+      route.fulfill({
+        contentType: 'application/json',
+        body: JSON.stringify({
+          totpURI: 'otpauth://totp/Innmo:admin%40innmo.test?secret=JBSWY3DPEHPK3PXP&issuer=Innmo',
+          backupCodes: ['aaaaa-11111', 'bbbbb-22222'],
+        }),
+      }),
+    );
+
+    await page.goto('/activar-2fa');
+    await page.getByLabel('Contraseña actual', { exact: true }).fill('una-clave-larga-1');
+    await page.getByRole('button', { name: 'Continuar' }).click();
+
+    const qr = page.getByRole('img', { name: 'Código QR para la aplicación de autenticación' });
+    await expect(qr).toBeVisible();
+    await expect(page.locator('code')).toHaveText('JBSWY3DPEHPK3PXP');
+    // El QR debe tener módulos dibujados (un SVG vacío también sería «visible»).
+    expect(await qr.locator('path').count()).toBeGreaterThan(0);
+    expect(problems).toEqual([]);
+  });
+
+  test('la pantalla de verificación (campo OTP) carga bajo la CSP sin violaciones', async ({
+    page,
+  }) => {
+    const problems: string[] = [];
+    page.on('console', (message) => {
+      const text = message.text();
+      if (message.type() === 'error' && !text.startsWith('Failed to load resource')) {
+        problems.push(`consola: ${text}`);
+      }
+    });
+    page.on('pageerror', (error) => problems.push(`pageerror: ${error.message}`));
+    await page.addInitScript(() => {
+      document.addEventListener('securitypolicyviolation', (event) => {
+        console.error(`CSP: ${event.violatedDirective} ${event.blockedURI}`);
+      });
+    });
+    await page.route('**/v1/me', (route) =>
+      route.fulfill({
+        status: 401,
+        contentType: 'application/problem+json',
+        body: JSON.stringify({ title: 'No autenticado', status: 401, code: 'unauthorized' }),
+      }),
+    );
+
+    await page.goto('/verificar');
+    await expect(page.getByLabel('Código de 6 dígitos', { exact: true })).toBeVisible();
+    expect(problems).toEqual([]);
+  });
+
   test('una configuración inválida muestra la pantalla de error de configuración', async ({
     page,
   }) => {
