@@ -32,6 +32,33 @@ export const es = {
       useTotp: 'Usar el código de la aplicación',
       backToLogin: 'Volver a iniciar sesión',
     },
+    activate: {
+      title: 'Active la verificación en dos pasos',
+      intro: 'Su cuenta necesita un segundo paso para entrar. Confirme su contraseña para empezar.',
+      password: 'Contraseña actual',
+      start: 'Continuar',
+      starting: 'Generando…',
+      scanTitle: 'Escanee el código',
+      scanHelp:
+        'Escanee el código con su aplicación de autenticación (Google Authenticator, Authy, 1Password…) o escriba la clave a mano.',
+      qrLabel: 'Código QR para la aplicación de autenticación',
+      secretLabel: 'Clave para escribir a mano',
+      copySecret: 'Copiar clave',
+      code: 'Código de 6 dígitos',
+      verify: 'Activar',
+      verifying: 'Activando…',
+      codesTitle: 'Guarde sus códigos de respaldo',
+      codesHelp:
+        'Cada código sirve una sola vez si pierde acceso a su aplicación. Guárdelos en un lugar seguro: no se volverán a mostrar.',
+      copyCodes: 'Copiar códigos',
+      downloadCodes: 'Descargar códigos',
+      copied: 'Copiado',
+      saved: 'Ya guardé mis códigos',
+      continue: 'Continuar',
+      alreadyEnabled: 'La verificación en dos pasos ya está activa en su cuenta.',
+      goToLogin: 'Ir a iniciar sesión',
+      downloadName: 'codigos-de-respaldo.txt',
+    },
     status: {
       maintenanceTitle: 'Servicio en mantenimiento',
       maintenanceHelp:

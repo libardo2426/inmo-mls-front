@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ProtegidoRouteImport } from './routes/_protegido'
+import { Route as Activar2faRouteImport } from './routes/activar-2fa'
 import { Route as IniciarSesionRouteImport } from './routes/iniciar-sesion'
 import { Route as MantenimientoRouteImport } from './routes/mantenimiento'
 import { Route as SinConexionRouteImport } from './routes/sin-conexion'
@@ -18,6 +19,11 @@ import { Route as ProtegidoIndexRouteImport } from './routes/_protegido/index'
 
 const ProtegidoRoute = ProtegidoRouteImport.update({
   id: '/_protegido',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Activar2faRoute = Activar2faRouteImport.update({
+  id: '/activar-2fa',
+  path: '/activar-2fa',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IniciarSesionRoute = IniciarSesionRouteImport.update({
@@ -48,12 +54,14 @@ const ProtegidoIndexRoute = ProtegidoIndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof ProtegidoIndexRoute
+  '/activar-2fa': typeof Activar2faRoute
   '/iniciar-sesion': typeof IniciarSesionRoute
   '/mantenimiento': typeof MantenimientoRoute
   '/sin-conexion': typeof SinConexionRoute
   '/verificar': typeof VerificarRoute
 }
 export interface FileRoutesByTo {
+  '/activar-2fa': typeof Activar2faRoute
   '/iniciar-sesion': typeof IniciarSesionRoute
   '/mantenimiento': typeof MantenimientoRoute
   '/sin-conexion': typeof SinConexionRoute
@@ -63,6 +71,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_protegido': typeof ProtegidoRouteWithChildren
+  '/activar-2fa': typeof Activar2faRoute
   '/iniciar-sesion': typeof IniciarSesionRoute
   '/mantenimiento': typeof MantenimientoRoute
   '/sin-conexion': typeof SinConexionRoute
@@ -72,13 +81,24 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/iniciar-sesion' | '/mantenimiento' | '/sin-conexion' | '/verificar'
+    | '/'
+    | '/activar-2fa'
+    | '/iniciar-sesion'
+    | '/mantenimiento'
+    | '/sin-conexion'
+    | '/verificar'
   fileRoutesByTo: FileRoutesByTo
   to:
-    '/iniciar-sesion' | '/mantenimiento' | '/sin-conexion' | '/verificar' | '/'
+    | '/activar-2fa'
+    | '/iniciar-sesion'
+    | '/mantenimiento'
+    | '/sin-conexion'
+    | '/verificar'
+    | '/'
   id:
     | '__root__'
     | '/_protegido'
+    | '/activar-2fa'
     | '/iniciar-sesion'
     | '/mantenimiento'
     | '/sin-conexion'
@@ -88,6 +108,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   ProtegidoRoute: typeof ProtegidoRouteWithChildren
+  Activar2faRoute: typeof Activar2faRoute
   IniciarSesionRoute: typeof IniciarSesionRoute
   MantenimientoRoute: typeof MantenimientoRoute
   SinConexionRoute: typeof SinConexionRoute
@@ -101,6 +122,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof ProtegidoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/activar-2fa': {
+      id: '/activar-2fa'
+      path: '/activar-2fa'
+      fullPath: '/activar-2fa'
+      preLoaderRoute: typeof Activar2faRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/iniciar-sesion': {
@@ -155,6 +183,7 @@ const ProtegidoRouteWithChildren = ProtegidoRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   ProtegidoRoute: ProtegidoRouteWithChildren,
+  Activar2faRoute: Activar2faRoute,
   IniciarSesionRoute: IniciarSesionRoute,
   MantenimientoRoute: MantenimientoRoute,
   SinConexionRoute: SinConexionRoute,
