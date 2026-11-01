@@ -22,6 +22,16 @@ export const es = {
       pending: 'Entrando…',
       validation: 'Ingrese su correo y su contraseña.',
     },
+    verify: {
+      title: 'Verificación en dos pasos',
+      code: 'Código de 6 dígitos',
+      backupCode: 'Código de respaldo',
+      submit: 'Verificar',
+      pending: 'Verificando…',
+      useBackup: 'Usar un código de respaldo',
+      useTotp: 'Usar el código de la aplicación',
+      backToLogin: 'Volver a iniciar sesión',
+    },
     status: {
       maintenanceTitle: 'Servicio en mantenimiento',
       maintenanceHelp:

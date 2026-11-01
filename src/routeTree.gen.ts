@@ -13,6 +13,7 @@ import { Route as ProtegidoRouteImport } from './routes/_protegido'
 import { Route as IniciarSesionRouteImport } from './routes/iniciar-sesion'
 import { Route as MantenimientoRouteImport } from './routes/mantenimiento'
 import { Route as SinConexionRouteImport } from './routes/sin-conexion'
+import { Route as VerificarRouteImport } from './routes/verificar'
 import { Route as ProtegidoIndexRouteImport } from './routes/_protegido/index'
 
 const ProtegidoRoute = ProtegidoRouteImport.update({
@@ -34,6 +35,11 @@ const SinConexionRoute = SinConexionRouteImport.update({
   path: '/sin-conexion',
   getParentRoute: () => rootRouteImport,
 } as any)
+const VerificarRoute = VerificarRouteImport.update({
+  id: '/verificar',
+  path: '/verificar',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProtegidoIndexRoute = ProtegidoIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -45,11 +51,13 @@ export interface FileRoutesByFullPath {
   '/iniciar-sesion': typeof IniciarSesionRoute
   '/mantenimiento': typeof MantenimientoRoute
   '/sin-conexion': typeof SinConexionRoute
+  '/verificar': typeof VerificarRoute
 }
 export interface FileRoutesByTo {
   '/iniciar-sesion': typeof IniciarSesionRoute
   '/mantenimiento': typeof MantenimientoRoute
   '/sin-conexion': typeof SinConexionRoute
+  '/verificar': typeof VerificarRoute
   '/': typeof ProtegidoIndexRoute
 }
 export interface FileRoutesById {
@@ -58,19 +66,23 @@ export interface FileRoutesById {
   '/iniciar-sesion': typeof IniciarSesionRoute
   '/mantenimiento': typeof MantenimientoRoute
   '/sin-conexion': typeof SinConexionRoute
+  '/verificar': typeof VerificarRoute
   '/_protegido/': typeof ProtegidoIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/iniciar-sesion' | '/mantenimiento' | '/sin-conexion'
+  fullPaths:
+    '/' | '/iniciar-sesion' | '/mantenimiento' | '/sin-conexion' | '/verificar'
   fileRoutesByTo: FileRoutesByTo
-  to: '/iniciar-sesion' | '/mantenimiento' | '/sin-conexion' | '/'
+  to:
+    '/iniciar-sesion' | '/mantenimiento' | '/sin-conexion' | '/verificar' | '/'
   id:
     | '__root__'
     | '/_protegido'
     | '/iniciar-sesion'
     | '/mantenimiento'
     | '/sin-conexion'
+    | '/verificar'
     | '/_protegido/'
   fileRoutesById: FileRoutesById
 }
@@ -79,6 +91,7 @@ export interface RootRouteChildren {
   IniciarSesionRoute: typeof IniciarSesionRoute
   MantenimientoRoute: typeof MantenimientoRoute
   SinConexionRoute: typeof SinConexionRoute
+  VerificarRoute: typeof VerificarRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -111,6 +124,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SinConexionRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/verificar': {
+      id: '/verificar'
+      path: '/verificar'
+      fullPath: '/verificar'
+      preLoaderRoute: typeof VerificarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_protegido/': {
       id: '/_protegido/'
       path: '/'
@@ -138,6 +158,7 @@ const rootRouteChildren: RootRouteChildren = {
   IniciarSesionRoute: IniciarSesionRoute,
   MantenimientoRoute: MantenimientoRoute,
   SinConexionRoute: SinConexionRoute,
+  VerificarRoute: VerificarRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

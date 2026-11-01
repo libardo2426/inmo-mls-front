@@ -29,7 +29,11 @@ function backend(options: {
     http.post('*/v1/auth/sign-in/email', async () => {
       state.signInCalls += 1;
       const response = await options.signIn();
-      if (response.ok) state.loggedIn = true;
+      // Un twoFactorRedirect no crea sesión: la cookie solo existe tras verificar el código.
+      const body: unknown = await response.clone().json();
+      const needsSecondFactor =
+        typeof body === 'object' && body !== null && 'twoFactorRedirect' in body;
+      if (response.ok && !needsSecondFactor) state.loggedIn = true;
       return response;
     }),
   );
