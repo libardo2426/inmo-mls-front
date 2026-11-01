@@ -9,50 +9,116 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as ProtegidoRouteImport } from './routes/_protegido'
+import { Route as MantenimientoRouteImport } from './routes/mantenimiento'
+import { Route as SinConexionRouteImport } from './routes/sin-conexion'
+import { Route as ProtegidoIndexRouteImport } from './routes/_protegido/index'
 
-const IndexRoute = IndexRouteImport.update({
+const ProtegidoRoute = ProtegidoRouteImport.update({
+  id: '/_protegido',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MantenimientoRoute = MantenimientoRouteImport.update({
+  id: '/mantenimiento',
+  path: '/mantenimiento',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SinConexionRoute = SinConexionRouteImport.update({
+  id: '/sin-conexion',
+  path: '/sin-conexion',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProtegidoIndexRoute = ProtegidoIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => ProtegidoRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
+  '/': typeof ProtegidoIndexRoute
+  '/mantenimiento': typeof MantenimientoRoute
+  '/sin-conexion': typeof SinConexionRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
+  '/mantenimiento': typeof MantenimientoRoute
+  '/sin-conexion': typeof SinConexionRoute
+  '/': typeof ProtegidoIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
+  '/_protegido': typeof ProtegidoRouteWithChildren
+  '/mantenimiento': typeof MantenimientoRoute
+  '/sin-conexion': typeof SinConexionRoute
+  '/_protegido/': typeof ProtegidoIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/mantenimiento' | '/sin-conexion'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/mantenimiento' | '/sin-conexion' | '/'
+  id:
+    | '__root__'
+    | '/_protegido'
+    | '/mantenimiento'
+    | '/sin-conexion'
+    | '/_protegido/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
+  ProtegidoRoute: typeof ProtegidoRouteWithChildren
+  MantenimientoRoute: typeof MantenimientoRoute
+  SinConexionRoute: typeof SinConexionRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
+    '/_protegido': {
+      id: '/_protegido'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof ProtegidoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mantenimiento': {
+      id: '/mantenimiento'
+      path: '/mantenimiento'
+      fullPath: '/mantenimiento'
+      preLoaderRoute: typeof MantenimientoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sin-conexion': {
+      id: '/sin-conexion'
+      path: '/sin-conexion'
+      fullPath: '/sin-conexion'
+      preLoaderRoute: typeof SinConexionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_protegido/': {
+      id: '/_protegido/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof ProtegidoIndexRouteImport
+      parentRoute: typeof ProtegidoRoute
     }
   }
 }
 
+interface ProtegidoRouteChildren {
+  ProtegidoIndexRoute: typeof ProtegidoIndexRoute
+}
+
+const ProtegidoRouteChildren: ProtegidoRouteChildren = {
+  ProtegidoIndexRoute: ProtegidoIndexRoute,
+}
+
+const ProtegidoRouteWithChildren = ProtegidoRoute._addFileChildren(
+  ProtegidoRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
+  ProtegidoRoute: ProtegidoRouteWithChildren,
+  MantenimientoRoute: MantenimientoRoute,
+  SinConexionRoute: SinConexionRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

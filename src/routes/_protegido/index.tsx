@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import { ThemeToggle } from '@/app/theme/ThemeToggle';
 import { es } from '@/lib/i18n/es';
 
-export const Route = createFileRoute('/')({
+export const Route = createFileRoute('/_protegido/')({
   component: HomePage,
 });
 

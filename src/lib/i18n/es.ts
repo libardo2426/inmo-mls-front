@@ -14,6 +14,14 @@ export const es = {
     errorHelp: 'La aplicación no puede iniciar. Revise las variables de entorno del despliegue.',
   },
   auth: {
+    status: {
+      maintenanceTitle: 'Servicio en mantenimiento',
+      maintenanceHelp:
+        'El país no está disponible por el momento. Inténtelo de nuevo en unos minutos.',
+      offlineTitle: 'Sin conexión con el servidor',
+      offlineHelp: 'No se pudo contactar al servidor. Revise su conexión e inténtelo de nuevo.',
+      retry: 'Reintentar',
+    },
     errors: {
       credentials: 'El correo o la contraseña no son correctos.',
       codeInvalid: 'El código no es válido. Inténtelo de nuevo.',
