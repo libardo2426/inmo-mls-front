@@ -23,6 +23,17 @@ export const es = {
       validation: 'Ingrese su correo y su contraseña.',
       forgot: '¿Olvidó su contraseña?',
     },
+    noAccess: {
+      title: 'Sin acceso a este país',
+      help: 'Su cuenta no tiene una membresía en este país. Pida a un administrador que le dé acceso.',
+      logout: 'Cerrar sesión',
+    },
+    home: {
+      signedInAs: 'Sesión iniciada como',
+      country: 'País',
+      logout: 'Cerrar sesión',
+      loggingOut: 'Cerrando sesión…',
+    },
     recover: {
       title: 'Recuperar contraseña',
       intro: 'Escriba su correo y le enviaremos un enlace para elegir una contraseña nueva.',

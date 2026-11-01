@@ -15,6 +15,7 @@ import { Route as IniciarSesionRouteImport } from './routes/iniciar-sesion'
 import { Route as MantenimientoRouteImport } from './routes/mantenimiento'
 import { Route as RecuperarRouteImport } from './routes/recuperar'
 import { Route as RestablecerRouteImport } from './routes/restablecer'
+import { Route as SinAccesoRouteImport } from './routes/sin-acceso'
 import { Route as SinConexionRouteImport } from './routes/sin-conexion'
 import { Route as VerificarRouteImport } from './routes/verificar'
 import { Route as ProtegidoIndexRouteImport } from './routes/_protegido/index'
@@ -48,6 +49,11 @@ const RestablecerRoute = RestablecerRouteImport.update({
   path: '/restablecer',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SinAccesoRoute = SinAccesoRouteImport.update({
+  id: '/sin-acceso',
+  path: '/sin-acceso',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SinConexionRoute = SinConexionRouteImport.update({
   id: '/sin-conexion',
   path: '/sin-conexion',
@@ -71,6 +77,7 @@ export interface FileRoutesByFullPath {
   '/mantenimiento': typeof MantenimientoRoute
   '/recuperar': typeof RecuperarRoute
   '/restablecer': typeof RestablecerRoute
+  '/sin-acceso': typeof SinAccesoRoute
   '/sin-conexion': typeof SinConexionRoute
   '/verificar': typeof VerificarRoute
 }
@@ -80,6 +87,7 @@ export interface FileRoutesByTo {
   '/mantenimiento': typeof MantenimientoRoute
   '/recuperar': typeof RecuperarRoute
   '/restablecer': typeof RestablecerRoute
+  '/sin-acceso': typeof SinAccesoRoute
   '/sin-conexion': typeof SinConexionRoute
   '/verificar': typeof VerificarRoute
   '/': typeof ProtegidoIndexRoute
@@ -92,6 +100,7 @@ export interface FileRoutesById {
   '/mantenimiento': typeof MantenimientoRoute
   '/recuperar': typeof RecuperarRoute
   '/restablecer': typeof RestablecerRoute
+  '/sin-acceso': typeof SinAccesoRoute
   '/sin-conexion': typeof SinConexionRoute
   '/verificar': typeof VerificarRoute
   '/_protegido/': typeof ProtegidoIndexRoute
@@ -105,6 +114,7 @@ export interface FileRouteTypes {
     | '/mantenimiento'
     | '/recuperar'
     | '/restablecer'
+    | '/sin-acceso'
     | '/sin-conexion'
     | '/verificar'
   fileRoutesByTo: FileRoutesByTo
@@ -114,6 +124,7 @@ export interface FileRouteTypes {
     | '/mantenimiento'
     | '/recuperar'
     | '/restablecer'
+    | '/sin-acceso'
     | '/sin-conexion'
     | '/verificar'
     | '/'
@@ -125,6 +136,7 @@ export interface FileRouteTypes {
     | '/mantenimiento'
     | '/recuperar'
     | '/restablecer'
+    | '/sin-acceso'
     | '/sin-conexion'
     | '/verificar'
     | '/_protegido/'
@@ -137,6 +149,7 @@ export interface RootRouteChildren {
   MantenimientoRoute: typeof MantenimientoRoute
   RecuperarRoute: typeof RecuperarRoute
   RestablecerRoute: typeof RestablecerRoute
+  SinAccesoRoute: typeof SinAccesoRoute
   SinConexionRoute: typeof SinConexionRoute
   VerificarRoute: typeof VerificarRoute
 }
@@ -185,6 +198,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RestablecerRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sin-acceso': {
+      id: '/sin-acceso'
+      path: '/sin-acceso'
+      fullPath: '/sin-acceso'
+      preLoaderRoute: typeof SinAccesoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sin-conexion': {
       id: '/sin-conexion'
       path: '/sin-conexion'
@@ -228,6 +248,7 @@ const rootRouteChildren: RootRouteChildren = {
   MantenimientoRoute: MantenimientoRoute,
   RecuperarRoute: RecuperarRoute,
   RestablecerRoute: RestablecerRoute,
+  SinAccesoRoute: SinAccesoRoute,
   SinConexionRoute: SinConexionRoute,
   VerificarRoute: VerificarRoute,
 }
