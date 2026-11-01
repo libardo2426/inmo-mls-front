@@ -28,7 +28,7 @@ export default defineConfig(({ mode }) => {
       // Vite bloquea por seguridad los hosts que no están en la lista; el panel se abre por este dominio.
       allowedHosts: ['app.localtest.me'],
       proxy: buildProxy({
-        API_TARGET: env.API_TARGET ?? 'http://localhost:3000',
+        API_TARGET: env.API_TARGET ?? 'http://co.api.localtest.me:3000',
         TENANT_CODE: env.TENANT_CODE ?? 'co',
         PLATFORM_HOST: env.PLATFORM_HOST ?? 'admin.api.localtest.me',
       }),

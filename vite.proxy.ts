@@ -1,5 +1,5 @@
 export type ProxyEnv = {
-  /** Backend local, p. ej. http://localhost:3000. */
+  /** Backend local por el host del país, p. ej. http://co.api.localtest.me:3000. */
   API_TARGET: string;
   /** País que el proxy fija con `X-Tenant` (solo funciona fuera de producción). */
   TENANT_CODE: string;
@@ -10,6 +10,8 @@ export type ProxyEnv = {
 export type ProxyRule = {
   target: string;
   headers: Record<string, string>;
+  /** Hace que el backend reciba el `Host` del destino en vez del de la app. */
+  changeOrigin?: boolean;
   rewrite?: (path: string) => string;
 };
 
@@ -18,6 +20,7 @@ export function buildProxy(env: ProxyEnv): Record<string, ProxyRule> {
   return {
     '/v1': {
       target: env.API_TARGET,
+      changeOrigin: true,
       headers: { 'X-Tenant': env.TENANT_CODE },
     },
     '/plataforma/v1': {

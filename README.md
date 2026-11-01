@@ -26,7 +26,7 @@ El servidor de desarrollo hace de proxy para que el navegador solo hable con su 
 
 | Ruta del navegador | Destino                                                                           |
 | ------------------ | --------------------------------------------------------------------------------- |
-| `/v1/*`            | `API_TARGET` con `X-Tenant: <TENANT_CODE>`                                        |
+| `/v1/*`            | `API_TARGET` (con su `Host`) y `X-Tenant: <TENANT_CODE>`                          |
 | `/plataforma/v1/*` | `API_TARGET`, reescrito a `/v1/*`, con `Host: <PLATFORM_HOST>` (plano de control) |
 
 Variables del servidor de desarrollo (opcionales, ver `.env.example`; cópielas a `.env.local`): `API_TARGET`, `TENANT_CODE`, `PLATFORM_HOST`.
