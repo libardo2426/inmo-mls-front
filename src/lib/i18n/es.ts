@@ -25,6 +25,8 @@ export const es = {
     genericError: 'Ocurrió un error inesperado. Inténtelo de nuevo.',
     reference: 'Referencia',
     retry: 'Reintentar',
+    loadMore: 'Cargar más',
+    loading: 'Cargando…',
   },
   config: {
     errorTitle: 'Error de configuración',
