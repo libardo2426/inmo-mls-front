@@ -9,6 +9,9 @@ export const es = {
   theme: {
     toggle: 'Cambiar tema',
   },
+  nav: {
+    home: 'Inicio',
+  },
   config: {
     errorTitle: 'Error de configuración',
     errorHelp: 'La aplicación no puede iniciar. Revise las variables de entorno del despliegue.',
