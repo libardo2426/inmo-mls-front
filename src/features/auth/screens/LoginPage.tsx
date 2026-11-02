@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Spinner } from '@/components/ui/spinner';
 import { ApiError } from '@/lib/http';
 import { es } from '@/lib/i18n/es';
-import { AuthCard } from '../components/AuthCard';
+import { AuthCard } from '@/components/shared/AuthCard';
 import { useAuthApi } from '../hooks/useAuthApi';
 import { useAuthNavigation } from '../hooks/useAuthNavigation';
 import { useCountdown } from '@/hooks/useCountdown';

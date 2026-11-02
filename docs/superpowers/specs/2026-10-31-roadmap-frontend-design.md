@@ -194,7 +194,7 @@ Estado: ✅ viable · ⚠️ viable con límites · 🚫 bloqueada por el backen
 | **F2** | Autorización y shell | Catálogo de permisos, `can()`/`<Can>`, navegación por permisos, layout, `DataTable`, estados vacío/error/sin permiso | F1 | ✅ |
 | **F3** | Revisión de agencias ✅ (implementada; pendiente fusionar) | Listado por estado (cursor), detalle, aprobar / devolver / rechazar con motivo y 2FA | F2 | ✅ |
 | **F3.5** | Sistema visual ✅ (implementada; ver ADR-0006) | Pulido del aspecto sobre lo ya construido: tipografía, jerarquía, espaciado, color semántico y patrones de lista, detalle, diálogo y estado vacío/error, aplicados al shell, `DataTable`, tarjeta de detalle y diálogos de F2/F3. Deja las reglas que F4–F6 usan al construir sus pantallas. Se define con su propio brainstorming (qué se siente «pobre» hoy) | F3 | ✅ |
-| **F4** | Miembros ✅ (implementada; ver diseño `2026-11-02-fase-04-miembros-design.md`) | Sección «Miembros» en el detalle de la agencia: listado y terminar miembro con motivo (`last_broker`) | F3 | ⚠️ sin paginación y sin `allowedActions` de miembros (se decide por permisos + `status`) |
+| **F4** | Miembros ✅ (implementada con el equipo de la inmobiliaria; ver `2026-11-02-fase-04-miembros-design.md` y `2026-11-02-fase-04b-equipo-inmobiliaria-design.md`) | MLS: sección «Miembros» en el detalle de la agencia (listado y terminar con motivo). Inmobiliaria (`broker`): sección «Equipo» en `/equipo` con miembros (detalle, cambiar rol, terminar), invitaciones (invitar, reenviar, cancelar) y renuncia desde el menú de usuario; página pública `/invitaciones/aceptar` para el invitado | F3 | ⚠️ ver dependencias B-19…B-24: sin detalle por endpoint, sin miembros dados de baja, sin paginación ni `allowedActions` de miembros (se decide por permisos + `status`) |
 | **F5** | Inmuebles (solo lectura) | Listado con filtros en URL, ficha, historial, descarga de soporte, terminar encargo | F2 | ⚠️ lista sin esquema (tipado a mano, `B-n`); sin búsqueda de texto; mostrar nombre de `territorialUnitCode` requiere solución (§10 Q6) |
 | **F6** | Consola de plataforma | Ver/publicar configuración de un país (host `admin.api`) | F1, F2; Q3 | ⚠️ sin `/me` ni lista de países para `platform_operator`; el `code` se configura |
 | **F7** | Dashboard | — | endpoints de métricas | 🚫 |
@@ -216,6 +216,12 @@ Estado: ✅ viable · ⚠️ viable con límites · 🚫 bloqueada por el backen
 | B-16 | Consulta de nombre por `territorialUnitCode` — **resuelto** por el backend con el filtro `codes` en `GET /v1/territory/units/{país}/{nivel}` (PR #78 de `inmo-mls`; hasta 100 códigos, siempre `limit=100`) | F3/F5 |
 | B-17 | Publicación versionada del `openapi.json` fuera del artefacto de CI | F0 |
 | B-18 | `GET /me` (o un campo `platformRole`) en `admin.api`: el `platform_operator` inicia sesión por la misma ruta `/v1/auth/sign-in/email`, pero hoy el frontend no puede saber su rol ni sus países sin probar endpoints. Precisa B-14 | F6 |
+| B-19 | `GET /v1/members/{id}`: detalle propio de un miembro (hoy el detalle sale de la fila del listado) | F4 |
+| B-20 | Listar miembros dados de baja (filtro por estado) y devolver fecha y motivo de baja en `MemberResponse` | F4 |
+| B-21 | Paginación por cursor en `GET /v1/agencies/{id}/members` | F4 |
+| B-22 | Endpoint o regla que produzca el estado `suspended` de un miembro (hoy el frontend lo muestra pero no se puede originar) | F4 |
+| B-23 | Comprobar al invitar si el correo ya es miembro de una inmobiliaria (hoy el error aparece al aceptar: `already_member`) | F4 |
+| B-24 | Confirmar los `code` de Better Auth en `sign-up/email` (`USER_ALREADY_EXISTS`, `PASSWORD_TOO_SHORT`, `EMAIL_NOT_VERIFIED`) y si cada entorno exige verificar el correo; el frontend los mapea sin haberlos probado en vivo | F4 |
 
 > La numeración continúa la serie del contexto (B-1…B-10). Es **Mi propuesta**; se confirma al registrarlos.
 
