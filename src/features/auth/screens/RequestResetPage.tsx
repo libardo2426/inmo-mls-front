@@ -10,7 +10,7 @@ import { ApiError } from '@/lib/http';
 import { es } from '@/lib/i18n/es';
 import { AuthCard } from '../components/AuthCard';
 import { useAuthApi } from '../hooks/useAuthApi';
-import { useCountdown } from '../hooks/useCountdown';
+import { useCountdown } from '@/hooks/useCountdown';
 import { authErrorMessage } from '../messages';
 
 type Feedback = { kind: 'text'; text: string } | { kind: 'rate' } | null;

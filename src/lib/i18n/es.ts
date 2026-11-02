@@ -11,6 +11,7 @@ export const es = {
   },
   nav: {
     home: 'Inicio',
+    agencies: 'Agencias',
   },
   shell: {
     toggleMenu: 'Plegar o desplegar el menú',
@@ -25,6 +26,8 @@ export const es = {
     genericError: 'Ocurrió un error inesperado. Inténtelo de nuevo.',
     reference: 'Referencia',
     retry: 'Reintentar',
+    loadMore: 'Cargar más',
+    loading: 'Cargando…',
   },
   config: {
     errorTitle: 'Error de configuración',
@@ -128,6 +131,93 @@ export const es = {
       network: 'No se pudo conectar con el servidor. Revise su conexión e inténtelo de nuevo.',
       generic: 'Ocurrió un error inesperado. Inténtelo de nuevo.',
       reference: 'referencia',
+      rateLimited: (seconds?: number): string =>
+        seconds !== undefined && Number.isFinite(seconds) && seconds >= 0
+          ? `Demasiados intentos. Espere ${seconds} s antes de volver a intentarlo.`
+          : 'Demasiados intentos. Espere un momento antes de volver a intentarlo.',
+    },
+  },
+  agencies: {
+    list: {
+      title: 'Solicitudes de agencias',
+      caption: 'Solicitudes de agencias',
+      filterLabel: 'Estado',
+      filterAll: 'Todos',
+      emptyTitle: 'No hay solicitudes con este estado',
+      emptyHelp: 'Pruebe con otro estado o con «Todos».',
+      columns: {
+        tradeName: 'Nombre comercial',
+        legalName: 'Razón social',
+        taxId: 'Documento',
+        status: 'Estado',
+        submittedAt: 'Enviada',
+      },
+    },
+    detail: {
+      back: 'Volver al listado',
+      sections: { application: 'Solicitud', review: 'Revisión', office: 'Sede principal' },
+      fields: {
+        tradeName: 'Nombre comercial',
+        legalName: 'Razón social',
+        taxId: 'Documento',
+        email: 'Correo',
+        phone: 'Teléfono',
+        status: 'Estado',
+        submittedAt: 'Enviada',
+        reviewReason: 'Motivo de la revisión',
+        reviewedAt: 'Revisada',
+        officeName: 'Nombre',
+        location: 'Municipio',
+        address: 'Dirección',
+        officePhone: 'Teléfono de la sede',
+      },
+      none: 'No informado',
+    },
+    review: {
+      actions: {
+        approve: 'Aprobar',
+        requestChanges: 'Devolver con cambios',
+        reject: 'Rechazar',
+      },
+      titles: {
+        approve: 'Aprobar la solicitud',
+        requestChanges: 'Devolver la solicitud con cambios',
+        reject: 'Rechazar la solicitud',
+      },
+      descriptions: {
+        approve: 'La inmobiliaria pasará a estar activa y podrá operar en el MLS.',
+        requestChanges: 'La inmobiliaria verá el motivo, podrá corregir la solicitud y reenviarla.',
+        reject:
+          'Se terminarán las membresías de esta solicitud y la persona quedará sin acceso. No podrá ver el motivo del rechazo. Esta acción no se puede deshacer.',
+      },
+      twoFactorNotice: 'Esta acción requiere que tenga activa la verificación en dos pasos (2FA).',
+      reasonLabel: 'Motivo',
+      reasonHelp: (max: number) => `Obligatorio, hasta ${max} caracteres.`,
+      confirmNameLabel: (name: string) => `Escriba «${name}» para confirmar`,
+      cancel: 'Cancelar',
+      sending: 'Enviando…',
+      done: {
+        approve: 'La solicitud se aprobó.',
+        requestChanges: 'La solicitud se devolvió con cambios.',
+        reject: 'La solicitud se rechazó.',
+      },
+      conflict: 'Otra persona ya revisó esta solicitud. Se actualizó el detalle.',
+    },
+    status: {
+      pending: 'Pendiente',
+      changes_requested: 'Cambios solicitados',
+      active: 'Activa',
+      rejected: 'Rechazada',
+      suspended: 'Suspendida',
+      terminated: 'Terminada',
+    },
+    errors: {
+      notReviewable: 'Otra persona ya revisó esta solicitud. Se actualizó el estado.',
+      reasonRequired: 'Escriba el motivo para continuar.',
+      notFound: 'No se encontró la solicitud.',
+      network: 'No se pudo conectar con el servidor. Revise su conexión.',
+      generic: 'No se pudo completar la acción. Inténtelo de nuevo.',
+      reference: 'Referencia',
       rateLimited: (seconds?: number): string =>
         seconds !== undefined && Number.isFinite(seconds) && seconds >= 0
           ? `Demasiados intentos. Espere ${seconds} s antes de volver a intentarlo.`
