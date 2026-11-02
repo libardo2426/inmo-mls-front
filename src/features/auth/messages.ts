@@ -12,6 +12,9 @@ const BY_CODE: Record<string, string> = {
   INVALID_TWO_FACTOR_COOKIE: es.auth.errors.twoFactorExpired,
   INVALID_ORIGIN: es.auth.errors.origin,
   MISSING_OR_NULL_ORIGIN: es.auth.errors.origin,
+  USER_ALREADY_EXISTS: es.auth.errors.userExists,
+  PASSWORD_TOO_SHORT: es.auth.errors.passwordShort,
+  EMAIL_NOT_VERIFIED: es.auth.errors.emailNotVerified,
 };
 
 /** Texto en español para un error de las pantallas de autenticación. Decide por `code`, nunca por el título. */
