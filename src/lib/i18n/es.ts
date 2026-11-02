@@ -11,6 +11,7 @@ export const es = {
   },
   nav: {
     home: 'Inicio',
+    agencies: 'Agencias',
   },
   shell: {
     toggleMenu: 'Plegar o desplegar el menú',
@@ -130,6 +131,20 @@ export const es = {
       network: 'No se pudo conectar con el servidor. Revise su conexión e inténtelo de nuevo.',
       generic: 'Ocurrió un error inesperado. Inténtelo de nuevo.',
       reference: 'referencia',
+      rateLimited: (seconds?: number): string =>
+        seconds !== undefined && Number.isFinite(seconds) && seconds >= 0
+          ? `Demasiados intentos. Espere ${seconds} s antes de volver a intentarlo.`
+          : 'Demasiados intentos. Espere un momento antes de volver a intentarlo.',
+    },
+  },
+  agencies: {
+    errors: {
+      notReviewable: 'Otra persona ya revisó esta solicitud. Se actualizó el estado.',
+      reasonRequired: 'Escriba el motivo para continuar.',
+      notFound: 'No se encontró la solicitud.',
+      network: 'No se pudo conectar con el servidor. Revise su conexión.',
+      generic: 'No se pudo completar la acción. Inténtelo de nuevo.',
+      reference: 'Referencia',
       rateLimited: (seconds?: number): string =>
         seconds !== undefined && Number.isFinite(seconds) && seconds >= 0
           ? `Demasiados intentos. Espere ${seconds} s antes de volver a intentarlo.`
