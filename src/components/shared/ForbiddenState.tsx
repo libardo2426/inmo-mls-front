@@ -4,8 +4,8 @@ import { es } from '@/lib/i18n/es';
 export function ForbiddenState() {
   return (
     <section className="flex flex-col gap-2 p-8">
-      <h2 className="text-section-title">{es.states.forbiddenTitle}</h2>
-      <p className="text-data text-text-muted">{es.states.forbiddenHelp}</p>
+      <h2 className="type-section-title">{es.states.forbiddenTitle}</h2>
+      <p className="type-data text-text-muted">{es.states.forbiddenHelp}</p>
     </section>
   );
 }

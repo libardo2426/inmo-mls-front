@@ -30,7 +30,7 @@ export function AgencyDetailScreen({ agencyId, filter }: Props) {
   const busy = useIsMutating({ mutationKey: REVIEW_MUTATION_KEY }) > 0;
 
   const back = (
-    <Link to="/agencias" search={{ status: filter }} className="text-data underline">
+    <Link to="/agencias" search={{ status: filter }} className="type-data underline">
       {es.agencies.detail.back}
     </Link>
   );

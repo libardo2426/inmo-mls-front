@@ -39,7 +39,7 @@
 
 **Interfaces:**
 - Produces (CSS vars, claro y `.dark`): `--surface`, `--surface-raised`, `--text`, `--text-muted`, `--primary-hover`, y por cada tono `T` ∈ {`success`,`warning`,`danger`,`info`}: `--T`, `--T-foreground`, `--T-subtle`. Utilidades Tailwind resultantes: `bg-surface`, `bg-surface-raised`, `text-text-muted`, `bg-T`, `text-T`, `bg-T-subtle`, `text-T-foreground`.
-- Produces (utilidades): `text-page-title` (20px/600, line-height 1.3), `text-section-title` (14px/600), `text-label` (12px/500, color `--text-muted`), `text-data` (14px/400, `font-variant-numeric: tabular-nums`).
+- Produces (utilidades): `type-page-title` (20px/600, line-height 1.3), `type-section-title` (14px/600), `type-label` (12px/500, color `--text-muted`), `type-data` (14px/400, `font-variant-numeric: tabular-nums`).
 - Produces (helper): `parseTokens(css: string): { light: Record<string,string>; dark: Record<string,string> }` (extrae `--name: oklch(L C H [/ A])` de los bloques `:root` y `.dark`), `contrastRatio(fg: string, bg: string): number` (oklch → sRGB lineal → luminancia WCAG).
 
 - [ ] **Step 1: Write the failing test** `src/test/contrast.test.ts`: lee `src/index.css` con `node:fs`, usa `parseTokens` y, para `light` y `dark`, afirma `contrastRatio(a, b) >= min` en estos pares: `text/background`, `text/surface`, `text-muted/surface` (4.5); `primary-foreground/primary`, `primary-foreground/primary-hover` (4.5); para cada tono `T`: `T-foreground/T-subtle` (4.5) y `T/background` (3, uso como borde/icono); `border/background` (≥ 1.2, solo informativo: no se exige 3). Añadir dos pruebas del helper: `contrastRatio('oklch(1 0 0)','oklch(0 0 0)')` ≈ 21 (±0.1) y `contrastRatio` de un color consigo mismo = 1.
@@ -75,11 +75,11 @@
 - Create: `src/components/shared/PageHeader.tsx`, `Section.tsx`, `DescriptionList.tsx` y un `layout-primitives.test.tsx` común en el mismo directorio.
 
 **Interfaces:**
-- Consumes: utilidades `text-page-title`, `text-section-title`, `text-label`, `text-data` (Task 1).
+- Consumes: utilidades `type-page-title`, `type-section-title`, `type-label`, `type-data` (Task 1).
 - Produces:
-  - `PageHeader({ title: string; description?: string; actions?: ReactNode; backLink?: ReactNode }): JSX.Element` — `<header>` con un único `<h1 class="text-page-title">`; las acciones a la derecha; el título usa `min-w-0 wrap-break-word`.
-  - `Section({ title: string; children: ReactNode }): JSX.Element` — `<section aria-labelledby>` con `<h2 class="text-section-title">`.
-  - `DescriptionList({ children }: { children: ReactNode })` y `DescriptionItem({ label, children }: { label: string; children: ReactNode })` — `<dl>` en rejilla `grid-cols-[10rem_1fr]`, `dt` con `text-label`, `dd` con `text-data`; si `children` es `null | undefined | ''` renderiza `es.agencies.detail.none`.
+  - `PageHeader({ title: string; description?: string; actions?: ReactNode; backLink?: ReactNode }): JSX.Element` — `<header>` con un único `<h1 class="type-page-title">`; las acciones a la derecha; el título usa `min-w-0 wrap-break-word`.
+  - `Section({ title: string; children: ReactNode }): JSX.Element` — `<section aria-labelledby>` con `<h2 class="type-section-title">`.
+  - `DescriptionList({ children }: { children: ReactNode })` y `DescriptionItem({ label, children }: { label: string; children: ReactNode })` — `<dl>` en rejilla `grid-cols-[10rem_1fr]`, `dt` con `type-label`, `dd` con `type-data`; si `children` es `null | undefined | ''` renderiza `es.agencies.detail.none`.
 
 - [ ] **Step 1: Write failing tests** en `layout-primitives.test.tsx`: `PageHeader` expone un heading nivel 1 con el título, muestra descripción y acciones cuando se pasan, y con un título de 150 caracteres sigue exponiendo las acciones (botón presente); `Section` expone heading nivel 2 y la región se nombra por él (`getByRole('region', { name })`); `DescriptionList` asocia `term`/`definition` (`getByRole('term')`, `getByRole('definition')`), y con `null` muestra «sin dato» (`es.agencies.detail.none`).
 - [ ] **Step 2: Run** `pnpm vitest run src/components/shared/layout-primitives.test.tsx` → FAIL.
@@ -93,11 +93,11 @@
 - Modify: `src/components/shared/DataTable.tsx`, `EmptyState.tsx`, `ErrorState.tsx`, `ForbiddenState.tsx`, `src/components/ui/table.tsx`; Test: `DataTable.test.tsx`, `states.test.tsx`
 
 **Interfaces:**
-- Consumes: `text-label`, `text-data`, `text-section-title`, `bg-surface`, `bg-muted` (Task 1). La API pública de `DataTable` no cambia.
+- Consumes: `type-label`, `type-data`, `type-section-title`, `bg-surface`, `bg-muted` (Task 1). La API pública de `DataTable` no cambia.
 
-- [ ] **Step 1: Write failing tests** (añadir a los existentes): la cabecera de `DataTable` (`columnheader`) lleva la clase `text-label`; las celdas llevan `text-data`; el texto de `EmptyState`/`ErrorState`/`ForbiddenState` usa `text-section-title` en el título; `ErrorState` conserva `role="alert"` y botón de reintento; una fila con `onRowActivate` sigue exponiendo el enlace real de la primera columna (regresión de F3).
+- [ ] **Step 1: Write failing tests** (añadir a los existentes): la cabecera de `DataTable` (`columnheader`) lleva la clase `type-label`; las celdas llevan `type-data`; el texto de `EmptyState`/`ErrorState`/`ForbiddenState` usa `type-section-title` en el título; `ErrorState` conserva `role="alert"` y botón de reintento; una fila con `onRowActivate` sigue exponiendo el enlace real de la primera columna (regresión de F3).
 - [ ] **Step 2: Run** `pnpm vitest run src/components/shared` → FAIL en las nuevas aserciones.
-- [ ] **Step 3: Implement**: cabecera sobre `bg-muted/50` con borde inferior, filas con `hover:bg-muted/50` y transición, `focus-within` visible en la fila, `py-1.5` conservado (densidad), contenedor de la tabla con `rounded-lg border bg-surface`; estados centrados con título `text-section-title`, texto `text-data text-text-muted`.
+- [ ] **Step 3: Implement**: cabecera sobre `bg-muted/50` con borde inferior, filas con `hover:bg-muted/50` y transición, `focus-within` visible en la fila, `py-1.5` conservado (densidad), contenedor de la tabla con `rounded-lg border bg-surface`; estados centrados con título `type-section-title`, texto `type-data text-text-muted`.
 - [ ] **Step 4: Run** `pnpm vitest run src/components/shared && pnpm test` → PASS.
 - [ ] **Step 5: Commit** `feat(ui): DataTable y estados con la jerarquía del sistema visual`.
 
@@ -111,7 +111,7 @@
 
 - [ ] **Step 1: Write failing tests**: el listado tiene un único `heading` nivel 1 con `es.agencies.list.title` (vía `PageHeader`) y el selector de filtro sigue accesible por su etiqueta; el detalle expone `h1` con el nombre comercial, las secciones `region` por nombre (`es.agencies.detail.sections.*`), y `term`/`definition` para los campos; el campo `email: null` muestra `es.agencies.detail.none`; el botón «Rechazar» sigue siendo destructivo y el diálogo de revisión conserva su comportamiento (abrir, motivo obligatorio, confirmar). La prueba axe de `a11y.test.tsx` sigue sin violaciones.
 - [ ] **Step 2: Run** `pnpm vitest run src/features/agencies` → FAIL en las nuevas aserciones.
-- [ ] **Step 3: Implement**: reemplazar `h1`/`Section`/`Field` locales por los primitivos (eliminar los locales de `AgencyDetailCard`); filtro del listado en `actions` del `PageHeader`; enlace «volver» como `backLink`; `ReviewDialog`: título `text-section-title`, motivo con `Field` existente, aviso de acción irreversible con `Alert` en tono `warning` (añadir variante `warning`/`info` a `alert.tsx` si no existe), botón de confirmar `destructive` solo para rechazar.
+- [ ] **Step 3: Implement**: reemplazar `h1`/`Section`/`Field` locales por los primitivos (eliminar los locales de `AgencyDetailCard`); filtro del listado en `actions` del `PageHeader`; enlace «volver» como `backLink`; `ReviewDialog`: título `type-section-title`, motivo con `Field` existente, aviso de acción irreversible con `Alert` en tono `warning` (añadir variante `warning`/`info` a `alert.tsx` si no existe), botón de confirmar `destructive` solo para rechazar.
 - [ ] **Step 4: Run** `pnpm vitest run src/features/agencies && pnpm test` → PASS.
 - [ ] **Step 5: Commit** `feat(agencias): listado, detalle y diálogo con el sistema visual`.
 
@@ -125,7 +125,7 @@
 
 - [ ] **Step 1: Write failing tests**: el ítem de navegación activo conserva `aria-current="page"` y `data-active="true"`; la cabecera es un `banner` con el botón de menú, el conmutador de tema y el menú de usuario accesibles por nombre; el contenido principal sigue dentro de `main`; axe sin violaciones con tema claro y con la clase `dark` aplicada a `document.documentElement`.
 - [ ] **Step 2: Run** `pnpm vitest run src/app/shell` → FAIL en las aserciones nuevas (p. ej. `banner`/tema oscuro).
-- [ ] **Step 3: Implement**: cabecera `bg-surface border-b`, ítem activo con fondo `sidebar-primary` y texto `sidebar-primary-foreground`, ítems con foco visible, etiqueta del usuario con `text-data`/`text-label`; sin cambios de comportamiento ni de rutas.
+- [ ] **Step 3: Implement**: cabecera `bg-surface border-b`, ítem activo con fondo `sidebar-primary` y texto `sidebar-primary-foreground`, ítems con foco visible, etiqueta del usuario con `type-data`/`type-label`; sin cambios de comportamiento ni de rutas.
 - [ ] **Step 4: Run** `pnpm vitest run src/app && pnpm test` → PASS.
 - [ ] **Step 5: Commit** `feat(shell): superficies, ítem activo y cabecera con el sistema visual`.
 

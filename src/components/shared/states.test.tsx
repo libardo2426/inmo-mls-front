@@ -61,7 +61,7 @@ describe('EmptyState', () => {
 });
 
 describe('jerarquía de los estados', () => {
-  it('los títulos de error, sin permiso y vacío usan text-section-title', () => {
+  it('los títulos de error, sin permiso y vacío usan type-section-title', () => {
     render(
       <>
         <ErrorState error={new Error('x')} />
@@ -70,7 +70,7 @@ describe('jerarquía de los estados', () => {
       </>,
     );
     for (const name of [es.states.genericError, es.states.forbiddenTitle, 'Sin datos']) {
-      expect(screen.getByRole('heading', { name })).toHaveClass('text-section-title');
+      expect(screen.getByRole('heading', { name })).toHaveClass('type-section-title');
     }
   });
 });

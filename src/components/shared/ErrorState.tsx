@@ -9,9 +9,9 @@ export function ErrorState({ error, onRetry }: ErrorStateProps) {
   const apiError = error instanceof ApiError ? error : null;
   return (
     <section role="alert" className="flex flex-col items-start gap-2 p-8">
-      <h2 className="text-section-title">{apiError?.title ?? es.states.genericError}</h2>
+      <h2 className="type-section-title">{apiError?.title ?? es.states.genericError}</h2>
       {apiError?.requestId ? (
-        <p className="text-data text-text-muted">
+        <p className="type-data text-text-muted">
           {es.states.reference}: {apiError.requestId}
         </p>
       ) : null}

@@ -6,13 +6,17 @@ export function DescriptionList({ children }: { children: ReactNode }) {
   return <dl className="grid max-w-2xl grid-cols-[10rem_1fr] gap-x-4 gap-y-1.5">{children}</dl>;
 }
 
-/** Un dato; sin valor (`null`, `undefined` o cadena vacía) muestra el marcador «sin dato». */
+/** Un dato; sin valor (`null`, `undefined`, `false` o cadena en blanco) muestra el marcador «sin dato». */
 export function DescriptionItem({ label, children }: { label: string; children?: ReactNode }) {
-  const empty = children === null || children === undefined || children === '';
+  const empty =
+    children === null ||
+    children === undefined ||
+    children === false ||
+    (typeof children === 'string' && children.trim() === '');
   return (
     <>
-      <dt className="text-label">{label}</dt>
-      <dd className="text-data">{empty ? es.agencies.detail.none : children}</dd>
+      <dt className="type-label">{label}</dt>
+      <dd className="type-data">{empty ? es.agencies.detail.none : children}</dd>
     </>
   );
 }

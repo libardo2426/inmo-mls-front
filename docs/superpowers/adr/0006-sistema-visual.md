@@ -10,11 +10,11 @@ Tras F0–F3 el panel usaba los grises por defecto de shadcn, un solo color (des
 ## Decisión
 
 1. **Tokens semánticos en `src/index.css`**, con tema claro (`:root`) y oscuro (`.dark`): `background`, `surface`, `surface-raised`, `text`, `text-muted`, `border`, `primary` (+ `primary-hover`, `primary-foreground`) y, por tono, `success`, `warning`, `danger`, `info` con `-foreground` y `-subtle`. Los tokens de shadcn (`card`, `popover`, `muted-foreground`, `destructive`, `sidebar-*`) se derivan de estos. **No se escriben colores sueltos en componentes.**
-2. **Cuatro niveles tipográficos** (utilidades Tailwind):
-   - `text-page-title`: un único `h1` por pantalla.
-   - `text-section-title`: títulos de sección, de estado (vacío/error/sin permiso) y de diálogo.
-   - `text-label`: etiquetas y cabeceras de tabla (color atenuado).
-   - `text-data`: valores y celdas (cifras tabulares).
+2. **Cuatro niveles tipográficos** (utilidades Tailwind con prefijo `type-`, no `text-`: el helper `cn` trataría `text-label` o `text-data` como color y los borraría ante una clase `text-*` posterior):
+   - `type-page-title`: un único `h1` por pantalla.
+   - `type-section-title`: títulos de sección, de estado (vacío/error/sin permiso) y de diálogo.
+   - `type-label`: etiquetas y cabeceras de tabla (color atenuado).
+   - `type-data`: valores y celdas (cifras tabulares).
 3. **Primitivos** en `components/shared`: `PageHeader` (título, descripción, acciones, enlace de regreso), `Section`, `DescriptionList`/`DescriptionItem` (sin valor muestra «No informado») y `StatusBadge` (por `Tone`). Una pantalla nueva compone estos antes de crear marcado propio.
 4. **Estados con tono, siempre con texto.** El color nunca es el único portador de significado. Un estado nuevo del backend cae a `neutral` mostrando su valor.
 5. **Contraste verificado:** `src/test/contrast.test.ts` exige ≥ 4.5:1 en texto y ≥ 3:1 en color de tono sobre fondo, en ambos temas. Un tono o par nuevo se añade a ese test en el mismo cambio.

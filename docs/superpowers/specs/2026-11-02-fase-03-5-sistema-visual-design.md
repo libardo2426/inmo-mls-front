@@ -28,7 +28,7 @@ Sobrio, densidad alta, tema claro y oscuro desde tokens, sin gradientes ni ilust
 
 - Paleta: azul sobrio como `primary`, neutros fríos; estados `success`/`warning`/`danger`/`info` (+ `-subtle`). **Propuesta mía, ajustable con capturas.**
 - Estado de agencia → tono: `pending`→warning, `active`→success, `rejected`→danger, `changes_requested`→info, `suspended`→danger, `terminated`→neutral.
-- Escala tipográfica de 4 niveles: `text-page-title`, `text-section-title`, `text-label`, `text-data`.
+- Escala tipográfica de 4 niveles: `type-page-title`, `type-section-title`, `type-label`, `type-data`.
 - Contraste verificado con un test propio (sin dependencia nueva): ≥ 4.5:1 texto, ≥ 3:1 UI, en ambos temas.
 
 ## Deja al implementador

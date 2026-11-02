@@ -62,3 +62,19 @@ describe('DescriptionList', () => {
     expect(screen.getByRole('definition')).toHaveTextContent(es.agencies.detail.none);
   });
 });
+
+describe('DescriptionItem con valores falsy', () => {
+  it('false y cadena de solo espacios se tratan como sin dato; 0 se muestra', () => {
+    render(
+      <DescriptionList>
+        <DescriptionItem label="A">{false}</DescriptionItem>
+        <DescriptionItem label="B">{'   '}</DescriptionItem>
+        <DescriptionItem label="C">{0}</DescriptionItem>
+      </DescriptionList>,
+    );
+    const [a, b, c] = screen.getAllByRole('definition');
+    expect(a).toHaveTextContent(es.agencies.detail.none);
+    expect(b).toHaveTextContent(es.agencies.detail.none);
+    expect(c).toHaveTextContent('0');
+  });
+});

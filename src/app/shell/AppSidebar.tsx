@@ -20,7 +20,7 @@ export function AppSidebar({ me }: { me: MeResponse }) {
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
-        <span className="text-section-title truncate px-2 py-1">{es.app.name}</span>
+        <span className="type-section-title truncate px-2 py-1">{es.app.name}</span>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
