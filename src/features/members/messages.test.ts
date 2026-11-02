@@ -16,6 +16,8 @@ describe('memberErrorMessage', () => {
     [404, 'member_not_found', es.members.errors.notFound],
     [422, 'termination_reason_required', es.members.errors.reasonRequired],
     [403, 'two_factor_required', es.members.errors.twoFactorRequired],
+    [422, 'role_not_invitable', es.members.errors.roleNotInvitable],
+    [404, 'agency_not_found', es.members.errors.notFound],
   ])('%s %s → texto propio', (status, code, expected) => {
     expect(memberErrorMessage(apiError(status, code))).toBe(expected);
   });

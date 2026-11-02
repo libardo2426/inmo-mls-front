@@ -11,6 +11,7 @@ export type { EnableTwoFactorResult, SignInResult };
 
 export type AuthApi = {
   signInEmail(input: { email: string; password: string }): Promise<SignInResult>;
+  signUpEmail(input: { name: string; email: string; password: string }): Promise<void>;
   verifyTotp(code: string): Promise<void>;
   verifyBackupCode(code: string): Promise<void>;
   enableTwoFactor(password: string): Promise<EnableTwoFactorResult>;
@@ -33,6 +34,9 @@ export function createAuthApi(http: HttpClient): AuthApi {
         body: { email: input.email, password: input.password },
         schema: signInResponseSchema,
       }),
+    signUpEmail: async ({ name, email, password }) => {
+      await post('/sign-up/email', { name, email, password }, ignoredResponseSchema);
+    },
     verifyTotp: async (code) => {
       await post('/two-factor/verify-totp', { code }, ignoredResponseSchema);
     },

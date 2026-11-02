@@ -38,6 +38,9 @@ describe('authErrorMessage', () => {
     ['INVALID_TWO_FACTOR_COOKIE', es.auth.errors.twoFactorExpired],
     ['INVALID_ORIGIN', es.auth.errors.origin],
     ['MISSING_OR_NULL_ORIGIN', es.auth.errors.origin],
+    ['USER_ALREADY_EXISTS', es.auth.errors.userExists],
+    ['PASSWORD_TOO_SHORT', es.auth.errors.passwordShort],
+    ['EMAIL_NOT_VERIFIED', es.auth.errors.emailNotVerified],
   ])('%s → mensaje propio', (code, expected) => {
     expect(authErrorMessage(apiError(400, code))).toBe(expected);
   });

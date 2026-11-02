@@ -11,7 +11,7 @@ import { ApiError } from '@/lib/http';
 import { es } from '@/lib/i18n/es';
 import { secretFromTotpUri } from '../api/totp-uri';
 import { BackupCodes } from '../components/BackupCodes';
-import { AuthCard } from '../components/AuthCard';
+import { AuthCard } from '@/components/shared/AuthCard';
 import { useAuthApi } from '../hooks/useAuthApi';
 import { useAuthNavigation } from '../hooks/useAuthNavigation';
 import { authErrorMessage } from '../messages';

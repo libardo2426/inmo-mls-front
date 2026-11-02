@@ -1,7 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { memberFixture } from '@/test/fixtures';
+import { invitationFixture, memberFixture } from '@/test/fixtures';
 import me from '@/lib/api/__fixtures__/me.json';
 import {
+  INVITABLE_ROLES,
+  invitationPageSchema,
+  invitationWithWarningsSchema,
   memberListSchema,
   memberResponseSchema,
   meResponseSchema,
@@ -78,5 +81,27 @@ describe('esquemas de miembros', () => {
 
   it('memberResponseSchema rechaza un estado fuera del contrato', () => {
     expect(memberResponseSchema.safeParse({ ...memberFixture(), status: 'x' }).success).toBe(false);
+  });
+});
+
+describe('esquemas de invitaciones', () => {
+  it('invitationPageSchema acepta una página con una invitación pendiente', () => {
+    const page = invitationPageSchema.parse({ items: [invitationFixture()], nextCursor: null });
+    expect(page.items[0]?.status).toBe('pending');
+  });
+
+  it('invitationWithWarningsSchema acepta email_not_sent y rechaza otros avisos', () => {
+    const base = { invitation: invitationFixture() };
+    expect(
+      invitationWithWarningsSchema.safeParse({ ...base, warnings: [{ code: 'email_not_sent' }] })
+        .success,
+    ).toBe(true);
+    expect(
+      invitationWithWarningsSchema.safeParse({ ...base, warnings: [{ code: 'x' }] }).success,
+    ).toBe(false);
+  });
+
+  it('INVITABLE_ROLES son los cuatro roles de inmobiliaria', () => {
+    expect([...INVITABLE_ROLES]).toEqual(['broker', 'agent', 'assistant', 'read_only']);
   });
 });

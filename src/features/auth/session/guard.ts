@@ -2,7 +2,8 @@ import type { SessionState } from './me';
 
 export type { SessionState };
 
-export type GuardRule = 'protected' | 'public-only' | 'two-factor-setup' | 'no-access';
+export type GuardRule =
+  'protected' | 'public-only' | 'two-factor-setup' | 'no-access' | 'invitation';
 export type GuardTarget = { to: string; search?: { redirect: string } } | null;
 
 /**
@@ -45,6 +46,13 @@ export function guardTarget(rule: GuardRule, state: SessionState, returnTo: stri
       if (state.status === 'anonymous') return toLogin;
       if (state.status === 'authenticated') return { to: '/' };
       if (state.status === 'two-factor-required') return { to: '/activar-2fa' };
+      return null;
+    case 'invitation':
+      // Pública: el invitado puede estar sin sesión o sin membresía. Solo la 2FA obligatoria
+      // pendiente y las caídas del servidor lo sacan de la página.
+      if (state.status === 'two-factor-required') return { to: '/activar-2fa' };
+      if (state.status === 'unavailable') return { to: '/mantenimiento' };
+      if (state.status === 'offline') return { to: '/sin-conexion' };
       return null;
   }
 }

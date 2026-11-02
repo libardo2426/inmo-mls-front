@@ -1,6 +1,6 @@
 import { FieldGroup } from '@/components/ui/field';
 import { es } from '@/lib/i18n/es';
-import { AuthCard } from '../components/AuthCard';
+import { AuthCard } from '@/components/shared/AuthCard';
 import { LogoutButton } from '../components/LogoutButton';
 
 export function NoAccessPage() {

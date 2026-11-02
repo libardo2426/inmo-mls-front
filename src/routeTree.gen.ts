@@ -19,6 +19,8 @@ import { Route as SinAccesoRouteImport } from './routes/sin-acceso'
 import { Route as SinConexionRouteImport } from './routes/sin-conexion'
 import { Route as VerificarRouteImport } from './routes/verificar'
 import { Route as ProtegidoIndexRouteImport } from './routes/_protegido/index'
+import { Route as ProtegidoEquipoRouteImport } from './routes/_protegido/equipo'
+import { Route as InvitacionesAceptarRouteImport } from './routes/invitaciones/aceptar'
 import { Route as ProtegidoAgenciasIndexRouteImport } from './routes/_protegido/agencias/index'
 import { Route as ProtegidoAgenciasAgencyIdRouteImport } from './routes/_protegido/agencias/$agencyId'
 
@@ -71,6 +73,16 @@ const ProtegidoIndexRoute = ProtegidoIndexRouteImport.update({
   path: '/',
   getParentRoute: () => ProtegidoRoute,
 } as any)
+const ProtegidoEquipoRoute = ProtegidoEquipoRouteImport.update({
+  id: '/equipo',
+  path: '/equipo',
+  getParentRoute: () => ProtegidoRoute,
+} as any)
+const InvitacionesAceptarRoute = InvitacionesAceptarRouteImport.update({
+  id: '/invitaciones/aceptar',
+  path: '/invitaciones/aceptar',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProtegidoAgenciasIndexRoute = ProtegidoAgenciasIndexRouteImport.update({
   id: '/agencias/',
   path: '/agencias/',
@@ -93,6 +105,8 @@ export interface FileRoutesByFullPath {
   '/sin-acceso': typeof SinAccesoRoute
   '/sin-conexion': typeof SinConexionRoute
   '/verificar': typeof VerificarRoute
+  '/equipo': typeof ProtegidoEquipoRoute
+  '/invitaciones/aceptar': typeof InvitacionesAceptarRoute
   '/agencias/$agencyId': typeof ProtegidoAgenciasAgencyIdRoute
   '/agencias/': typeof ProtegidoAgenciasIndexRoute
 }
@@ -105,6 +119,8 @@ export interface FileRoutesByTo {
   '/sin-acceso': typeof SinAccesoRoute
   '/sin-conexion': typeof SinConexionRoute
   '/verificar': typeof VerificarRoute
+  '/equipo': typeof ProtegidoEquipoRoute
+  '/invitaciones/aceptar': typeof InvitacionesAceptarRoute
   '/': typeof ProtegidoIndexRoute
   '/agencias/$agencyId': typeof ProtegidoAgenciasAgencyIdRoute
   '/agencias': typeof ProtegidoAgenciasIndexRoute
@@ -120,6 +136,8 @@ export interface FileRoutesById {
   '/sin-acceso': typeof SinAccesoRoute
   '/sin-conexion': typeof SinConexionRoute
   '/verificar': typeof VerificarRoute
+  '/_protegido/equipo': typeof ProtegidoEquipoRoute
+  '/invitaciones/aceptar': typeof InvitacionesAceptarRoute
   '/_protegido/': typeof ProtegidoIndexRoute
   '/_protegido/agencias/$agencyId': typeof ProtegidoAgenciasAgencyIdRoute
   '/_protegido/agencias/': typeof ProtegidoAgenciasIndexRoute
@@ -136,6 +154,8 @@ export interface FileRouteTypes {
     | '/sin-acceso'
     | '/sin-conexion'
     | '/verificar'
+    | '/equipo'
+    | '/invitaciones/aceptar'
     | '/agencias/$agencyId'
     | '/agencias/'
   fileRoutesByTo: FileRoutesByTo
@@ -148,6 +168,8 @@ export interface FileRouteTypes {
     | '/sin-acceso'
     | '/sin-conexion'
     | '/verificar'
+    | '/equipo'
+    | '/invitaciones/aceptar'
     | '/'
     | '/agencias/$agencyId'
     | '/agencias'
@@ -162,6 +184,8 @@ export interface FileRouteTypes {
     | '/sin-acceso'
     | '/sin-conexion'
     | '/verificar'
+    | '/_protegido/equipo'
+    | '/invitaciones/aceptar'
     | '/_protegido/'
     | '/_protegido/agencias/$agencyId'
     | '/_protegido/agencias/'
@@ -177,6 +201,7 @@ export interface RootRouteChildren {
   SinAccesoRoute: typeof SinAccesoRoute
   SinConexionRoute: typeof SinConexionRoute
   VerificarRoute: typeof VerificarRoute
+  InvitacionesAceptarRoute: typeof InvitacionesAceptarRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -251,6 +276,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtegidoIndexRouteImport
       parentRoute: typeof ProtegidoRoute
     }
+    '/_protegido/equipo': {
+      id: '/_protegido/equipo'
+      path: '/equipo'
+      fullPath: '/equipo'
+      preLoaderRoute: typeof ProtegidoEquipoRouteImport
+      parentRoute: typeof ProtegidoRoute
+    }
+    '/invitaciones/aceptar': {
+      id: '/invitaciones/aceptar'
+      path: '/invitaciones/aceptar'
+      fullPath: '/invitaciones/aceptar'
+      preLoaderRoute: typeof InvitacionesAceptarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_protegido/agencias/': {
       id: '/_protegido/agencias/'
       path: '/agencias'
@@ -269,12 +308,14 @@ declare module '@tanstack/react-router' {
 }
 
 interface ProtegidoRouteChildren {
+  ProtegidoEquipoRoute: typeof ProtegidoEquipoRoute
   ProtegidoIndexRoute: typeof ProtegidoIndexRoute
   ProtegidoAgenciasAgencyIdRoute: typeof ProtegidoAgenciasAgencyIdRoute
   ProtegidoAgenciasIndexRoute: typeof ProtegidoAgenciasIndexRoute
 }
 
 const ProtegidoRouteChildren: ProtegidoRouteChildren = {
+  ProtegidoEquipoRoute: ProtegidoEquipoRoute,
   ProtegidoIndexRoute: ProtegidoIndexRoute,
   ProtegidoAgenciasAgencyIdRoute: ProtegidoAgenciasAgencyIdRoute,
   ProtegidoAgenciasIndexRoute: ProtegidoAgenciasIndexRoute,
@@ -294,6 +335,7 @@ const rootRouteChildren: RootRouteChildren = {
   SinAccesoRoute: SinAccesoRoute,
   SinConexionRoute: SinConexionRoute,
   VerificarRoute: VerificarRoute,
+  InvitacionesAceptarRoute: InvitacionesAceptarRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

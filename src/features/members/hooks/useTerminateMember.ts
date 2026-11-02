@@ -5,7 +5,7 @@ import { useMembersApi } from './useMembersApi';
 
 export const TERMINATE_MUTATION_KEY = ['members', 'terminate'] as const;
 
-export type TerminateInput = { memberId: string; reason: string };
+export type TerminateInput = { memberId: string; reason?: string };
 
 /** Terminar un miembro. Al terminar (o si ya no estaba activo) invalida el caché de miembros. */
 export function useTerminateMember() {

@@ -84,3 +84,58 @@ export function memberFixture(overrides: Record<string, unknown> = {}) {
     ...overrides,
   };
 }
+
+/** Inmobiliaria de las sesiones `broker`/`agent` de las fixtures. */
+export const BROKER_AGENCY_ID = '0192a3b4-5c6d-7e8f-9a0b-1c2d3e4f5a80';
+
+type Scopes = Record<string, 'own' | 'agency' | 'network'>;
+
+function agencyMe(role: string, permissions: Scopes): MeResponse {
+  const me = meFixture();
+  return {
+    ...me,
+    user: { ...me.user, id: '0192a3b4-5c6d-7e8f-9a0b-1c2d3e4f5a90', name: 'Persona Demo' },
+    membership: {
+      role,
+      agencyId: BROKER_AGENCY_ID,
+      agencyStatus: 'active',
+      permissions,
+      twoFactorRequired: false,
+    },
+  };
+}
+
+/** `GET /v1/me` de un `broker` activo (gestiona el equipo de su inmobiliaria). */
+export function brokerMeFixture(overrides: { permissions?: Scopes } = {}): MeResponse {
+  return agencyMe(
+    'broker',
+    overrides.permissions ?? {
+      'member.read': 'agency',
+      'member.invite': 'agency',
+      'member.update_role': 'agency',
+      'member.terminate': 'agency',
+    },
+  );
+}
+
+/** `GET /v1/me` de un `agent`: solo puede renunciar (`member.terminate` propio). */
+export function agentMeFixture(): MeResponse {
+  return agencyMe('agent', { 'member.terminate': 'own' });
+}
+
+/** Una invitación de `GET /v1/agencies/{id}/invitations`. */
+export function invitationFixture(overrides: Record<string, unknown> = {}) {
+  return {
+    id: '0192a3b4-5c6d-7e8f-9a0b-1c2d3e4f5a81',
+    agencyId: BROKER_AGENCY_ID,
+    officeId: null,
+    email: 'nuevo@demo.test',
+    fullName: 'Nuevo Demo',
+    role: 'agent',
+    status: 'pending',
+    expiresAt: '2026-11-09T12:00:00.000Z',
+    invitedByUserId: '0192a3b4-5c6d-7e8f-9a0b-1c2d3e4f5a90',
+    createdAt: '2026-11-02T12:00:00.000Z',
+    ...overrides,
+  };
+}

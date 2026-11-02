@@ -133,3 +133,29 @@ describe('sesión y contraseña', () => {
     expect(seen.body).toEqual({ newPassword: 'otra-clave-larga-1', token: 'tok' });
   });
 });
+
+describe('signUpEmail', () => {
+  it('hace POST a sign-up/email con nombre, correo y contraseña', async () => {
+    const seen = capture('sign-up/email', () => HttpResponse.json({ token: null, user: {} }));
+    await api.signUpEmail({ name: 'Nuevo Demo', email: 'a@b.co', password: 'una-clave-larga-1' });
+    expect(seen.body).toEqual({
+      name: 'Nuevo Demo',
+      email: 'a@b.co',
+      password: 'una-clave-larga-1',
+    });
+  });
+
+  it('propaga el code de Better Auth cuando el correo ya existe', async () => {
+    capture('sign-up/email', () =>
+      HttpResponse.json(
+        { code: 'USER_ALREADY_EXISTS', message: 'x' },
+        { status: 422, headers: { 'content-type': 'application/json' } },
+      ),
+    );
+    const error = await api
+      .signUpEmail({ name: 'N', email: 'a@b.co', password: 'una-clave-larga-1' })
+      .catch((e: unknown) => e);
+    expect(error).toBeInstanceOf(ApiError);
+    expect((error as ApiError).code).toBe('USER_ALREADY_EXISTS');
+  });
+});
