@@ -1,7 +1,7 @@
 # Fase 3 — Revisión de agencias — Diseño
 
 - **Fecha:** 2026-11-02
-- **Estado:** borrador para aprobación
+- **Estado:** implementado en la rama `fase-03-revision-agencias` (pendiente de revisión y fusión)
 - **Padre:** [Roadmap del frontend](./2026-10-31-roadmap-frontend-design.md) (fila F3 de §9), [F2](./2026-11-02-fase-02-autorizacion-shell-design.md), ADR-0004
 - **Backend:** `docs/backend/contexto-para-frontend.md` §3, §8.1–8.2, §9.4 y `docs/backend/openapi.json` (`/v1/agencies*`, `/v1/territory/units/*`)
 - **Rama / worktree:** `fase-03-revision-agencias`, en `.claude/worktrees/fase-03-revision-agencias`, creada desde `master` (F2 ya fusionada, PR #2).

@@ -132,7 +132,9 @@ Requisitos del backend para ese e2e:
 - `FRONTEND_ORIGINS` debe incluir `http://app.localtest.me:8080`: el navegador del contenedor entra por ese host (alias de `web`), de modo que el `Origin` y la cookie (`Domain=<BASE_DOMAIN>`) coinciden con lo que acepta Better Auth.
 - `API_UPSTREAM` debe apuntar al backend (en el host, la IP de la pasarela de Docker, p. ej. `http://172.17.0.1:3000`).
 
-> Estado: el flujo contra el backend en marcha **aún no se ha verificado**; el e2e de humo y el de TOTP sí corren en Docker.
+La revisión de agencias (`e2e/agencias.spec.ts`) también necesita un backend real, un admin MLS **con 2FA ya activo** y al menos una solicitud pendiente. Además de las variables anteriores usa `E2E_ADMIN_TOTP_SECRET` (la clave en texto que mostró la activación). **No envía ninguna acción de revisión**: solo comprueba el listado, el detalle y que rechazar exige motivo y nombre.
+
+> Estado: el flujo contra el backend en marcha **aún no se ha verificado** (autenticación ni revisión de agencias); el e2e de humo y el de TOTP sí corren en Docker.
 
 Los resultados de Playwright se escriben en `/tmp/pw-results` dentro del contenedor (`PW_OUTPUT_DIR`), así no quedan archivos de root en el repositorio.
 
@@ -151,6 +153,14 @@ pnpm ops member add co admin@ejemplo.test --role admin
 ```
 
 El admin empieza **sin 2FA**: al iniciar sesión el panel lo lleva a `/activar-2fa`, donde escanea el QR con una app de autenticación y guarda los códigos de respaldo. Los correos de recuperación de contraseña llegan a Mailpit (`http://localhost:8025`).
+
+## Revisión de agencias (F3)
+
+Quien tenga `agency.list` (admin y `compliance`) ve **Agencias** en el menú: listado por estado (el filtro vive en la URL, `?status=`; por defecto `pending`) y detalle de cada solicitud. Solo con `agency.approve`, `agency.request_changes` o `agency.reject` y con la solicitud `pending` aparecen los botones **Aprobar**, **Devolver con cambios** (motivo obligatorio) y **Rechazar** (motivo obligatorio y escribir el nombre comercial; se terminan las membresías y la persona no ve el motivo). Las acciones sensibles exigen 2FA.
+
+Datos de prueba (desde el repositorio del backend): `pnpm ops agency add co --trade-name "Inmobiliaria Demo" --legal-name "Demo S.A.S." …` y `pnpm ops agency list co`.
+
+El nombre del municipio sale de `GET /v1/territory/units/{país}/{nivel}?codes=…&limit=100` (pedido B-16, PR #78 del backend). Si el backend aún no tiene ese filtro, el detalle muestra el código del municipio y todo lo demás funciona.
 
 ## Despliegue: autenticación
 

@@ -35,6 +35,10 @@ export function ReviewDialog({ action, agency, open, onOpenChange, onDone, onCon
   const mutation = useReviewAgency();
   const [reason, setReason] = useState('');
   const [typedName, setTypedName] = useState('');
+  // Sin `DialogTrigger`, Radix no devuelve el foco: se guarda quién lo tenía al abrir.
+  const [opener] = useState(() =>
+    document.activeElement instanceof HTMLElement ? document.activeElement : null,
+  );
 
   const needsReason = action !== 'approve';
   const trimmed = reason.trim();
@@ -67,7 +71,12 @@ export function ReviewDialog({ action, agency, open, onOpenChange, onDone, onCon
       open={open}
       onOpenChange={(next) => (mutation.isPending ? undefined : onOpenChange(next))}
     >
-      <DialogContent>
+      <DialogContent
+        onCloseAutoFocus={(event) => {
+          event.preventDefault();
+          opener?.focus();
+        }}
+      >
         <form onSubmit={submit} className="flex flex-col gap-4">
           <DialogHeader>
             <DialogTitle>{text.titles[action]}</DialogTitle>

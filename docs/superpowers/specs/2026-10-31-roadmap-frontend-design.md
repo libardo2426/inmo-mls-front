@@ -190,7 +190,7 @@ Estado: ✅ viable · ⚠️ viable con límites · 🚫 bloqueada por el backen
 | **F0** | Fundación | Vite + React + TS strict, shadcn init + tokens claro/oscuro, router, TanStack Query, cliente HTTP con 2 hosts, config de runtime, `openapi.json` versionado + generación de tipos/Zod, tooling, tests base, Docker dev/prod + Nginx, CI | — | ✅ |
 | **F1** | Autenticación y seguridad base | Login, logout, sesión, recuperación de contraseña, **flujo de activación de 2FA**, manejo global 401/403/`two_factor_required`/`no_membership`, headers y CSP | F0; Q2, Q4, Q5 | ⚠️ (cuerpos de Better Auth no verificados) |
 | **F2** | Autorización y shell | Catálogo de permisos, `can()`/`<Can>`, navegación por permisos, layout, `DataTable`, estados vacío/error/sin permiso | F1 | ✅ |
-| **F3** | Revisión de agencias | Listado por estado (cursor), detalle, aprobar / devolver / rechazar con motivo y 2FA | F2 | ✅ |
+| **F3** | Revisión de agencias ✅ (implementada; pendiente fusionar) | Listado por estado (cursor), detalle, aprobar / devolver / rechazar con motivo y 2FA | F2 | ✅ |
 | **F4** | Miembros | Listado por agencia, terminar miembro (`last_broker`) | F3 | ⚠️ sin paginación y sin `allowedActions` de miembros (se decide por permisos + `status`) |
 | **F5** | Inmuebles (solo lectura) | Listado con filtros en URL, ficha, historial, descarga de soporte, terminar encargo | F2 | ⚠️ lista sin esquema (tipado a mano, `B-n`); sin búsqueda de texto; mostrar nombre de `territorialUnitCode` requiere solución (§10 Q6) |
 | **F6** | Consola de plataforma | Ver/publicar configuración de un país (host `admin.api`) | F1, F2; Q3 | ⚠️ sin `/me` ni lista de países para `platform_operator`; el `code` se configura |
@@ -210,7 +210,7 @@ Estado: ✅ viable · ⚠️ viable con límites · 🚫 bloqueada por el backen
 | B-13 | Endpoint de consulta de auditoría | F8 |
 | B-14 | `/me` (o equivalente) y lista de países para `platform_operator` en `admin.api` | F6 |
 | B-15 | `allowedActions` en agencia, miembros e invitaciones (ya pendiente en el contexto, §7) | F3/F4 |
-| B-16 | Consulta de nombre por `territorialUnitCode` | F3/F5 |
+| B-16 | Consulta de nombre por `territorialUnitCode` — **resuelto** por el backend con el filtro `codes` en `GET /v1/territory/units/{país}/{nivel}` (PR #78 de `inmo-mls`; hasta 100 códigos, siempre `limit=100`) | F3/F5 |
 | B-17 | Publicación versionada del `openapi.json` fuera del artefacto de CI | F0 |
 | B-18 | `GET /me` (o un campo `platformRole`) en `admin.api`: el `platform_operator` inicia sesión por la misma ruta `/v1/auth/sign-in/email`, pero hoy el frontend no puede saber su rol ni sus países sin probar endpoints. Precisa B-14 | F6 |
 
@@ -227,7 +227,7 @@ Estado: ✅ viable · ⚠️ viable con límites · 🚫 bloqueada por el backen
 | Q3 | ¿Cómo establece sesión y se identifica el `platform_operator` en `admin.api`? No hay `/me` allí. ¿La cookie con `Domain=<BASE_DOMAIN>` sirve en ambos hosts (parece que sí, sin verificar)? | F1, F6 |
 | Q4 | ~~Con el proxy de mismo origen, ¿qué `Origin` ve Better Auth?~~ **Resuelta en F1:** Better Auth valida el `Origin` que envía el navegador contra `FRONTEND_ORIGINS` (lista separada por comas; en producción, orígenes https). Un origen ajeno recibe 403 `INVALID_ORIGIN`. La cookie es `SameSite=lax`. *Pendiente: comprobar el 403 con `curl` contra el backend en marcha (CA19).* | F1, ADR-0003 |
 | Q5 | ~~Duración de la sesión~~ **Resuelta en F1:** valores por defecto de Better Auth (7 días, renovación diaria); el panel no gestiona la expiración: un 401 lleva a login con la ruta de retorno. *Pendiente: confirmarlo con `get-session` en vivo.* | F1 |
-| Q6 | Cómo mostrar el nombre de un `territorialUnitCode` guardado (no hay endpoint de consulta por código). | F3, F5 |
+| Q6 | ~~Cómo mostrar el nombre de un `territorialUnitCode` guardado.~~ **Resuelta en F3** con el filtro `codes` del backend (B-16, PR #78): una consulta por nivel (`lib/territory`); sin el filtro desplegado, se muestra el código. | F3, F5 |
 | Q7 | Cadencia de polling: no aplica al admin MLS (no sube multimedia); solo relevante en F10. | F10 |
 | Q8 | Cómo obtiene el frontend el `openapi.json` versionado (artefacto de CI, release o copia manual). **Mi propuesta:** copia versionada en el repo + script, hasta que el backend publique (B-17). | F0 |
 | Q9 | Sentry (o similar) para monitoreo de errores: ¿se usa? El contexto lo menciona sin spec. | F9 |
