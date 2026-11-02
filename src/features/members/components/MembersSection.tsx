@@ -1,5 +1,5 @@
 import { useIsMutating } from '@tanstack/react-query';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { DataTable, type Column } from '@/components/shared/DataTable';
 import { Section } from '@/components/shared/Section';
 import { Button } from '@/components/ui/button';
@@ -28,6 +28,12 @@ export function MembersSection({ agencyId }: { agencyId: string }) {
   const busy = useIsMutating({ mutationKey: TERMINATE_MUTATION_KEY }) > 0;
   const [target, setTarget] = useState<Member | null>(null);
   const [notice, setNotice] = useState(false);
+  const noticeRef = useRef<HTMLParagraphElement>(null);
+
+  // El botón que abrió el diálogo desaparece al terminar al miembro: el foco pasa al aviso.
+  useEffect(() => {
+    if (notice) noticeRef.current?.focus();
+  }, [notice]);
 
   const rows = useMemo(() => sortMembers(query.data ?? []), [query.data]);
   const showActions = rows.some((member) => canTerminateMember(me, member));
@@ -91,7 +97,7 @@ export function MembersSection({ agencyId }: { agencyId: string }) {
   return (
     <Section title={es.members.title}>
       {notice ? (
-        <p role="status" className="type-data">
+        <p ref={noticeRef} role="status" tabIndex={-1} className="type-data">
           {es.members.terminate.done}
         </p>
       ) : null}

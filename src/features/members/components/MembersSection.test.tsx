@@ -140,6 +140,7 @@ describe('MembersSection', () => {
       within(dialog).getByRole('button', { name: es.members.terminate.submit }),
     );
     expect(await screen.findByRole('status')).toHaveTextContent(es.members.terminate.done);
+    expect(screen.getByRole('status')).toHaveFocus();
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     expect(JSON.parse(body)).toEqual({ reason: 'Incumple normas' });
     await waitFor(() =>
