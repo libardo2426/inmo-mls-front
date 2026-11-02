@@ -92,6 +92,15 @@ describe('AppShell', () => {
     expect(within(menu).getByText(/Colombia/)).toBeInTheDocument();
   });
 
+  it('abrir el menú de usuario no inyecta <style> con texto (la CSP solo admite <style> vacíos)', async () => {
+    backend();
+    mountApp('/');
+    await userEvent.click(await screen.findByRole('button', { name: es.shell.userMenu }));
+    await screen.findByRole('menu');
+    const withText = [...document.querySelectorAll('style')].filter((el) => el.textContent?.trim());
+    expect(withText).toHaveLength(0);
+  });
+
   it('un correo larguísimo se trunca en el menú de usuario', async () => {
     const long = `${'a'.repeat(70)}@innmo.test`;
     backend(meWith({}, long));

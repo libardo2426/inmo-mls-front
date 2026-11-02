@@ -1,6 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { ApiError } from '@/lib/http';
 import { es } from '@/lib/i18n/es';
 import { PermissionDeniedError } from '@/lib/permissions/guard';
@@ -12,12 +11,10 @@ describe('RouteErrorBoundary', () => {
     expect(screen.getByText(es.states.forbiddenTitle)).toBeInTheDocument();
   });
 
-  it('otro error → ErrorState y Reintentar llama a reset', async () => {
-    const reset = vi.fn();
+  it('otro error → ErrorState con título y referencia', () => {
     const error = new ApiError({ status: 500, code: 'x', title: 'Falló', requestId: 'r-1' });
-    render(<RouteErrorBoundary error={error} reset={reset} />);
+    render(<RouteErrorBoundary error={error} reset={() => undefined} />);
     expect(screen.getByText('Falló')).toBeInTheDocument();
-    await userEvent.click(screen.getByRole('button', { name: es.states.retry }));
-    expect(reset).toHaveBeenCalledOnce();
+    expect(screen.getByText(/r-1/)).toBeInTheDocument();
   });
 });

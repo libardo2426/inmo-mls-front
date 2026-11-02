@@ -16,7 +16,7 @@ import { es } from '@/lib/i18n/es';
 export function UserMenu({ me }: { me: MeResponse }) {
   const logout = useLogout();
   return (
-    <DropdownMenu>
+    <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon" aria-label={es.shell.userMenu}>
           <UserIcon />
