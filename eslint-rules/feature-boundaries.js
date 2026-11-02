@@ -3,8 +3,10 @@
  * por feature que prohíbe importar de las demás, por alias o por ruta relativa.
  */
 export function featureBoundaryConfig(features) {
-  return features.map((feature) => {
+  return features.flatMap((feature) => {
     const others = features.filter((f) => f !== feature);
+    // Con una sola feature no hay a quién prohibir importar (un `group` vacío es inválido).
+    if (others.length === 0) return [];
     const patterns = others.flatMap((other) => [
       `@/features/${other}`,
       `@/features/${other}/**`,

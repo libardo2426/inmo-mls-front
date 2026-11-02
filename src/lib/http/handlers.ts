@@ -1,8 +1,12 @@
 import type { ApiError } from './errors';
+import type { HostKind } from './request';
+
+/** Qué petición produjo el error: permite ignorar rutas (p. ej. `/auth/*`). */
+export type HttpRequestInfo = { host: HostKind; path: string };
 
 export type HttpHandlers = {
-  onUnauthorized?: (error: ApiError) => void;
-  onForbidden?: (error: ApiError) => void;
+  onUnauthorized?: (error: ApiError, request: HttpRequestInfo) => void;
+  onForbidden?: (error: ApiError, request: HttpRequestInfo) => void;
 };
 
 let current: HttpHandlers = {};

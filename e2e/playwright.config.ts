@@ -6,7 +6,8 @@ export default defineConfig({
   testMatch: '*.spec.ts',
   fullyParallel: true,
   reporter: [['list']],
-  outputDir: '../test-results',
+  // En Docker se redirige a /tmp para que el contenedor (root) no deje archivos en el repositorio.
+  outputDir: process.env.PW_OUTPUT_DIR ?? '../test-results',
   use: {
     baseURL: process.env.BASE_URL ?? 'http://localhost:8080',
     colorScheme: 'light',

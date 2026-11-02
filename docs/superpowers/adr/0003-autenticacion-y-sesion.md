@@ -1,6 +1,6 @@
 # ADR-0003 — Estrategia de autenticación y sesión
 
-- **Estado:** Propuesto
+- **Estado:** Aceptado (F1)
 - **Fecha:** 2026-10-31
 
 ## Contexto
@@ -12,7 +12,7 @@ El backend usa **Better Auth** montado en `/v1/auth/*`. La identidad es global; 
 Corresponde a la **opción 1** del prompt (cookie de sesión del backend):
 
 1. **Cookie `httpOnly` de Better Auth**, enviada con `credentials: 'include'`. El frontend **no almacena tokens** ni en `localStorage` ni en `sessionStorage` ni en memoria persistente. No se usa `bearer`.
-2. **Cliente:** `better-auth/react` con `twoFactorClient`, apuntando al mismo origen vía proxy (ADR-0005).
+2. **Cliente:** módulo propio `features/auth` sobre `lib/http` (el único lugar con `fetch`), sin la librería `better-auth`. *Enmienda de F1:* son siete rutas `POST` con cuerpos pequeños; una librería de cliente añadiría un segundo cliente HTTP, otro manejo de errores y más peso en el bundle, y duplicaría el manejo global de 401/403/429. Se valida cada respuesta con Zod y se descarta el `token` de `sign-in` (nunca se guarda ni se muestra). Todas las rutas usan el mismo origen vía proxy (ADR-0005).
 3. **Sin cookie legible:** el estado de sesión del frontend se deriva de `GET /v1/me` (TanStack Query), no de leer la cookie.
 4. **Flujo de entrada:**
    - Login → si la respuesta pide 2FA, verificar TOTP o código de respaldo.
@@ -38,5 +38,13 @@ Corresponde a la **opción 1** del prompt (cookie de sesión del backend):
 - (+) Sin secretos en el navegador; XSS no puede leer la sesión.
 - (+) Menos código de sesión propio.
 - (−) Dependemos de que la cookie con `Domain=<BASE_DOMAIN>` funcione tras el proxy (Q4) y para `admin.api` (Q3).
-- (−) Los cuerpos exactos de las rutas de Better Auth y la forma de un 429 no están verificados (Q2); F1 los confirma contra el cliente de la librería antes de planificar.
-- (−) Las cuentas de admin no se crean por API: dev y e2e necesitan `ops-cli` (Q10).
+- (−) Los cuerpos de las rutas de Better Auth se tomaron de `better-auth@1.7.14` y de la sesión `backend` (Q2); **no se han verificado contra un backend en marcha** hasta que se ejecute `e2e/auth.spec.ts` y el `curl` de CA19. Si difieren, se ajustan los esquemas de `features/auth/api/schemas.ts`.
+- (−) Las cuentas de admin no se crean con `ops-cli`: se registran con `sign-up/email` y se les da membresía con `ops member add` (Q10, ver README).
+
+## Verificado en F1
+
+- `enable`, `generate-backup-codes` y `disable` exigen `{password}` (el plugin no tiene `allowPasswordless`); por eso la activación pide la contraseña primero.
+- `verify-totp` y `verify-backup-code` reciben `{code}`; no se envía `trustDevice`.
+- Los errores de Better Auth llegan como `{code, message}`; el 429 de auth es `{message}` con `X-Retry-After`. El cliente HTTP lee `message` y la cabecera además de `Retry-After`.
+- El `Origin` del navegador debe figurar en `FRONTEND_ORIGINS` del backend; en el e2e dentro de Docker, `http://app.localtest.me:8080`.
+- La cookie de sesión lleva `Domain=<BASE_DOMAIN>`: el e2e entra por un host bajo ese dominio.

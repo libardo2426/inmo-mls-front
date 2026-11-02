@@ -9,6 +9,7 @@ type ApiErrorInit = {
   requestId?: string | undefined;
   details?: Record<string, unknown> | undefined;
   errors?: FieldError[] | undefined;
+  retryAfterSeconds?: number | undefined;
 };
 
 /** Error devuelto por el backend. La UI decide con `code`, nunca con `title`. */
@@ -19,6 +20,8 @@ export class ApiError extends Error {
   readonly requestId?: string | undefined;
   readonly details?: Record<string, unknown> | undefined;
   readonly errors?: FieldError[] | undefined;
+  /** Segundos de espera pedidos por el servidor (429); indefinido si no vino o no es válido. */
+  readonly retryAfterSeconds?: number | undefined;
 
   constructor(init: ApiErrorInit) {
     super(init.title);
@@ -29,6 +32,7 @@ export class ApiError extends Error {
     this.requestId = init.requestId;
     this.details = init.details;
     this.errors = init.errors;
+    this.retryAfterSeconds = init.retryAfterSeconds;
   }
 }
 

@@ -30,6 +30,18 @@ describe('featureBoundaryConfig', () => {
     expect(msgs).toHaveLength(0);
   });
 
+  it('con una sola feature produce una configuración válida y no prohíbe nada', async () => {
+    const eslint = new ESLint({
+      overrideConfigFile: true,
+      overrideConfig: featureBoundaryConfig(['auth']),
+    });
+    const [result] = await eslint.lintText("import x from '@/features/auth/api';", {
+      filePath: 'src/features/auth/a.ts',
+    });
+    expect(result.messages.filter((m) => m.ruleId === 'no-restricted-imports')).toHaveLength(0);
+    expect(result.fatalErrorCount).toBe(0);
+  });
+
   it('permite importar de lib y components desde cualquier feature', async () => {
     const msgs = await lint(
       "import a from '@/lib/http'; import b from '@/components/shared/x';",

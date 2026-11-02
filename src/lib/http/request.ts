@@ -24,6 +24,8 @@ export type HttpClientOptions = {
 // Tolerante a propósito: un `code` nuevo del backend no debe romper el manejo de errores.
 const looseProblemSchema = z.object({
   title: z.string().optional(),
+  // Better Auth responde `{ code, message }` en lugar de problem+json.
+  message: z.string().optional(),
   code: z.string().optional(),
   requestId: z.string().optional(),
   details: z.record(z.string(), z.unknown()).optional(),
@@ -40,6 +42,13 @@ async function readJson(response: Response): Promise<unknown> {
   }
 }
 
+/** Segundos de espera de `Retry-After` / `X-Retry-After`; solo enteros ≥ 0. */
+export function parseRetryAfter(headers: Headers): number | undefined {
+  const raw = headers.get('retry-after') ?? headers.get('x-retry-after');
+  if (raw === null || !/^\d+$/.test(raw.trim())) return undefined;
+  return Number(raw.trim());
+}
+
 async function toApiError(response: Response): Promise<ApiError> {
   const isProblem = (response.headers.get('content-type') ?? '').includes('json');
   const parsed = isProblem ? looseProblemSchema.safeParse(await readJson(response)) : undefined;
@@ -47,10 +56,11 @@ async function toApiError(response: Response): Promise<ApiError> {
   return new ApiError({
     status: response.status,
     code: problem.code ?? 'unknown',
-    title: problem.title ?? `Error ${response.status}`,
+    title: problem.title ?? problem.message ?? `Error ${response.status}`,
     requestId: problem.requestId,
     details: problem.details,
     errors: problem.errors,
+    retryAfterSeconds: parseRetryAfter(response.headers),
   });
 }
 
@@ -90,8 +100,9 @@ export function createRequest(options: HttpClientOptions) {
     if (!response.ok) {
       const apiError = await toApiError(response);
       const handlers = getHttpHandlers();
-      if (response.status === 401) handlers.onUnauthorized?.(apiError);
-      if (response.status === 403) handlers.onForbidden?.(apiError);
+      const info = { host: o.host, path: o.path };
+      if (response.status === 401) handlers.onUnauthorized?.(apiError, info);
+      if (response.status === 403) handlers.onForbidden?.(apiError, info);
       throw apiError;
     }
 

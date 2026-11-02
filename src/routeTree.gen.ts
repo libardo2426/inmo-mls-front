@@ -9,50 +9,248 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as ProtegidoRouteImport } from './routes/_protegido'
+import { Route as Activar2faRouteImport } from './routes/activar-2fa'
+import { Route as IniciarSesionRouteImport } from './routes/iniciar-sesion'
+import { Route as MantenimientoRouteImport } from './routes/mantenimiento'
+import { Route as RecuperarRouteImport } from './routes/recuperar'
+import { Route as RestablecerRouteImport } from './routes/restablecer'
+import { Route as SinAccesoRouteImport } from './routes/sin-acceso'
+import { Route as SinConexionRouteImport } from './routes/sin-conexion'
+import { Route as VerificarRouteImport } from './routes/verificar'
+import { Route as ProtegidoIndexRouteImport } from './routes/_protegido/index'
 
-const IndexRoute = IndexRouteImport.update({
+const ProtegidoRoute = ProtegidoRouteImport.update({
+  id: '/_protegido',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Activar2faRoute = Activar2faRouteImport.update({
+  id: '/activar-2fa',
+  path: '/activar-2fa',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IniciarSesionRoute = IniciarSesionRouteImport.update({
+  id: '/iniciar-sesion',
+  path: '/iniciar-sesion',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MantenimientoRoute = MantenimientoRouteImport.update({
+  id: '/mantenimiento',
+  path: '/mantenimiento',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RecuperarRoute = RecuperarRouteImport.update({
+  id: '/recuperar',
+  path: '/recuperar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RestablecerRoute = RestablecerRouteImport.update({
+  id: '/restablecer',
+  path: '/restablecer',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SinAccesoRoute = SinAccesoRouteImport.update({
+  id: '/sin-acceso',
+  path: '/sin-acceso',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SinConexionRoute = SinConexionRouteImport.update({
+  id: '/sin-conexion',
+  path: '/sin-conexion',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VerificarRoute = VerificarRouteImport.update({
+  id: '/verificar',
+  path: '/verificar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProtegidoIndexRoute = ProtegidoIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => ProtegidoRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
+  '/': typeof ProtegidoIndexRoute
+  '/activar-2fa': typeof Activar2faRoute
+  '/iniciar-sesion': typeof IniciarSesionRoute
+  '/mantenimiento': typeof MantenimientoRoute
+  '/recuperar': typeof RecuperarRoute
+  '/restablecer': typeof RestablecerRoute
+  '/sin-acceso': typeof SinAccesoRoute
+  '/sin-conexion': typeof SinConexionRoute
+  '/verificar': typeof VerificarRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
+  '/activar-2fa': typeof Activar2faRoute
+  '/iniciar-sesion': typeof IniciarSesionRoute
+  '/mantenimiento': typeof MantenimientoRoute
+  '/recuperar': typeof RecuperarRoute
+  '/restablecer': typeof RestablecerRoute
+  '/sin-acceso': typeof SinAccesoRoute
+  '/sin-conexion': typeof SinConexionRoute
+  '/verificar': typeof VerificarRoute
+  '/': typeof ProtegidoIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
+  '/_protegido': typeof ProtegidoRouteWithChildren
+  '/activar-2fa': typeof Activar2faRoute
+  '/iniciar-sesion': typeof IniciarSesionRoute
+  '/mantenimiento': typeof MantenimientoRoute
+  '/recuperar': typeof RecuperarRoute
+  '/restablecer': typeof RestablecerRoute
+  '/sin-acceso': typeof SinAccesoRoute
+  '/sin-conexion': typeof SinConexionRoute
+  '/verificar': typeof VerificarRoute
+  '/_protegido/': typeof ProtegidoIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/activar-2fa'
+    | '/iniciar-sesion'
+    | '/mantenimiento'
+    | '/recuperar'
+    | '/restablecer'
+    | '/sin-acceso'
+    | '/sin-conexion'
+    | '/verificar'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/activar-2fa'
+    | '/iniciar-sesion'
+    | '/mantenimiento'
+    | '/recuperar'
+    | '/restablecer'
+    | '/sin-acceso'
+    | '/sin-conexion'
+    | '/verificar'
+    | '/'
+  id:
+    | '__root__'
+    | '/_protegido'
+    | '/activar-2fa'
+    | '/iniciar-sesion'
+    | '/mantenimiento'
+    | '/recuperar'
+    | '/restablecer'
+    | '/sin-acceso'
+    | '/sin-conexion'
+    | '/verificar'
+    | '/_protegido/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
+  ProtegidoRoute: typeof ProtegidoRouteWithChildren
+  Activar2faRoute: typeof Activar2faRoute
+  IniciarSesionRoute: typeof IniciarSesionRoute
+  MantenimientoRoute: typeof MantenimientoRoute
+  RecuperarRoute: typeof RecuperarRoute
+  RestablecerRoute: typeof RestablecerRoute
+  SinAccesoRoute: typeof SinAccesoRoute
+  SinConexionRoute: typeof SinConexionRoute
+  VerificarRoute: typeof VerificarRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
+    '/_protegido': {
+      id: '/_protegido'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof ProtegidoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/activar-2fa': {
+      id: '/activar-2fa'
+      path: '/activar-2fa'
+      fullPath: '/activar-2fa'
+      preLoaderRoute: typeof Activar2faRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/iniciar-sesion': {
+      id: '/iniciar-sesion'
+      path: '/iniciar-sesion'
+      fullPath: '/iniciar-sesion'
+      preLoaderRoute: typeof IniciarSesionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mantenimiento': {
+      id: '/mantenimiento'
+      path: '/mantenimiento'
+      fullPath: '/mantenimiento'
+      preLoaderRoute: typeof MantenimientoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/recuperar': {
+      id: '/recuperar'
+      path: '/recuperar'
+      fullPath: '/recuperar'
+      preLoaderRoute: typeof RecuperarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/restablecer': {
+      id: '/restablecer'
+      path: '/restablecer'
+      fullPath: '/restablecer'
+      preLoaderRoute: typeof RestablecerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sin-acceso': {
+      id: '/sin-acceso'
+      path: '/sin-acceso'
+      fullPath: '/sin-acceso'
+      preLoaderRoute: typeof SinAccesoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sin-conexion': {
+      id: '/sin-conexion'
+      path: '/sin-conexion'
+      fullPath: '/sin-conexion'
+      preLoaderRoute: typeof SinConexionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/verificar': {
+      id: '/verificar'
+      path: '/verificar'
+      fullPath: '/verificar'
+      preLoaderRoute: typeof VerificarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_protegido/': {
+      id: '/_protegido/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof ProtegidoIndexRouteImport
+      parentRoute: typeof ProtegidoRoute
     }
   }
 }
 
+interface ProtegidoRouteChildren {
+  ProtegidoIndexRoute: typeof ProtegidoIndexRoute
+}
+
+const ProtegidoRouteChildren: ProtegidoRouteChildren = {
+  ProtegidoIndexRoute: ProtegidoIndexRoute,
+}
+
+const ProtegidoRouteWithChildren = ProtegidoRoute._addFileChildren(
+  ProtegidoRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
+  ProtegidoRoute: ProtegidoRouteWithChildren,
+  Activar2faRoute: Activar2faRoute,
+  IniciarSesionRoute: IniciarSesionRoute,
+  MantenimientoRoute: MantenimientoRoute,
+  RecuperarRoute: RecuperarRoute,
+  RestablecerRoute: RestablecerRoute,
+  SinAccesoRoute: SinAccesoRoute,
+  SinConexionRoute: SinConexionRoute,
+  VerificarRoute: VerificarRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

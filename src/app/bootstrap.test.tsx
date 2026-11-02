@@ -1,15 +1,12 @@
 import { createMemoryHistory } from '@tanstack/react-router';
 import { screen } from '@testing-library/react';
+import { http, HttpResponse } from 'msw';
 import { afterEach, describe, expect, it } from 'vitest';
 import { renderApp } from '@/app/bootstrap';
 import { es } from '@/lib/i18n/es';
-
-const validConfig = {
-  APP_ENV: 'development',
-  API_BASE_PATH: '/v1',
-  PLATFORM_API_BASE_PATH: '/plataforma/v1',
-  TENANT_CODE: 'co',
-};
+import { meFixture } from '@/test/fixtures';
+import { validConfig } from '@/test/mount';
+import { server } from '@/test/server';
 
 let container: HTMLElement | undefined;
 
@@ -24,7 +21,8 @@ afterEach(() => {
 });
 
 describe('renderApp', () => {
-  it('con config válida en / muestra el encabezado y el conmutador de tema', async () => {
+  it('con config válida y sesión, / muestra el encabezado y el conmutador de tema', async () => {
+    server.use(http.get('*/v1/me', () => HttpResponse.json(meFixture())));
     mount({ __APP_CONFIG__: validConfig }, '/');
     expect(await screen.findByRole('heading', { name: es.app.name })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: es.theme.toggle })).toBeInTheDocument();
@@ -39,5 +37,20 @@ describe('renderApp', () => {
     mount({ __APP_CONFIG__: { ...validConfig, TENANT_CODE: '' } }, '/');
     expect(await screen.findByRole('heading', { name: es.config.errorTitle })).toBeInTheDocument();
     expect(screen.queryByRole('heading', { name: es.app.name })).toBeNull();
+  });
+
+  it('sin sesión, / redirige a /iniciar-sesion', async () => {
+    server.use(
+      http.get('*/v1/me', () =>
+        HttpResponse.json(
+          { title: 'x', status: 401, code: 'unauthorized' },
+          { status: 401, headers: { 'content-type': 'application/problem+json' } },
+        ),
+      ),
+    );
+    mount({ __APP_CONFIG__: validConfig }, '/');
+    expect(
+      await screen.findByRole('heading', { level: 1, name: es.auth.login.title }),
+    ).toBeInTheDocument();
   });
 });
