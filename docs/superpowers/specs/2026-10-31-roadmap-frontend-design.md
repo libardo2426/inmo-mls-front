@@ -242,7 +242,7 @@ Estado: ✅ viable · ⚠️ viable con límites · 🚫 bloqueada por el backen
 | [0001](../adr/0001-estructura-del-proyecto.md) | Estructura del proyecto | Propuesto |
 | [0002](../adr/0002-router.md) | Router | Propuesto |
 | [0003](../adr/0003-autenticacion-y-sesion.md) | Autenticación y sesión | Aceptado (F1) |
-| [0004](../adr/0004-modelo-de-permisos.md) | Modelo de permisos | Propuesto |
+| [0004](../adr/0004-modelo-de-permisos.md) | Modelo de permisos | Aceptado (F2) |
 | [0005](../adr/0005-configuracion-de-runtime-docker.md) | Configuración de runtime en Docker | Propuesto |
 
 ---

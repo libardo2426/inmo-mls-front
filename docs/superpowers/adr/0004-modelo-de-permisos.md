@@ -1,6 +1,6 @@
 # ADR-0004 — Modelo de permisos
 
-- **Estado:** Propuesto
+- **Estado:** Aceptado (F2)
 - **Fecha:** 2026-10-31
 
 ## Contexto
@@ -18,6 +18,14 @@ El backend entrega en `GET /v1/me` el mapa `membership.permissions: Record<Permi
 7. **Permisos sensibles:** el front los puede marcar para mostrar un aviso de "requiere 2FA", pero **no** decide el acceso con eso. Si el servidor responde 403 `two_factor_required`, se aplica el flujo de ADR-0003.
 8. **Multi-tenant ready:** el alcance (`agency`/`network`) no se interpreta en componentes. Las queries reciben el contexto (agencia, país) desde la sesión; las features no asumen "red completa".
 9. **Plano de plataforma:** el `platform_operator` no tiene `/me` (Q3). Mientras el backend no lo exponga, el acceso a la consola se decide por la sesión y la respuesta del servidor (403 `platform_operator_required`), y el catálogo de permisos admite una fuente alterna de permisos sin cambiar `can()`.
+
+## Implementación (F2)
+
+- `lib/permissions` es puro: `PERMISSIONS` (catálogo, comparado por un test con la tabla del backend), `can()`, `assertCan()` y `PermissionDeniedError`. `PermissionsProvider`, `useCan()` y `<Can>` leen la sesión de un contexto de React que provee el shell.
+- La ruta `_protegido` resuelve `/me` una vez (`enforce` devuelve el estado) y lo pone en el contexto del router como `context.me`; las rutas hijas con permiso usan `beforeLoad: ({ context }) => assertCan(context.me, '…')`.
+- Una ruta sin permiso lanza `PermissionDeniedError`; `RouteErrorBoundary` (el `defaultErrorComponent` del router) lo muestra como «sin permiso» **dentro del shell**.
+- El shell vive en `src/app/shell` (no en una feature) porque compone la feature `auth` (cierre de sesión) y una feature no importa otra.
+- Quedan para F3: `allowedActions`/botones por recurso y el aviso «requiere 2FA».
 
 ## Alternativas consideradas
 
