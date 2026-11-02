@@ -28,6 +28,7 @@ Construir el panel interno (SPA) de **Innmo MLS**, un MLS inmobiliario multi-pa�
 - Pantallas para `broker`, `agent`, `assistant` o `read_only` (solo se prepara la arquitectura).
 - Portal público o de cliente final.
 - **Crear, aprovisionar o activar países desde la UI.** Hoy es solo CLI; el usuario lo descartó por ahora y no se planifica ni como fase ni como pedido al backend. Queda como idea futura.
+- **Portal de postulación de agencias** (registro de cuenta, formulario `POST /v1/agencies`, estado, editar y reenviar). Es del portal Inmobiliaria/Agente, no de este panel; hoy el backend exige sesión sin membresía (no hay endpoint anónimo). **En espera**: no se planifica ahora; F10 deja el diseño del portal. Un envío sin cuenta previa requeriría un pedido nuevo al backend.
 - Reimplementar reglas de negocio del backend: la UI las explica y muestra el error del servidor.
 
 ### Anti-goals (fallaría aunque "funcione")
@@ -126,6 +127,7 @@ El prompt original esperaba un admin que "gestiona inmobiliarias, agentes, propi
 ## 6. Dirección visual (requisitos)
 
 - **Audiencia:** personal interno del MLS, uso diario y prolongado. Prima la eficiencia sobre la decoración.
+- **Aplicación:** estos requisitos se aplican pantalla a pantalla desde F2; la fase **F3.5** (§9) los consolida en un sistema visual antes de F4. **Decidido.**
 - **Tono:** profesional y sobrio. Sin ilustraciones decorativas ni gradientes. **Decidido.**
 - **Densidad:** alta. Tablas compactas, filtros visibles, poco espacio muerto, navegación por teclado. **Decidido.**
 - **Modo oscuro:** desde el primer día, con tema claro y oscuro a partir de tokens. **Decidido.**
@@ -191,15 +193,16 @@ Estado: ✅ viable · ⚠️ viable con límites · 🚫 bloqueada por el backen
 | **F1** | Autenticación y seguridad base | Login, logout, sesión, recuperación de contraseña, **flujo de activación de 2FA**, manejo global 401/403/`two_factor_required`/`no_membership`, headers y CSP | F0; Q2, Q4, Q5 | ⚠️ (cuerpos de Better Auth no verificados) |
 | **F2** | Autorización y shell | Catálogo de permisos, `can()`/`<Can>`, navegación por permisos, layout, `DataTable`, estados vacío/error/sin permiso | F1 | ✅ |
 | **F3** | Revisión de agencias ✅ (implementada; pendiente fusionar) | Listado por estado (cursor), detalle, aprobar / devolver / rechazar con motivo y 2FA | F2 | ✅ |
+| **F3.5** | Sistema visual | Pulido del aspecto sobre lo ya construido: tipografía, jerarquía, espaciado, color semántico y patrones de lista, detalle, diálogo y estado vacío/error, aplicados al shell, `DataTable`, tarjeta de detalle y diálogos de F2/F3. Deja las reglas que F4–F6 usan al construir sus pantallas. Se define con su propio brainstorming (qué se siente «pobre» hoy) | F3 | ✅ |
 | **F4** | Miembros | Listado por agencia, terminar miembro (`last_broker`) | F3 | ⚠️ sin paginación y sin `allowedActions` de miembros (se decide por permisos + `status`) |
 | **F5** | Inmuebles (solo lectura) | Listado con filtros en URL, ficha, historial, descarga de soporte, terminar encargo | F2 | ⚠️ lista sin esquema (tipado a mano, `B-n`); sin búsqueda de texto; mostrar nombre de `territorialUnitCode` requiere solución (§10 Q6) |
 | **F6** | Consola de plataforma | Ver/publicar configuración de un país (host `admin.api`) | F1, F2; Q3 | ⚠️ sin `/me` ni lista de países para `platform_operator`; el `code` se configura |
 | **F7** | Dashboard | — | endpoints de métricas | 🚫 |
 | **F8** | Auditoría | — | endpoint de auditoría | 🚫 |
-| **F9** | Hardening y observabilidad | e2e de flujos críticos, accesibilidad, rendimiento (bundle, Web Vitals), revisión de seguridad, monitoreo de errores | F1–F6 | ✅ |
+| **F9** | Hardening y observabilidad | e2e de flujos críticos, accesibilidad y revisión visual final (contraste, consistencia), rendimiento (bundle, Web Vitals), revisión de seguridad, monitoreo de errores | F1–F6 | ✅ |
 | **F10** | Preparación multi-rol *(solo diseño)* | Spec del portal Inmobiliaria/Agente reutilizando features con alcance por organización | F2, F5 | ✅ |
 
-**Orden sugerido:** F0 → F1 → F2 → F3 → F4 → F5 → F6 → F9 → F10. F7 y F8 se retoman cuando el backend exponga los endpoints.
+**Orden sugerido:** F0 → F1 → F2 → F3 → **F3.5** → F4 → F5 → F6 → F9 → F10. F7 y F8 se retoman cuando el backend exponga los endpoints.
 
 ### Pedidos al backend (formato `B-n`)
 
