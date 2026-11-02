@@ -69,3 +69,18 @@ export function agencyDetailFixture(overrides: Record<string, unknown> = {}) {
     ...overrides,
   };
 }
+
+/** Un elemento de `GET /v1/agencies/{id}/members`. */
+export function memberFixture(overrides: Record<string, unknown> = {}) {
+  return {
+    memberId: '0192a3b4-5c6d-7e8f-9a0b-1c2d3e4f5a70',
+    userId: '0192a3b4-5c6d-7e8f-9a0b-1c2d3e4f5a71',
+    fullName: 'Luis Demo',
+    email: 'luis@demo.test',
+    role: 'agent',
+    officeId: null,
+    status: 'active',
+    since: '2026-10-01T12:00:00.000Z',
+    ...overrides,
+  };
+}
