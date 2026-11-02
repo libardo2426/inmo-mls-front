@@ -19,6 +19,8 @@ import { Route as SinAccesoRouteImport } from './routes/sin-acceso'
 import { Route as SinConexionRouteImport } from './routes/sin-conexion'
 import { Route as VerificarRouteImport } from './routes/verificar'
 import { Route as ProtegidoIndexRouteImport } from './routes/_protegido/index'
+import { Route as ProtegidoAgenciasIndexRouteImport } from './routes/_protegido/agencias/index'
+import { Route as ProtegidoAgenciasAgencyIdRouteImport } from './routes/_protegido/agencias/$agencyId'
 
 const ProtegidoRoute = ProtegidoRouteImport.update({
   id: '/_protegido',
@@ -69,6 +71,17 @@ const ProtegidoIndexRoute = ProtegidoIndexRouteImport.update({
   path: '/',
   getParentRoute: () => ProtegidoRoute,
 } as any)
+const ProtegidoAgenciasIndexRoute = ProtegidoAgenciasIndexRouteImport.update({
+  id: '/agencias/',
+  path: '/agencias/',
+  getParentRoute: () => ProtegidoRoute,
+} as any)
+const ProtegidoAgenciasAgencyIdRoute =
+  ProtegidoAgenciasAgencyIdRouteImport.update({
+    id: '/agencias/$agencyId',
+    path: '/agencias/$agencyId',
+    getParentRoute: () => ProtegidoRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof ProtegidoIndexRoute
@@ -80,6 +93,8 @@ export interface FileRoutesByFullPath {
   '/sin-acceso': typeof SinAccesoRoute
   '/sin-conexion': typeof SinConexionRoute
   '/verificar': typeof VerificarRoute
+  '/agencias/$agencyId': typeof ProtegidoAgenciasAgencyIdRoute
+  '/agencias/': typeof ProtegidoAgenciasIndexRoute
 }
 export interface FileRoutesByTo {
   '/activar-2fa': typeof Activar2faRoute
@@ -91,6 +106,8 @@ export interface FileRoutesByTo {
   '/sin-conexion': typeof SinConexionRoute
   '/verificar': typeof VerificarRoute
   '/': typeof ProtegidoIndexRoute
+  '/agencias/$agencyId': typeof ProtegidoAgenciasAgencyIdRoute
+  '/agencias': typeof ProtegidoAgenciasIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -104,6 +121,8 @@ export interface FileRoutesById {
   '/sin-conexion': typeof SinConexionRoute
   '/verificar': typeof VerificarRoute
   '/_protegido/': typeof ProtegidoIndexRoute
+  '/_protegido/agencias/$agencyId': typeof ProtegidoAgenciasAgencyIdRoute
+  '/_protegido/agencias/': typeof ProtegidoAgenciasIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -117,6 +136,8 @@ export interface FileRouteTypes {
     | '/sin-acceso'
     | '/sin-conexion'
     | '/verificar'
+    | '/agencias/$agencyId'
+    | '/agencias/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/activar-2fa'
@@ -128,6 +149,8 @@ export interface FileRouteTypes {
     | '/sin-conexion'
     | '/verificar'
     | '/'
+    | '/agencias/$agencyId'
+    | '/agencias'
   id:
     | '__root__'
     | '/_protegido'
@@ -140,6 +163,8 @@ export interface FileRouteTypes {
     | '/sin-conexion'
     | '/verificar'
     | '/_protegido/'
+    | '/_protegido/agencias/$agencyId'
+    | '/_protegido/agencias/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -226,15 +251,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtegidoIndexRouteImport
       parentRoute: typeof ProtegidoRoute
     }
+    '/_protegido/agencias/': {
+      id: '/_protegido/agencias/'
+      path: '/agencias'
+      fullPath: '/agencias/'
+      preLoaderRoute: typeof ProtegidoAgenciasIndexRouteImport
+      parentRoute: typeof ProtegidoRoute
+    }
+    '/_protegido/agencias/$agencyId': {
+      id: '/_protegido/agencias/$agencyId'
+      path: '/agencias/$agencyId'
+      fullPath: '/agencias/$agencyId'
+      preLoaderRoute: typeof ProtegidoAgenciasAgencyIdRouteImport
+      parentRoute: typeof ProtegidoRoute
+    }
   }
 }
 
 interface ProtegidoRouteChildren {
   ProtegidoIndexRoute: typeof ProtegidoIndexRoute
+  ProtegidoAgenciasAgencyIdRoute: typeof ProtegidoAgenciasAgencyIdRoute
+  ProtegidoAgenciasIndexRoute: typeof ProtegidoAgenciasIndexRoute
 }
 
 const ProtegidoRouteChildren: ProtegidoRouteChildren = {
   ProtegidoIndexRoute: ProtegidoIndexRoute,
+  ProtegidoAgenciasAgencyIdRoute: ProtegidoAgenciasAgencyIdRoute,
+  ProtegidoAgenciasIndexRoute: ProtegidoAgenciasIndexRoute,
 }
 
 const ProtegidoRouteWithChildren = ProtegidoRoute._addFileChildren(

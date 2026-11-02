@@ -45,9 +45,15 @@ describe('visibleNavigation', () => {
 });
 
 describe('navigation', () => {
-  it('en F2 solo contiene Inicio, sin permiso', () => {
-    expect(navigation).toHaveLength(1);
+  it('contiene Inicio (sin permiso) y Agencias (agency.list en red)', () => {
+    expect(navigation).toHaveLength(2);
     expect(navigation[0]).toMatchObject({ to: '/', label: 'Inicio' });
     expect(navigation[0]?.permission).toBeUndefined();
+    expect(navigation[1]).toMatchObject({
+      to: '/agencias',
+      label: 'Agencias',
+      permission: 'agency.list',
+      minScope: 'network',
+    });
   });
 });

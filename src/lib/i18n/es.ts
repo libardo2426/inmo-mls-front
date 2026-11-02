@@ -138,6 +138,29 @@ export const es = {
     },
   },
   agencies: {
+    list: {
+      title: 'Solicitudes de agencias',
+      caption: 'Solicitudes de agencias',
+      filterLabel: 'Estado',
+      filterAll: 'Todos',
+      emptyTitle: 'No hay solicitudes con este estado',
+      emptyHelp: 'Pruebe con otro estado o con «Todos».',
+      columns: {
+        tradeName: 'Nombre comercial',
+        legalName: 'Razón social',
+        taxId: 'Documento',
+        status: 'Estado',
+        submittedAt: 'Enviada',
+      },
+    },
+    status: {
+      pending: 'Pendiente',
+      changes_requested: 'Cambios solicitados',
+      active: 'Activa',
+      rejected: 'Rechazada',
+      suspended: 'Suspendida',
+      terminated: 'Terminada',
+    },
     errors: {
       notReviewable: 'Otra persona ya revisó esta solicitud. Se actualizó el estado.',
       reasonRequired: 'Escriba el motivo para continuar.',

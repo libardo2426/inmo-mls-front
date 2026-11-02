@@ -1,4 +1,4 @@
-import { House, type LucideIcon } from 'lucide-react';
+import { Building2, House, type LucideIcon } from 'lucide-react';
 import { es } from '@/lib/i18n/es';
 import type { MeResponse } from '@/lib/api/schemas';
 import { can, type Permission, type Scope } from '@/lib/permissions';
@@ -16,7 +16,16 @@ export type NavItem = {
  * Menú del panel (ADR-0004 §5). Solo lleva ítems con pantalla real: cada fase agrega
  * el suyo con el permiso que lo habilita.
  */
-export const navigation: readonly NavItem[] = [{ to: '/', label: es.nav.home, icon: House }];
+export const navigation: readonly NavItem[] = [
+  { to: '/', label: es.nav.home, icon: House },
+  {
+    to: '/agencias',
+    label: es.nav.agencies,
+    icon: Building2,
+    permission: 'agency.list',
+    minScope: 'network',
+  },
+];
 
 /** Los ítems que la sesión puede ver, en el orden declarado. */
 export function visibleNavigation(
