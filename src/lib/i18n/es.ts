@@ -173,6 +173,36 @@ export const es = {
       },
       none: 'No informado',
     },
+    review: {
+      actions: {
+        approve: 'Aprobar',
+        requestChanges: 'Devolver con cambios',
+        reject: 'Rechazar',
+      },
+      titles: {
+        approve: 'Aprobar la solicitud',
+        requestChanges: 'Devolver la solicitud con cambios',
+        reject: 'Rechazar la solicitud',
+      },
+      descriptions: {
+        approve: 'La inmobiliaria pasará a estar activa y podrá operar en el MLS.',
+        requestChanges: 'La inmobiliaria verá el motivo, podrá corregir la solicitud y reenviarla.',
+        reject:
+          'Se terminarán las membresías de esta solicitud y la persona quedará sin acceso. No podrá ver el motivo del rechazo. Esta acción no se puede deshacer.',
+      },
+      twoFactorNotice: 'Esta acción requiere que tenga activa la verificación en dos pasos (2FA).',
+      reasonLabel: 'Motivo',
+      reasonHelp: (max: number) => `Obligatorio, hasta ${max} caracteres.`,
+      confirmNameLabel: (name: string) => `Escriba «${name}» para confirmar`,
+      cancel: 'Cancelar',
+      sending: 'Enviando…',
+      done: {
+        approve: 'La solicitud se aprobó.',
+        requestChanges: 'La solicitud se devolvió con cambios.',
+        reject: 'La solicitud se rechazó.',
+      },
+      conflict: 'Otra persona ya revisó esta solicitud. Se actualizó el detalle.',
+    },
     status: {
       pending: 'Pendiente',
       changes_requested: 'Cambios solicitados',

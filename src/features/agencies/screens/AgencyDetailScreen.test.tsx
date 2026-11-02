@@ -1,6 +1,7 @@
 import { screen, within } from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
-import { beforeEach, describe, expect, it } from 'vitest';
+import userEvent from '@testing-library/user-event';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { es } from '@/lib/i18n/es';
 import { agencyDetailFixture, meWithPermissions } from '@/test/fixtures';
 import { mountApp } from '@/test/mount';
@@ -139,5 +140,107 @@ describe('detalle de agencia', () => {
     mountApp(`${PATH}?status=rejected`);
     const back = await screen.findByRole('link', { name: es.agencies.detail.back });
     expect(back).toHaveAttribute('href', expect.stringContaining('status=rejected'));
+  });
+});
+
+const REVIEWER_ME = meWithPermissions({
+  'agency.list': 'network',
+  'agency.approve': 'network',
+  'agency.request_changes': 'network',
+  'agency.reject': 'network',
+});
+
+describe('acciones de revisión en el detalle', () => {
+  beforeEach(() => useMe(REVIEWER_ME));
+
+  const actionButton = (name: string) => screen.getByRole('button', { name });
+
+  it('con permisos y estado pending aparecen los tres botones', async () => {
+    useDetail();
+    mountApp(PATH);
+    await screen.findByRole('heading', { level: 1, name: 'Inmobiliaria Demo' });
+    for (const label of Object.values(es.agencies.review.actions)) {
+      expect(actionButton(label)).toBeEnabled();
+    }
+  });
+
+  it.each(['changes_requested', 'active', 'rejected'])(
+    'con estado %s no aparece ninguno',
+    async (status) => {
+      useDetail(agencyDetailFixture({ status }));
+      mountApp(PATH);
+      await screen.findByRole('heading', { level: 1, name: 'Inmobiliaria Demo' });
+      for (const label of Object.values(es.agencies.review.actions)) {
+        expect(screen.queryByRole('button', { name: label })).not.toBeInTheDocument();
+      }
+    },
+  );
+
+  it('tras aprobar vuelve al listado con el filtro y muestra el aviso de éxito', async () => {
+    useDetail();
+    server.use(
+      http.post(`*/v1/agencies/${ID}/approve`, () => new HttpResponse(null, { status: 204 })),
+      http.get('*/v1/agencies', () => HttpResponse.json({ items: [], nextCursor: null })),
+    );
+    const { history } = mountApp(`${PATH}?status=pending`);
+    await screen.findByRole('heading', { level: 1, name: 'Inmobiliaria Demo' });
+    await userEvent.click(actionButton(es.agencies.review.actions.approve));
+    const dialog = await screen.findByRole('dialog');
+    await userEvent.click(
+      within(dialog).getByRole('button', { name: es.agencies.review.actions.approve }),
+    );
+    expect(await screen.findByText(es.agencies.review.done.approve)).toBeInTheDocument();
+    expect(history.location.pathname).toBe('/agencias');
+    expect(history.location.search).toContain('status=pending');
+  });
+
+  it('tras un 409 se queda en el detalle, lo recarga y avisa que otra persona la revisó', async () => {
+    let detailCalls = 0;
+    server.use(
+      http.get(`*/v1/agencies/${ID}`, () => {
+        detailCalls += 1;
+        return HttpResponse.json(
+          agencyDetailFixture({ status: detailCalls > 1 ? 'active' : 'pending' }),
+        );
+      }),
+      http.post(`*/v1/agencies/${ID}/approve`, () =>
+        HttpResponse.json(
+          { title: 'x', status: 409, code: 'agency_not_reviewable' },
+          { status: 409, headers: { 'content-type': 'application/problem+json' } },
+        ),
+      ),
+    );
+    const { history } = mountApp(PATH);
+    await screen.findByRole('heading', { level: 1, name: 'Inmobiliaria Demo' });
+    await userEvent.click(actionButton(es.agencies.review.actions.approve));
+    const dialog = await screen.findByRole('dialog');
+    await userEvent.click(
+      within(dialog).getByRole('button', { name: es.agencies.review.actions.approve }),
+    );
+    expect(await screen.findByText(es.agencies.review.conflict)).toBeInTheDocument();
+    expect(history.location.pathname).toBe(PATH);
+    expect(detailCalls).toBeGreaterThan(1);
+    expect(
+      screen.queryByRole('button', { name: es.agencies.review.actions.approve }),
+    ).not.toBeInTheDocument();
+  });
+
+  it('mientras una acción está en curso los botones del detalle están deshabilitados', async () => {
+    useDetail();
+    server.use(
+      http.post(`*/v1/agencies/${ID}/approve`, () => new Promise<Response>(() => undefined)),
+    );
+    mountApp(PATH);
+    await screen.findByRole('heading', { level: 1, name: 'Inmobiliaria Demo' });
+    await userEvent.click(actionButton(es.agencies.review.actions.approve));
+    const dialog = await screen.findByRole('dialog');
+    await userEvent.click(
+      within(dialog).getByRole('button', { name: es.agencies.review.actions.approve }),
+    );
+    await vi.waitFor(() =>
+      expect(
+        screen.getByRole('button', { name: es.agencies.review.actions.reject, hidden: true }),
+      ).toBeDisabled(),
+    );
   });
 });
