@@ -22,6 +22,12 @@ const base = {
 };
 
 describe('DataTable', () => {
+  it('usa la jerarquía del sistema visual: cabecera text-label, celdas text-data', () => {
+    render(<DataTable {...base} />);
+    expect(screen.getByRole('columnheader', { name: 'Nombre' })).toHaveClass('text-label');
+    expect(screen.getByRole('cell', { name: 'Alfa' })).toHaveClass('text-data');
+  });
+
   it('muestra encabezados y filas, y la tabla tiene nombre accesible', () => {
     render(<DataTable {...base} />);
     const table = screen.getByRole('table', { name: 'Tabla de prueba' });
