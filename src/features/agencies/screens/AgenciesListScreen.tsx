@@ -5,7 +5,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import type { AgencySummary } from '@/lib/api/schemas';
 import { es } from '@/lib/i18n/es';
 import { AgencyStatusBadge } from '../components/AgencyStatusBadge';
-import { formatDate } from '../format';
+import { formatDate } from '@/lib/format';
 import type { ReviewAction } from '../review-rules';
 import { STATUS_FILTERS, useAgencies, type StatusFilter } from '../hooks/useAgencies';
 

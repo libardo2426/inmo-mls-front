@@ -224,4 +224,61 @@ export const es = {
           : 'Demasiados intentos. Espere un momento antes de volver a intentarlo.',
     },
   },
+  members: {
+    title: 'Miembros',
+    caption: 'Miembros de la inmobiliaria',
+    columns: {
+      name: 'Nombre',
+      email: 'Correo',
+      role: 'Rol',
+      status: 'Estado',
+      since: 'Desde',
+      actions: 'Acciones',
+    },
+    roles: {
+      admin: 'Administrador',
+      compliance: 'Cumplimiento',
+      broker: 'Broker',
+      agent: 'Agente',
+      assistant: 'Asistente',
+      read_only: 'Solo lectura',
+    },
+    status: {
+      active: 'Activo',
+      suspended: 'Suspendido',
+      terminated: 'Terminado',
+    },
+    empty: {
+      title: 'Esta inmobiliaria no tiene miembros',
+      description: 'Cuando acepten una invitación aparecerán aquí.',
+    },
+    terminate: {
+      action: 'Terminar',
+      actionFor: (name: string) => `Terminar a ${name}`,
+      title: (name: string) => `Terminar a ${name}`,
+      description: (name: string) =>
+        `${name} perderá el acceso a la inmobiliaria. Esta acción no se puede deshacer.`,
+      twoFactorNotice: 'Esta acción requiere que tenga activa la verificación en dos pasos (2FA).',
+      reasonLabel: 'Motivo',
+      reasonHelp: (max: number) => `Obligatorio, hasta ${max} caracteres.`,
+      cancel: 'Cancelar',
+      submit: 'Terminar miembro',
+      done: 'El miembro se terminó.',
+    },
+    errors: {
+      lastBroker: 'La inmobiliaria no puede quedarse sin un broker activo.',
+      notActive: 'Este miembro ya no está activo. Se actualizó el listado.',
+      notFound: 'No se encontró al miembro.',
+      reasonRequired: 'Escriba el motivo para continuar.',
+      twoFactorRequired: 'Active la verificación en dos pasos (2FA) para terminar miembros.',
+      forbidden: 'No tiene permiso para terminar a este miembro.',
+      network: 'No se pudo conectar con el servidor. Revise su conexión.',
+      generic: 'No se pudo completar la acción. Inténtelo de nuevo.',
+      reference: 'Referencia',
+      rateLimited: (seconds?: number): string =>
+        seconds !== undefined && Number.isFinite(seconds) && seconds >= 0
+          ? `Demasiados intentos. Espere ${seconds} s antes de volver a intentarlo.`
+          : 'Demasiados intentos. Espere un momento antes de volver a intentarlo.',
+    },
+  },
 } as const;
