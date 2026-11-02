@@ -44,6 +44,33 @@ function meWith(permissions: Record<string, 'own' | 'agency' | 'network'>, email
 const sidebar = () => document.querySelector('[data-slot="sidebar"]');
 
 describe('AppShell', () => {
+  it('la cabecera agrupa plegar, tema y usuario; el ítem activo usa el color primario del menú', async () => {
+    backend();
+    mountApp('/');
+    const nav = await screen.findByRole('navigation');
+    const banner = screen.getByRole('banner');
+    expect(banner).toHaveClass('bg-surface');
+    expect(within(banner).getByRole('button', { name: es.shell.toggleMenu })).toBeVisible();
+    expect(within(banner).getByRole('button', { name: es.theme.toggle })).toBeVisible();
+    expect(within(banner).getByRole('button', { name: es.shell.userMenu })).toBeVisible();
+    const active = within(nav).getByRole('link', { name: es.nav.home });
+    expect(active).toHaveAttribute('data-active', 'true');
+    expect(active.className).toContain('data-active:bg-sidebar-primary');
+  });
+
+  it('con el tema oscuro aplicado conserva landmarks y controles con nombre', async () => {
+    document.documentElement.classList.add('dark');
+    try {
+      backend();
+      mountApp('/');
+      await screen.findByRole('navigation');
+      expect(screen.getByRole('banner')).toBeVisible();
+      expect(screen.getByRole('main')).toBeVisible();
+    } finally {
+      document.documentElement.classList.remove('dark');
+    }
+  });
+
   it('el menú tiene Inicio como página actual', async () => {
     backend();
     mountApp('/');

@@ -6,8 +6,8 @@ type EmptyStateProps = { title: string; description?: string; action?: ReactNode
 export function EmptyState({ title, description, action }: EmptyStateProps) {
   return (
     <section className="flex flex-col items-center gap-2 p-8 text-center">
-      <h2 className="text-base font-semibold">{title}</h2>
-      {description ? <p className="text-muted-foreground text-sm">{description}</p> : null}
+      <h2 className="type-section-title">{title}</h2>
+      {description ? <p className="type-data text-text-muted">{description}</p> : null}
       {action}
     </section>
   );

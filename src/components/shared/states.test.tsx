@@ -59,3 +59,18 @@ describe('EmptyState', () => {
     expect(screen.getByRole('button', { name: 'Crear' })).toBeInTheDocument();
   });
 });
+
+describe('jerarquía de los estados', () => {
+  it('los títulos de error, sin permiso y vacío usan type-section-title', () => {
+    render(
+      <>
+        <ErrorState error={new Error('x')} />
+        <ForbiddenState />
+        <EmptyState title="Sin datos" />
+      </>,
+    );
+    for (const name of [es.states.genericError, es.states.forbiddenTitle, 'Sin datos']) {
+      expect(screen.getByRole('heading', { name })).toHaveClass('type-section-title');
+    }
+  });
+});

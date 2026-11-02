@@ -79,46 +79,48 @@ export function DataTable<T>({
 
   return (
     <div className="flex flex-col gap-3">
-      <Table aria-label={caption} aria-busy={isLoading}>
-        <TableHeader>
-          <TableRow>
-            {columns.map((column) => (
-              <TableHead key={column.id} className={column.className}>
-                {column.header}
-              </TableHead>
-            ))}
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {isLoading
-            ? Array.from({ length: SKELETON_ROWS }, (_, index) => (
-                <TableRow key={index} aria-hidden="true">
-                  {columns.map((column) => (
-                    <TableCell key={column.id} className="py-1.5">
-                      <Skeleton className="h-4 w-full" />
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            : rows.map((row) => (
-                <TableRow
-                  key={getRowKey(row)}
-                  {...(onRowActivate
-                    ? {
-                        className: 'cursor-pointer',
-                        onClick: (event: MouseEvent) => onRowClick(event, row),
-                      }
-                    : {})}
-                >
-                  {columns.map((column) => (
-                    <TableCell key={column.id} className={`py-1.5 ${column.className ?? ''}`}>
-                      {column.cell(row)}
-                    </TableCell>
-                  ))}
-                </TableRow>
+      <div className="bg-surface overflow-hidden rounded-lg border">
+        <Table aria-label={caption} aria-busy={isLoading}>
+          <TableHeader>
+            <TableRow>
+              {columns.map((column) => (
+                <TableHead key={column.id} className={column.className}>
+                  {column.header}
+                </TableHead>
               ))}
-        </TableBody>
-      </Table>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {isLoading
+              ? Array.from({ length: SKELETON_ROWS }, (_, index) => (
+                  <TableRow key={index} aria-hidden="true">
+                    {columns.map((column) => (
+                      <TableCell key={column.id} className="py-1.5">
+                        <Skeleton className="h-4 w-full" />
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              : rows.map((row) => (
+                  <TableRow
+                    key={getRowKey(row)}
+                    {...(onRowActivate
+                      ? {
+                          className: 'cursor-pointer',
+                          onClick: (event: MouseEvent) => onRowClick(event, row),
+                        }
+                      : {})}
+                  >
+                    {columns.map((column) => (
+                      <TableCell key={column.id} className={`py-1.5 ${column.className ?? ''}`}>
+                        {column.cell(row)}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))}
+          </TableBody>
+        </Table>
+      </div>
       {hasError ? (
         <div role="alert" className="flex items-center gap-3 text-sm">
           <span>{error instanceof ApiError ? error.title : es.states.genericError}</span>

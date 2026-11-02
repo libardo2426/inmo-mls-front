@@ -62,6 +62,16 @@ describe('listado de agencias', () => {
     ).not.toBeInTheDocument();
   });
 
+  it('tiene un único h1 con el título y el filtro accesible por su etiqueta', async () => {
+    useMe();
+    useAgencies(() => HttpResponse.json({ items: [], nextCursor: null }));
+    mountApp('/agencias');
+    await screen.findByText(es.agencies.list.emptyTitle);
+    expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
+    expect(screen.getByRole('heading', { level: 1, name: es.agencies.list.title })).toBeVisible();
+    expect(screen.getByLabelText(es.agencies.list.filterLabel)).toBeVisible();
+  });
+
   it('abre en pending con limit=50', async () => {
     useMe();
     const seen = useAgencies(() => HttpResponse.json({ items: [], nextCursor: null }));

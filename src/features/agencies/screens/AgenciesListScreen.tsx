@@ -1,4 +1,5 @@
 import { Link, useNavigate, useRouterState } from '@tanstack/react-router';
+import { PageHeader } from '@/components/shared/PageHeader';
 import { DataTable, type Column } from '@/components/shared/DataTable';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import type { AgencySummary } from '@/lib/api/schemas';
@@ -61,28 +62,30 @@ export function AgenciesListScreen({ filter }: { filter: StatusFilter }) {
 
   return (
     <div className="flex flex-col gap-4 p-6">
-      <div className="flex items-center justify-between gap-4">
-        <h1 className="text-lg font-semibold">{es.agencies.list.title}</h1>
-        <label className="flex items-center gap-2 text-sm">
-          <span className="text-muted-foreground">{es.agencies.list.filterLabel}</span>
-          <select
-            className="border-input bg-background h-8 rounded-md border px-2 text-sm"
-            value={filter}
-            onChange={(event) =>
-              void navigate({
-                to: '/agencias',
-                search: { status: event.target.value as StatusFilter },
-              })
-            }
-          >
-            {STATUS_FILTERS.map((option) => (
-              <option key={option} value={option}>
-                {filterLabel(option)}
-              </option>
-            ))}
-          </select>
-        </label>
-      </div>
+      <PageHeader
+        title={es.agencies.list.title}
+        actions={
+          <label className="flex items-center gap-2 text-sm">
+            <span className="text-muted-foreground">{es.agencies.list.filterLabel}</span>
+            <select
+              className="border-input bg-background h-8 rounded-md border px-2 text-sm"
+              value={filter}
+              onChange={(event) =>
+                void navigate({
+                  to: '/agencias',
+                  search: { status: event.target.value as StatusFilter },
+                })
+              }
+            >
+              {STATUS_FILTERS.map((option) => (
+                <option key={option} value={option}>
+                  {filterLabel(option)}
+                </option>
+              ))}
+            </select>
+          </label>
+        }
+      />
       {notice ? (
         <Alert>
           <AlertDescription>{es.agencies.review.done[notice]}</AlertDescription>
