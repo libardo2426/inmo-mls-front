@@ -61,6 +61,11 @@ export default tseslint.config(
     rules: { 'react-refresh/only-export-components': 'off' },
   },
   {
+    // Hook generado por la CLI de shadcn (sidebar): fija el estado inicial dentro del efecto.
+    files: ['src/hooks/use-mobile.ts'],
+    rules: { 'react-hooks/set-state-in-effect': 'off' },
+  },
+  {
     // Los archivos de ruta exportan `Route` junto al componente (convención de TanStack Router).
     files: ['src/routes/**/*.tsx'],
     rules: { 'react-refresh/only-export-components': 'off' },

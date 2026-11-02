@@ -11,6 +11,18 @@ beforeAll(() => {
   window.scrollTo = () => undefined;
   // jsdom no implementa elementFromPoint; input-otp lo usa para detectar el gestor de contraseñas.
   document.elementFromPoint = () => null;
+  // jsdom no implementa matchMedia; el menú lateral (useIsMobile) lo usa. Por defecto, escritorio.
+  window.matchMedia ??= (query: string): MediaQueryList =>
+    ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addEventListener: () => undefined,
+      removeEventListener: () => undefined,
+      addListener: () => undefined,
+      removeListener: () => undefined,
+      dispatchEvent: () => false,
+    }) satisfies MediaQueryList;
   server.listen({ onUnhandledFrame: 'error' });
 });
 

@@ -50,6 +50,14 @@ La configuración de runtime de la app en desarrollo sale de `public/config.js`.
 
 Para actualizarlo: copie el nuevo `openapi.json` a `docs/backend/openapi.json`, ejecute `pnpm api:generate` y revise el diff (el CI falla si el código generado no coincide).
 
+### Agregar un ítem de menú con su permiso
+
+1. Si el permiso no está en `src/lib/permissions/catalog.ts`, agréguelo (un test lo compara con la tabla del backend).
+2. Declare el ítem en `src/config/navigation.ts` con `to`, `label`, `icon` y `permission` (y `minScope` si hace falta). Solo se agregan ítems con pantalla real.
+3. En la ruta, exija el mismo permiso: `beforeLoad: ({ context }) => assertCan(context.me, 'agency.list')`. Sin permiso, el shell muestra «sin permiso».
+
+Son ayudas de UX; el servidor es la autoridad.
+
 ### Reglas del proyecto
 
 - Estructura por features; una feature no importa de otra (lo hace cumplir ESLint).
