@@ -141,6 +141,46 @@ describe('listado de agencias', () => {
     expect(screen.queryByRole('button', { name: es.states.loadMore })).not.toBeInTheDocument();
   });
 
+  it('si «Cargar más» falla conserva las filas cargadas y reintenta solo esa página', async () => {
+    useMe();
+    let failNext = true;
+    const seen = useAgencies((url) => {
+      if (url.searchParams.get('cursor') === 'c2') {
+        return failNext
+          ? HttpResponse.json({ title: 'Falló', status: 500, code: 'internal' }, { status: 500 })
+          : HttpResponse.json({
+              items: [
+                agencySummaryFixture({
+                  id: '0192a3b4-0000-7000-8000-00000000000b',
+                  tradeName: 'Segunda',
+                }),
+              ],
+              nextCursor: null,
+            });
+      }
+      return HttpResponse.json({
+        items: [
+          agencySummaryFixture({
+            id: '0192a3b4-0000-7000-8000-00000000000a',
+            tradeName: 'Primera',
+          }),
+        ],
+        nextCursor: 'c2',
+      });
+    });
+    mountApp('/agencias');
+    await screen.findByText('Primera');
+    await userEvent.click(screen.getByRole('button', { name: es.states.loadMore }));
+    const alert = await screen.findByRole('alert');
+    expect(screen.getByText('Primera')).toBeInTheDocument();
+    failNext = false;
+    const firstPageCalls = seen.filter((u) => !u.searchParams.has('cursor')).length;
+    await userEvent.click(within(alert).getByRole('button', { name: es.states.retry }));
+    await screen.findByText('Segunda');
+    expect(screen.getByText('Primera')).toBeInTheDocument();
+    expect(seen.filter((u) => !u.searchParams.has('cursor')).length).toBe(firstPageCalls);
+  });
+
   it('lista vacía muestra el EmptyState', async () => {
     useMe();
     useAgencies(() => HttpResponse.json({ items: [], nextCursor: null }));

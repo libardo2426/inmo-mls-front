@@ -146,6 +146,36 @@ describe('ReviewDialog', () => {
     expect(onDone).not.toHaveBeenCalled();
   });
 
+  it('tras un 429 el botón sigue deshabilitado durante la espera y muestra los segundos', async () => {
+    const seen = mockAction('approve', () =>
+      HttpResponse.json(
+        { title: 'x', status: 429, code: 'rate_limited' },
+        { status: 429, headers: { 'Retry-After': '30' } },
+      ),
+    );
+    setup('approve');
+    await userEvent.click(confirmButton('approve'));
+    await screen.findByRole('alert');
+    expect(confirmButton('approve')).toBeDisabled();
+    expect(screen.getByRole('alert')).toHaveTextContent(/30/);
+    await userEvent.click(confirmButton('approve'));
+    expect(seen.calls).toBe(1);
+  });
+
+  it('cuando termina la espera del 429 el botón vuelve a habilitarse', async () => {
+    mockAction('approve', () =>
+      HttpResponse.json(
+        { title: 'x', status: 429, code: 'rate_limited' },
+        { status: 429, headers: { 'Retry-After': '1' } },
+      ),
+    );
+    setup('approve');
+    await userEvent.click(confirmButton('approve'));
+    await screen.findByRole('alert');
+    expect(confirmButton('approve')).toBeDisabled();
+    await vi.waitFor(() => expect(confirmButton('approve')).toBeEnabled(), { timeout: 3000 });
+  });
+
   it('409 agency_not_reviewable cierra el diálogo, avisa del conflicto y no llama onDone', async () => {
     mockAction('approve', () =>
       HttpResponse.json(

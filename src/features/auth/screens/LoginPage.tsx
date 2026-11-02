@@ -12,7 +12,7 @@ import { es } from '@/lib/i18n/es';
 import { AuthCard } from '../components/AuthCard';
 import { useAuthApi } from '../hooks/useAuthApi';
 import { useAuthNavigation } from '../hooks/useAuthNavigation';
-import { useCountdown } from '../hooks/useCountdown';
+import { useCountdown } from '@/hooks/useCountdown';
 import { authErrorMessage } from '../messages';
 import { safeRedirect } from '../session/guard';
 import { ME_QUERY_KEY } from '../session/me';

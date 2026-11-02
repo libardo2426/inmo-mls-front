@@ -46,11 +46,12 @@ describe('accesibilidad de agencias', () => {
     expect(screen.getByRole('combobox', { name: es.agencies.list.filterLabel })).toBeVisible();
   });
 
-  it('Enter sobre una fila abre el detalle', async () => {
+  it('cada fila tiene un enlace real al detalle, alcanzable y activable con el teclado', async () => {
     useBackend();
     const { history } = mountApp('/agencias');
-    await screen.findByText('Inmobiliaria Demo');
-    screen.getByRole('row', { name: /Inmobiliaria Demo/ }).focus();
+    const link = await screen.findByRole('link', { name: 'Inmobiliaria Demo' });
+    expect(link).toHaveAttribute('href', expect.stringContaining(`/agencias/${ID}`));
+    link.focus();
     await userEvent.keyboard('{Enter}');
     expect(history.location.pathname).toBe(`/agencias/${ID}`);
   });

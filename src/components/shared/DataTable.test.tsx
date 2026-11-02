@@ -55,20 +55,41 @@ describe('DataTable', () => {
     expect(screen.getByText('Nada aún')).toBeInTheDocument();
   });
 
-  it('Enter y clic sobre una fila llaman onRowActivate con la fila', async () => {
+  it('el clic sobre una fila llama onRowActivate; las filas no son un tab stop', async () => {
     const onRowActivate = vi.fn();
     render(<DataTable {...base} onRowActivate={onRowActivate} />);
-    const row = screen.getByRole('row', { name: /Alfa/ });
-    row.focus();
-    await userEvent.keyboard('{Enter}');
-    expect(onRowActivate).toHaveBeenLastCalledWith(rows[0]);
     await userEvent.click(screen.getByText('Beta'));
     expect(onRowActivate).toHaveBeenLastCalledWith(rows[1]);
+    expect(screen.getByRole('row', { name: /Alfa/ })).not.toHaveAttribute('tabindex');
   });
 
-  it('las filas no son activables si no hay onRowActivate', () => {
-    render(<DataTable {...base} />);
-    expect(screen.getByRole('row', { name: /Alfa/ })).not.toHaveAttribute('tabindex');
+  it('un clic en un enlace de la fila no dispara también onRowActivate', async () => {
+    const onRowActivate = vi.fn();
+    const withLink: Column<Row>[] = [
+      { id: 'id', header: 'Código', cell: (r) => <a href={`#${r.id}`}>{r.id}</a> },
+      { id: 'name', header: 'Nombre', cell: (r) => r.name },
+    ];
+    render(<DataTable {...base} columns={withLink} onRowActivate={onRowActivate} />);
+    await userEvent.click(screen.getByRole('link', { name: 'a1' }));
+    expect(onRowActivate).not.toHaveBeenCalled();
+  });
+
+  it('con filas y un error (p. ej. falló «Cargar más») conserva la tabla y muestra el error en línea', async () => {
+    const onRetry = vi.fn();
+    render(
+      <DataTable
+        {...base}
+        error={new Error('x')}
+        onRetry={onRetry}
+        hasMore
+        onLoadMore={() => {}}
+      />,
+    );
+    expect(screen.getByText('Alfa')).toBeInTheDocument();
+    const alert = screen.getByRole('alert');
+    await userEvent.click(within(alert).getByRole('button', { name: es.states.retry }));
+    expect(onRetry).toHaveBeenCalledOnce();
+    expect(screen.getByRole('table', { name: 'Tabla de prueba' })).toBeInTheDocument();
   });
 
   it('hasMore muestra «Cargar más» y llama onLoadMore; sin hasMore no aparece', async () => {

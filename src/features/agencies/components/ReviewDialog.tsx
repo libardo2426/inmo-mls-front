@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useCountdown } from '@/hooks/useCountdown';
 import { Textarea } from '@/components/ui/textarea';
 import type { AgencyApplication } from '@/lib/api/schemas';
 import { ApiError } from '@/lib/http';
@@ -33,6 +34,7 @@ type Props = {
 export function ReviewDialog({ action, agency, open, onOpenChange, onDone, onConflict }: Props) {
   const text = es.agencies.review;
   const mutation = useReviewAgency();
+  const countdown = useCountdown();
   const [reason, setReason] = useState('');
   const [typedName, setTypedName] = useState('');
   // Sin `DialogTrigger`, Radix no devuelve el foco: se guarda quién lo tenía al abrir.
@@ -44,7 +46,8 @@ export function ReviewDialog({ action, agency, open, onOpenChange, onDone, onCon
   const trimmed = reason.trim();
   const reasonOk = !needsReason || (trimmed.length > 0 && trimmed.length <= REASON_MAX);
   const nameOk = action !== 'reject' || matchesName(typedName, agency.tradeName);
-  const canSubmit = reasonOk && nameOk && !mutation.isPending;
+  const waiting = countdown.remaining > 0;
+  const canSubmit = reasonOk && nameOk && !mutation.isPending && !waiting;
 
   const submit = (event: FormEvent) => {
     event.preventDefault();
@@ -54,6 +57,9 @@ export function ReviewDialog({ action, agency, open, onOpenChange, onDone, onCon
       {
         onSuccess: () => onDone(action),
         onError: (error) => {
+          if (error instanceof ApiError && error.status === 429 && error.retryAfterSeconds) {
+            countdown.start(error.retryAfterSeconds);
+          }
           if (error instanceof ApiError && error.code === 'agency_not_reviewable') {
             onOpenChange(false);
             onConflict?.();
@@ -110,7 +116,11 @@ export function ReviewDialog({ action, agency, open, onOpenChange, onDone, onCon
           ) : null}
           {mutation.isError && !conflict ? (
             <Alert variant="destructive" role="alert">
-              <AlertDescription>{agencyErrorMessage(mutation.error)}</AlertDescription>
+              <AlertDescription>
+                {waiting
+                  ? es.agencies.errors.rateLimited(countdown.remaining)
+                  : agencyErrorMessage(mutation.error)}
+              </AlertDescription>
             </Alert>
           ) : null}
           <DialogFooter>

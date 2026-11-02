@@ -1,4 +1,4 @@
-import { useNavigate, useRouterState } from '@tanstack/react-router';
+import { Link, useNavigate, useRouterState } from '@tanstack/react-router';
 import { DataTable, type Column } from '@/components/shared/DataTable';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import type { AgencySummary } from '@/lib/api/schemas';
@@ -8,8 +8,21 @@ import { formatDate } from '../format';
 import type { ReviewAction } from '../review-rules';
 import { STATUS_FILTERS, useAgencies, type StatusFilter } from '../hooks/useAgencies';
 
-const columns: Column<AgencySummary>[] = [
-  { id: 'tradeName', header: es.agencies.list.columns.tradeName, cell: (a) => a.tradeName },
+const columns = (filter: StatusFilter): Column<AgencySummary>[] => [
+  {
+    id: 'tradeName',
+    header: es.agencies.list.columns.tradeName,
+    cell: (a) => (
+      <Link
+        to="/agencias/$agencyId"
+        params={{ agencyId: a.id }}
+        search={{ status: filter }}
+        className="focus-visible:ring-ring rounded-sm font-medium underline-offset-4 outline-none hover:underline focus-visible:ring-2"
+      >
+        {a.tradeName}
+      </Link>
+    ),
+  },
   { id: 'legalName', header: es.agencies.list.columns.legalName, cell: (a) => a.legalName },
   {
     id: 'taxId',
@@ -76,13 +89,13 @@ export function AgenciesListScreen({ filter }: { filter: StatusFilter }) {
         </Alert>
       ) : null}
       <DataTable
-        columns={columns}
+        columns={columns(filter)}
         rows={rows}
         getRowKey={(agency) => agency.id}
         caption={es.agencies.list.caption}
         isLoading={query.isPending}
         error={query.error}
-        onRetry={() => void query.refetch()}
+        onRetry={() => void (query.isFetchNextPageError ? query.fetchNextPage() : query.refetch())}
         empty={{ title: es.agencies.list.emptyTitle, description: es.agencies.list.emptyHelp }}
         onRowActivate={(agency) =>
           void navigate({
