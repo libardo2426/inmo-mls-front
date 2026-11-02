@@ -15,7 +15,7 @@ export function PageHeader({ title, description, actions, backLink }: PageHeader
       <div className="flex items-start justify-between gap-4">
         <div className="flex min-w-0 flex-col gap-0.5">
           <h1 className="type-page-title min-w-0 wrap-break-word">{title}</h1>
-          {description ? <p className="type-data text-text-muted">{description}</p> : null}
+          {description ? <p className="type-data text-primary font-bold">{description}</p> : null}
         </div>
         {actions ? <div className="flex shrink-0 items-center gap-2">{actions}</div> : null}
       </div>

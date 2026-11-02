@@ -29,3 +29,7 @@ Tras F0–F3 el panel usaba los grises por defecto de shadcn, un solo color (des
 - Cambiar la marca es editar `primary` y los neutros en un solo lugar.
 - `PageHeader` es un `div`, no `header`, para no duplicar el landmark `banner` del shell.
 - La verificación formal de accesibilidad y la revisión visual final quedan en F9.
+
+## Ajuste de marca (flyer de referencia)
+
+La paleta se alineó con el flyer de Viviendata: `primary` verde (`oklch(0.5 0.085 159)`, ≈ `#3D7A5A`), menú lateral en carbón, fondo gris claro con superficies blancas, radio de 0.75 rem, tipografía Lato (400/700/900) y títulos en negrita con el subtítulo en verde (`PageHeader`). El test de contraste cubre también los pares del menú lateral y el verde como texto.
