@@ -30,7 +30,7 @@
 
 Entradas o condiciones que el spec implica pero que ningún flujo feliz cubre; cada una tiene su prueba en la tarea indicada:
 
-1. El catálogo territorial falla o el código no existe ⇒ el detalle sigue funcionando y muestra el código (Tarea 3 y 5).
+1. El territorio falla (500/400), el código no existe o el backend aún no tiene el filtro `codes` ⇒ el detalle sigue funcionando y muestra el código (Tarea 3 y 5).
 2. `?status=basura` en la URL ⇒ cae a `pending`, no rompe la pantalla (Tarea 4).
 3. Doble clic en «Rechazar» / «Aprobar» ⇒ una sola petición (Tarea 6).
 4. Motivo vacío, solo espacios o de más de 2000 caracteres ⇒ no se puede enviar (Tarea 6).
@@ -134,31 +134,33 @@ Entradas o condiciones que el spec implica pero que ningún flujo feliz cubre; c
 - [ ] **Step 4: Run** tests + `pnpm typecheck && pnpm lint` — Expected: PASS.
 - [ ] **Step 5: Commit** `feat(agencias): cliente tipado, claves de caché y mensajes de error`.
 
-### Task 3: Nombres de territorio
+### Task 3: Nombres de territorio (filtro `codes` del backend)
+
+El backend implementó el filtro `codes` (PR #78 de `inmo-mls`): `GET /v1/territory/units/{país}/{nivel}?codes=05001,11001&limit=100`. Acepta hasta 100 códigos, limpia espacios, vacíos y repetidos, ignora los desconocidos sin error y devuelve `parentCode`. Con 101 códigos, o ninguno válido, responde 400. `limit` por defecto es 10, así que siempre se envía `limit=100`.
 
 **Files:**
 - Create: `src/features/territory/territory-api.ts`, `src/features/territory/useTerritoryName.ts`
 - Test: `src/features/territory/territory.test.tsx`
-- Modify: `src/lib/i18n/es.ts` (si hace falta `territory.*`)
 
 **Interfaces:**
-- Consumes: `territoryPageResponseSchema`, `TerritoryPage` (Task 2); `useHttpClient()` de `@/app/app-context`.
+- Consumes: `territoryPageResponseSchema`, `TerritoryPage` (Task 2); `useHttpClient()` de `@/app/app-context`; `useMe()` de `@/lib/permissions` (país = `me.tenant.code`).
 - Produces:
   ```ts
   export type TerritoryUnit = { code: string; name: string; parentCode: string | null };
-  /** Descarga todas las páginas (limit=100, sin `q`) de un nivel y devuelve el mapa código → unidad. */
-  export function fetchTerritoryLevel(http: HttpClient, country: string, level: 'municipality' | 'department', signal?: AbortSignal): Promise<Map<string, TerritoryUnit>>;
-  export function territoryLevelQueryOptions(http: HttpClient, country: string, level: 'municipality' | 'department'); // queryKey ['territory', country, level], staleTime: Infinity, retry: false
+  export const MAX_CODES = 100;
+  /** Una sola petición con `codes` (deduplicados y recortados a MAX_CODES) y `limit=100`.
+   *  Solo devuelve las unidades cuyo `code` fue pedido (descarta lo demás). */
+  export function fetchTerritoryUnits(http: HttpClient, country: string, level: 'municipality' | 'department', codes: string[], signal?: AbortSignal): Promise<Map<string, TerritoryUnit>>;
   /** `label` = «Municipio, Departamento»; cae a solo municipio, o al código, si no se resuelve. */
   export function useTerritoryName(code: string | undefined): { label: string; isLoading: boolean };
   ```
-  El país sale de `me.tenant.code` (usar `useMe()` de `@/lib/permissions`).
+  Query keys `['territory', country, level, code]`, `staleTime: Infinity`, `retry: false`. La consulta de departamento se habilita solo cuando el municipio resolvió y trae `parentCode`.
 
-- [ ] **Step 1: Write the failing tests** (MSW sobre `*/v1/territory/units/co/municipality` y `.../department`, paginado con `nextCursor`): `junta todas las páginas siguiendo nextCursor`; `no envía q`; `label = «Medellín, Antioquia»` usando `parentCode` del municipio; `departamento caído ⇒ solo el municipio`; `catálogo caído (500) ⇒ label es el código y isLoading termina en false` (**Review Focus 1**); `código inexistente ⇒ label es el código`; `code undefined ⇒ label vacío sin disparar peticiones`.
-- [ ] **Step 2: Run** — Expected: FAIL.
-- [ ] **Step 3: Implement.** `fetchTerritoryLevel` itera con `cursor` hasta `nextCursor === null`. `useTerritoryName` usa dos `useQuery` (municipio y departamento; el de departamento solo se habilita cuando el municipio resolvió). **Verificar en el test que la ausencia de `q` es aceptable para el servidor real** en el e2e (Task 7); si el backend la rechaza, el hook devuelve el código y se documenta como bloqueo B-16 en el README.
-- [ ] **Step 4: Run** tests + typecheck/lint — Expected: PASS.
-- [ ] **Step 5: Commit** `feat(territorio): resolver nombre de municipio y departamento por código`.
+- [ ] **Step 1: Write the failing tests** (MSW sobre `*/v1/territory/units/co/municipality` y `.../department`): `envía codes y limit=100 y no envía q`; `deduplica y recorta a 100 códigos`; `label = «Medellín, Antioquia»` pidiendo primero el municipio y luego el departamento con su `parentCode`; `departamento caído ⇒ solo el municipio`; `municipio caído (500) o 400 ⇒ label es el código, isLoading termina en false` (**Review Focus 1**); `código desconocido (ausente en la respuesta) ⇒ label es el código`; **`un backend sin el filtro devuelve la primera página sin filtrar ⇒ no se toma el ítem equivocado, label es el código`**; `code undefined ⇒ label vacío sin peticiones`.
+- [ ] **Step 2: Run** `pnpm vitest run src/features/territory` — Expected: FAIL.
+- [ ] **Step 3: Implement** según Interfaces con `HttpClient.request({ host: 'country', path: '/territory/units/{country}/{level}', query: { codes, limit: 100 }, schema: territoryPageResponseSchema })`. Filtrar la respuesta por los códigos pedidos. Si `pnpm api:generate` aún no trae `codes` (PR sin fusionar), la consulta se arma a mano; al actualizar `docs/backend/openapi.json` solo cambia el tipo de la query.
+- [ ] **Step 4: Run** tests + `pnpm typecheck && pnpm lint` — Expected: PASS.
+- [ ] **Step 5: Commit** `feat(territorio): resolver nombre de municipio y departamento con el filtro codes`.
 
 ---
 
@@ -207,7 +209,7 @@ Entradas o condiciones que el spec implica pero que ningún flujo feliz cubre; c
   ```
   Ruta con la misma guarda que el listado (`agency.list`, `network`) y enlace «Volver al listado» que conserva el `status` de la URL.
 
-- [ ] **Step 1: Write the failing tests:** `muestra nombre comercial, razón social, documento, correo, teléfono, estado, fecha de envío`; `muestra reviewReason y reviewedAt solo si existen`; `muestra la sede principal con «Municipio, Departamento» resuelto`; `si el catálogo territorial falla muestra el código y el resto del detalle sigue visible` (**Review Focus 1**); `404 agency_not_found muestra el texto de es.agencies.errors y no rompe el shell`; `carga muestra Skeleton`; `sin permiso muestra «sin permiso»`; **`compliance (agency.list sin las acciones) ve el detalle sin ningún botón de acción`** (Review Focus 5).
+- [ ] **Step 1: Write the failing tests:** `muestra nombre comercial, razón social, documento, correo, teléfono, estado, fecha de envío`; `muestra reviewReason y reviewedAt solo si existen`; `muestra la sede principal con «Municipio, Departamento» resuelto`; `si el territorio falla muestra el código y el resto del detalle sigue visible` (**Review Focus 1**); `404 agency_not_found muestra el texto de es.agencies.errors y no rompe el shell`; `carga muestra Skeleton`; `sin permiso muestra «sin permiso»`; **`compliance (agency.list sin las acciones) ve el detalle sin ningún botón de acción`** (Review Focus 5).
 - [ ] **Step 2: Run** — Expected: FAIL.
 - [ ] **Step 3: Implement.** `<h1>` = nombre comercial; datos en `<dl>`. La pantalla acepta un contenido de acciones que Task 6 conecta (por ahora, no renderiza botones).
 - [ ] **Step 4: Run** tests + typecheck/lint — Expected: PASS.
@@ -256,12 +258,12 @@ Entradas o condiciones que el spec implica pero que ningún flujo feliz cubre; c
 
 **Files:**
 - Create: `src/features/agencies/a11y.test.tsx`, `e2e/agencias.spec.ts`
-- Modify: `README.md` (sección F3: cómo se revisa una agencia, datos de prueba con `ops-cli`, B-16 pendiente), `docs/superpowers/specs/2026-10-31-roadmap-frontend-design.md` (F3 ✅, Q6 con la solución adoptada, B-16 y B-15 con su estado), `docs/superpowers/specs/2026-11-02-fase-03-revision-agencias-design.md` (Estado: «Implementado» si todo pasa)
+- Modify: `README.md` (sección F3: cómo se revisa una agencia, datos de prueba con `ops-cli`, B-16 resuelto por el backend con `codes`), `docs/superpowers/specs/2026-10-31-roadmap-frontend-design.md` (F3 ✅, Q6 con la solución adoptada, B-16 y B-15 con su estado), `docs/superpowers/specs/2026-11-02-fase-03-revision-agencias-design.md` (Estado: «Implementado» si todo pasa)
 
 - [ ] **Step 1: Write the a11y test** siguiendo `src/app/shell/a11y.test.tsx`: listado y detalle tienen un único `h1` y landmarks; la tabla es `role=table` con encabezados; Enter sobre la fila abre el detalle; al abrir un diálogo el foco entra en él y al cerrarlo vuelve al botón que lo abrió; todo control tiene nombre accesible.
 - [ ] **Step 2: Run** `pnpm vitest run src/features/agencies/a11y.test.tsx` — Expected: PASS (si falla, corregir los componentes y no el test).
-- [ ] **Step 3: e2e** `e2e/agencias.spec.ts` reutilizando `e2e/support` (como `auth.spec.ts`): un admin con 2FA entra, filtra por `pending`, abre una agencia y la devuelve con motivo; otra agencia rechazada exigiendo el nombre; y se comprueba que el nombre del municipio aparece (esto confirma que el endpoint territorial acepta llamadas sin `q`). Los datos se crean con `pnpm ops agency add co ...` según el README. Si el backend no está disponible, el archivo debe omitirse con `test.skip` explícito y razón, sin romper `pnpm test:e2e` existente.
-- [ ] **Step 4: Documentación** como indica Files. Anotar que **B-16 sigue sin enviarse** si así es al cerrar.
+- [ ] **Step 3: e2e** `e2e/agencias.spec.ts` reutilizando `e2e/support` (como `auth.spec.ts`): un admin con 2FA entra, filtra por `pending`, abre una agencia y la devuelve con motivo; otra agencia rechazada exigiendo el nombre; y se comprueba que el nombre del municipio aparece (esto confirma el filtro `codes` contra un backend con el PR #78; contra uno sin él, el detalle muestra el código). Los datos se crean con `pnpm ops agency add co ...` según el README. Si el backend no está disponible, el archivo debe omitirse con `test.skip` explícito y razón, sin romper `pnpm test:e2e` existente.
+- [ ] **Step 4: Documentación** como indica Files. Si el PR #78 ya está fusionado, copiar su `openapi.json` a `docs/backend/openapi.json` y correr `pnpm api:generate`; si no, anotarlo como pendiente.
 - [ ] **Step 5: Verificación final:** `pnpm ci:verify` (si no hay red para `pnpm audit`, ejecutar el resto y decirlo). Expected: todo en verde y `git diff --exit-code src/lib/api/generated` limpio.
 - [ ] **Step 6: Commit** `docs(f3): README, roadmap y e2e de la revisión de agencias`.
 
@@ -271,4 +273,4 @@ Entradas o condiciones que el spec implica pero que ningún flujo feliz cubre; c
 
 - **Cobertura del spec:** DataTable (T1), listado + filtro en URL + menú + guarda (T4), detalle + territorio (T3, T5), acciones y confirmación reforzada + 2FA + 409/429 (T6), pruebas/a11y/README (T7), cliente y mensajes (T2). Fuera de alcance del spec no tiene tareas, a propósito.
 - **Consistencia de tipos:** `AgencyStatus`, `AgencySummary`, `AgencyApplication`, `StatusFilter`, `ReviewAction`, `agencyKeys`, `useAgenciesApi` se definen en T2/T4/T6 y se usan con los mismos nombres después.
-- **Pendiente conocido:** que el servidor real acepte el catálogo sin `q` solo se prueba en el e2e (T7); el resto usa MSW.
+- **Pendiente conocido:** que el servidor real tenga el filtro `codes` (PR #78 sin fusionar) solo se prueba en el e2e (T7); el resto usa MSW y el hook tolera su ausencia.

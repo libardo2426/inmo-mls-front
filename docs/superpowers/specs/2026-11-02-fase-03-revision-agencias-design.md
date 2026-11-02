@@ -64,7 +64,7 @@ Que el personal del MLS revise las solicitudes de inmobiliarias: ver el listado 
 | A. Mostrar solo el código | Simple | Inútil para el revisor |
 | **B. Resolver el nombre (elegida, decidido)** | Datos legibles | Trabajo extra y dependencia del catálogo |
 
-**Cómo resolver B** (**mi propuesta**): pedirle al backend un filtro `codes` (pedido **B-16**, enviado). Mientras no exista, el hook descarga el catálogo paginado (`GET /v1/territory/units/co/municipality?limit=100`, sin `q`) y arma un mapa `código → nombre` (~1.100 unidades, ~11 peticiones), una vez por sesión y con caché de TanStack Query. Si el backend implementa `codes`, solo cambia el interior del hook. **Sin verificar:** que el endpoint acepte llamadas sin `q`; se confirma al construir y, si falla, se cae a mostrar el código y B-16 queda como bloqueo.
+**Cómo resolver B** (**decidido**): el backend implementó el filtro `codes` (pedido **B-16**, PR #78 de `inmo-mls`, pendiente de fusión): `?codes=05001,11001&limit=100`, hasta 100 códigos, desconocidos ignorados sin error, `parentCode` en cada ítem; 400 con 101 códigos o ninguno válido. El hook consulta el municipio y, con su `parentCode`, el departamento: dos peticiones, sin descargar el catálogo. Mientras el PR no esté desplegado, un backend sin el filtro devolvería la primera página sin filtrar; por eso el hook solo acepta el ítem cuyo `code` fue pedido y, si no aparece o hay un 400, muestra el código.
 
 ## 4. Diseño
 
@@ -105,7 +105,7 @@ Convención: igual que `features/auth` (api, hooks, components, screens, message
 ## 5. Restricciones
 
 - Sin endpoint de métricas ni auditoría: no se muestra historial de revisiones.
-- Sin `allowedActions` de agencia (B-15) ni búsqueda por código de territorio (B-16): se resuelven en el front como se indica.
+- Sin `allowedActions` de agencia (B-15) se resuelve en el front con permisos + `status`. La búsqueda por código de territorio (B-16) ya la resolvió el backend con `codes`.
 - Las acciones sensibles exigen 2FA activo; sin él, el backend responde 403 `two_factor_required` y F1 lleva a activarlo.
 - Densidad alta, tema claro/oscuro, textos en `lib/i18n/es.ts`.
 
@@ -118,7 +118,7 @@ Convención: igual que `features/auth` (api, hooks, components, screens, message
 
 ## 6.1 Aclaraciones tras la revisión (mis llamadas)
 
-- **Territorio:** `q` es opcional en el OpenAPI (mínimo 3 letras solo si se envía) y cada ítem trae `parentCode`. El nombre del **departamento** sale de una segunda carga del nivel `department` (33 unidades, una petición), no del municipio. Si el departamento falla, se muestra solo el municipio.
+- **Territorio:** con el filtro `codes` (siempre con `limit=100`) cada ítem trae `parentCode`. El nombre del **departamento** sale de una segunda consulta al nivel `department` con ese `parentCode`. Si el departamento falla, se muestra solo el municipio.
 - **Paginación:** `limit` máximo 100 (por defecto 20); el filtro `status` acepta un solo valor. «Todos» = no enviar `status`. El listado usa `limit=50`.
 - **Filtro en URL:** search param `status`, validado con `validateSearch`; valores: los 6 estados o `all`. Sin param se interpreta como `pending` (sin redirección), de modo que el botón «atrás» desde el detalle conserva el filtro.
 - **Aviso de éxito:** no hay librería de notificaciones en el proyecto y no se agrega una. Tras una acción se vuelve al listado con un `Alert` en línea (estado en la ruta de retorno, desaparece al cambiar de filtro). Tras un 409 se queda en el detalle recargado, con el aviso de que otra persona ya la revisó.
@@ -136,6 +136,5 @@ Nombres de query keys, composición exacta de los diálogos, estilos de densidad
 
 | # | Pregunta | Afecta |
 |---|---|---|
-| Q6 | Nombre de `territorialUnitCode`: B-16 enviado (filtro `codes`); mientras tanto, catálogo en caché. | F3, F5 |
-| — | ¿El endpoint de territorio acepta llamadas sin `q`? Se verifica al construir. | F3 |
+| Q6 | Nombre de `territorialUnitCode`: **resuelta por el backend** con el filtro `codes` (PR #78). Falta que se fusione y despliegue; copiar el `openapi.json` nuevo y regenerar el cliente. | F3, F5 |
 | — | ¿`compliance` realmente solo lee? Se confirma con un `/me` real (Q1). | F3 |
