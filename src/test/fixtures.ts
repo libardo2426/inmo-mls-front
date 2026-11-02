@@ -40,3 +40,32 @@ export function agencySummaryFixture(overrides: Record<string, unknown> = {}) {
     ...overrides,
   };
 }
+
+/** `GET /v1/agencies/{id}`. */
+export function agencyDetailFixture(overrides: Record<string, unknown> = {}) {
+  const { id, tradeName, legalName, taxIdType, taxId, status, submittedAt } =
+    agencySummaryFixture();
+  return {
+    id,
+    tradeName,
+    legalName,
+    taxIdType,
+    taxId,
+    status,
+    submittedAt,
+    email: 'contacto@demo.test',
+    phone: '3001234567',
+    attributes: {},
+    reviewReason: null,
+    reviewedAt: null,
+    approvedAt: null,
+    mainOffice: {
+      id: '0192a3b4-0000-7000-8000-0000000000f1',
+      name: 'Sede principal',
+      territorialUnitCode: '05001',
+      address: 'Calle 1 # 2-3',
+      phone: null,
+    },
+    ...overrides,
+  };
+}

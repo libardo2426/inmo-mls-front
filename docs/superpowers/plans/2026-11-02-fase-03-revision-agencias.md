@@ -4,7 +4,7 @@
 
 **Goal:** Que el personal del MLS liste, abra y revise (aprobar / devolver con cambios / rechazar) solicitudes de inmobiliarias desde el panel.
 
-**Architecture:** Nueva feature `src/features/agencies` (api, hooks, components, screens, messages) con el mismo patrón que `features/auth`, un `DataTable` genérico en `components/shared` y una feature `src/features/territory` que resuelve código → nombre de municipio/departamento. Las rutas viven bajo `_protegido/agencias` con guarda `assertCan`. Se construye por capas: cimientos → lectura → acciones → cierre.
+**Architecture:** Nueva feature `src/features/agencies` (api, hooks, components, screens, messages) con el mismo patrón que `features/auth`, un `DataTable` genérico en `components/shared` y un módulo compartido `src/lib/territory` que resuelve código → nombre de municipio/departamento. Las rutas viven bajo `_protegido/agencias` con guarda `assertCan`. Se construye por capas: cimientos → lectura → acciones → cierre.
 
 **Tech Stack:** React 19, TypeScript, TanStack Router y Query (`useInfiniteQuery`, `useMutation`), Zod 4 (tipos generados desde `openapi.json`), shadcn `radix-nova`, Vitest + Testing Library + MSW, Playwright (e2e).
 
@@ -52,7 +52,7 @@ Entradas o condiciones que el spec implica pero que ningún flujo feliz cubre; c
 | `src/features/agencies/hooks/` | `useAgenciesApi`, `useAgencies`, `useAgency`, `useReviewAgency` |
 | `src/features/agencies/components/` | `AgencyStatusBadge`, `ReviewDialog`, `AgencyDetailCard` |
 | `src/features/agencies/screens/` | `AgenciesListScreen`, `AgencyDetailScreen` |
-| `src/features/territory/` | `territory-api.ts`, `useTerritoryName.ts` |
+| `src/lib/territory/` | `territory-api.ts`, `useTerritoryName.ts` |
 | `src/routes/_protegido/agencias/{index,$agencyId}.tsx` | Rutas con guarda de permiso |
 | `src/config/navigation.ts` (modificar) | Ítem «Agencias» |
 | `src/lib/i18n/es.ts` (modificar) | Textos |
@@ -139,8 +139,8 @@ Entradas o condiciones que el spec implica pero que ningún flujo feliz cubre; c
 El backend implementó el filtro `codes` (PR #78 de `inmo-mls`): `GET /v1/territory/units/{país}/{nivel}?codes=05001,11001&limit=100`. Acepta hasta 100 códigos, limpia espacios, vacíos y repetidos, ignora los desconocidos sin error y devuelve `parentCode`. Con 101 códigos, o ninguno válido, responde 400. `limit` por defecto es 10, así que siempre se envía `limit=100`.
 
 **Files:**
-- Create: `src/features/territory/territory-api.ts`, `src/features/territory/useTerritoryName.ts`
-- Test: `src/features/territory/territory.test.tsx`
+- Create: `src/lib/territory/territory-api.ts`, `src/lib/territory/useTerritoryName.ts`
+- Test: `src/lib/territory/territory.test.tsx`
 
 **Interfaces:**
 - Consumes: `territoryPageResponseSchema`, `TerritoryPage` (Task 2); `useHttpClient()` de `@/app/app-context`; `useMe()` de `@/lib/permissions` (país = `me.tenant.code`).
@@ -157,7 +157,7 @@ El backend implementó el filtro `codes` (PR #78 de `inmo-mls`): `GET /v1/territ
   Query keys `['territory', country, level, code]`, `staleTime: Infinity`, `retry: false`. La consulta de departamento se habilita solo cuando el municipio resolvió y trae `parentCode`.
 
 - [ ] **Step 1: Write the failing tests** (MSW sobre `*/v1/territory/units/co/municipality` y `.../department`): `envía codes y limit=100 y no envía q`; `deduplica y recorta a 100 códigos`; `label = «Medellín, Antioquia»` pidiendo primero el municipio y luego el departamento con su `parentCode`; `departamento caído ⇒ solo el municipio`; `municipio caído (500) o 400 ⇒ label es el código, isLoading termina en false` (**Review Focus 1**); `código desconocido (ausente en la respuesta) ⇒ label es el código`; **`un backend sin el filtro devuelve la primera página sin filtrar ⇒ no se toma el ítem equivocado, label es el código`**; `code undefined ⇒ label vacío sin peticiones`.
-- [ ] **Step 2: Run** `pnpm vitest run src/features/territory` — Expected: FAIL.
+- [ ] **Step 2: Run** `pnpm vitest run src/lib/territory` — Expected: FAIL.
 - [ ] **Step 3: Implement** según Interfaces con `HttpClient.request({ host: 'country', path: '/territory/units/{country}/{level}', query: { codes, limit: 100 }, schema: territoryPageResponseSchema })`. Filtrar la respuesta por los códigos pedidos. Si `pnpm api:generate` aún no trae `codes` (PR sin fusionar), la consulta se arma a mano; al actualizar `docs/backend/openapi.json` solo cambia el tipo de la query.
 - [ ] **Step 4: Run** tests + `pnpm typecheck && pnpm lint` — Expected: PASS.
 - [ ] **Step 5: Commit** `feat(territorio): resolver nombre de municipio y departamento con el filtro codes`.

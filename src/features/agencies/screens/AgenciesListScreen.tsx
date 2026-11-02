@@ -69,7 +69,11 @@ export function AgenciesListScreen({ filter }: { filter: StatusFilter }) {
         onRetry={() => void query.refetch()}
         empty={{ title: es.agencies.list.emptyTitle, description: es.agencies.list.emptyHelp }}
         onRowActivate={(agency) =>
-          void navigate({ to: '/agencias/$agencyId', params: { agencyId: agency.id } })
+          void navigate({
+            to: '/agencias/$agencyId',
+            params: { agencyId: agency.id },
+            search: { status: filter },
+          })
         }
         hasMore={query.hasNextPage}
         onLoadMore={() => void query.fetchNextPage()}
