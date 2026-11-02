@@ -68,6 +68,11 @@ describe('TerminateMemberDialog', () => {
     expect(screen.getByText(es.members.terminate.description('Luis Demo'))).toBeInTheDocument();
   });
 
+  it('el broker (motivo opcional) no ve el aviso de 2FA, que no se le exige', () => {
+    setup(false);
+    expect(screen.queryByText(es.members.terminate.twoFactorNotice)).not.toBeInTheDocument();
+  });
+
   it('deshabilitado con motivo vacío, solo espacios o de más de 1000 caracteres', async () => {
     setup();
     expect(submit()).toBeDisabled();

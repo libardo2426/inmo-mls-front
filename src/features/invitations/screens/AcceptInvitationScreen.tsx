@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { useState, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { DescriptionItem, DescriptionList } from '@/components/shared/DescriptionList';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
@@ -34,17 +34,19 @@ function acceptErrorMessage(error: unknown): string {
 }
 
 /**
- * Toma el token del fragmento de la URL, lo guarda en memoria y deja la URL sin él. Es idempotente:
- * si el componente se monta dos veces, la segunda no encuentra fragmento y conserva el token.
+ * Toma el token del fragmento de la URL y lo guarda en memoria. Es idempotente: si el componente se
+ * monta dos veces, la segunda no encuentra fragmento y conserva el token. La URL se limpia aparte,
+ * en un efecto, porque `replaceState` avisa al router y no debe ocurrir durante el render.
  */
 function takeTokenFromUrl(): string | null {
   const fromHash = readTokenFromHash(window.location.hash);
-  if (fromHash) {
-    setInvitationToken(fromHash);
-    window.history.replaceState(null, '', window.location.pathname + window.location.search);
-  }
+  if (fromHash) setInvitationToken(fromHash);
   return getInvitationToken();
 }
+
+/** Errores definitivos del servidor (4xx): reintentar no los cambia. */
+const isDefinitive = (error: unknown) =>
+  error instanceof ApiError && error.status >= 400 && error.status < 500;
 
 type Props = {
   session: 'anonymous' | 'no-membership' | 'authenticated';
@@ -58,11 +60,21 @@ export function AcceptInvitationScreen({ session, renderAuth, onAccepted }: Prop
   const api = useInvitationsApi();
   const [token] = useState(takeTokenFromUrl);
 
+  // El token ya está en memoria: se quita el fragmento de la URL conservando el estado del historial.
+  useEffect(() => {
+    if (window.location.hash) {
+      window.history.replaceState(
+        window.history.state,
+        '',
+        window.location.pathname + window.location.search,
+      );
+    }
+  }, []);
+
   const preview = useQuery({
     queryKey: ['invitations', 'preview', token],
     queryFn: () => api.preview(token ?? ''),
     enabled: token !== null,
-    retry: false,
     staleTime: Infinity,
   });
   const accept = useMutation({
@@ -84,7 +96,14 @@ export function AcceptInvitationScreen({ session, renderAuth, onAccepted }: Prop
       </AuthCard>
     );
   }
-  if (preview.isError) return <Notice message={acceptErrorMessage(preview.error)} />;
+  if (preview.isError) {
+    return (
+      <Notice
+        message={acceptErrorMessage(preview.error)}
+        onRetry={isDefinitive(preview.error) ? undefined : () => void preview.refetch()}
+      />
+    );
+  }
 
   const invitation = preview.data;
   return (
@@ -132,12 +151,19 @@ export function AcceptInvitationScreen({ session, renderAuth, onAccepted }: Prop
   );
 }
 
-function Notice({ message }: { message: string }) {
+function Notice({ message, onRetry }: { message: string; onRetry?: (() => void) | undefined }) {
   return (
     <AuthCard title={t.title}>
-      <Alert variant="destructive" role="alert">
-        <AlertDescription>{message}</AlertDescription>
-      </Alert>
+      <div className="flex flex-col gap-3">
+        <Alert variant="destructive" role="alert">
+          <AlertDescription>{message}</AlertDescription>
+        </Alert>
+        {onRetry ? (
+          <Button variant="outline" onClick={onRetry}>
+            {es.states.retry}
+          </Button>
+        ) : null}
+      </div>
     </AuthCard>
   );
 }

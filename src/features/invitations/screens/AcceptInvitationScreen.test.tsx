@@ -90,6 +90,20 @@ describe('AcceptInvitationScreen', () => {
     expect(seen.previews).toEqual([{ token: 'abc' }]);
   });
 
+  it('al limpiar el fragmento conserva el estado del historial (el del router)', async () => {
+    backend();
+    window.history.replaceState({ __TSR_index: 3 }, '', '/invitaciones/aceptar#token=abc');
+    const client = createHttpClient({ config, origin: 'http://localhost:3000' });
+    render(
+      <Providers config={config} queryClient={createQueryClient()} http={client}>
+        <AcceptInvitationScreen session="anonymous" renderAuth={() => null} onAccepted={vi.fn()} />
+      </Providers>,
+    );
+    expect(await screen.findByText(t.invitedTo('Inmobiliaria Demo'))).toBeVisible();
+    expect(window.location.hash).toBe('');
+    expect(window.history.state).toEqual({ __TSR_index: 3 });
+  });
+
   it('muestra los datos de la invitación y el panel de autenticación a quien no tiene sesión', async () => {
     backend();
     setup('anonymous');
@@ -125,6 +139,23 @@ describe('AcceptInvitationScreen', () => {
     expect(await screen.findByText(message)).toBeVisible();
     expect(screen.queryByTestId('auth')).not.toBeInTheDocument();
   });
+
+  it('un fallo transitorio de la vista previa ofrece «Reintentar» sin perder el token', async () => {
+    let calls = 0;
+    const seen = backend({
+      preview: () => {
+        calls += 1;
+        // Falla la petición inicial y sus 2 reintentos automáticos; la siguiente funciona.
+        return calls <= 3 ? problem(503, 'service_unavailable') : HttpResponse.json(preview);
+      },
+    });
+    setup('anonymous');
+    await userEvent.click(
+      await screen.findByRole('button', { name: es.states.retry }, { timeout: 6000 }),
+    );
+    expect(await screen.findByText(t.invitedTo('Inmobiliaria Demo'))).toBeVisible();
+    expect(seen.previews.at(-1)).toEqual({ token: 'abc' });
+  }, 12000);
 
   it('con sesión sin inmobiliaria ofrece aceptar; aceptar llama onAccepted una vez', async () => {
     const seen = backend();

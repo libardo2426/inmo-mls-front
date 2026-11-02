@@ -82,7 +82,9 @@ export function TerminateMemberDialog({
             <DialogTitle>{text.title(member.fullName)}</DialogTitle>
             <DialogDescription>{text.description(member.fullName)}</DialogDescription>
           </DialogHeader>
-          <p className="text-muted-foreground text-sm">{text.twoFactorNotice}</p>
+          {reasonRequired ? (
+            <p className="text-muted-foreground text-sm">{text.twoFactorNotice}</p>
+          ) : null}
           <div className="flex flex-col gap-1">
             <Label htmlFor="terminate-reason">{text.reasonLabel}</Label>
             <Textarea
