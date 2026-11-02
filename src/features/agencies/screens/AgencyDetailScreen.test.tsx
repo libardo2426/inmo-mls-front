@@ -59,6 +59,33 @@ describe('detalle de agencia', () => {
     }
   });
 
+  it('organiza los datos en regiones nombradas con términos y definiciones', async () => {
+    useDetail();
+    mountApp(PATH);
+    await screen.findByRole('heading', { level: 1, name: 'Inmobiliaria Demo' });
+    for (const name of [
+      es.agencies.detail.sections.application,
+      es.agencies.detail.sections.office,
+    ]) {
+      expect(screen.getByRole('region', { name })).toBeVisible();
+    }
+    const application = screen.getByRole('region', {
+      name: es.agencies.detail.sections.application,
+    });
+    expect(within(application).getAllByRole('term').length).toBeGreaterThan(0);
+    expect(within(application).getAllByRole('definition').length).toBeGreaterThan(0);
+  });
+
+  it('un dato nulo muestra «No informado»', async () => {
+    useDetail(agencyDetailFixture({ email: null }));
+    mountApp(PATH);
+    await screen.findByRole('heading', { level: 1 });
+    const application = screen.getByRole('region', {
+      name: es.agencies.detail.sections.application,
+    });
+    expect(within(application).getAllByText(es.agencies.detail.none).length).toBeGreaterThan(0);
+  });
+
   it('muestra reviewReason y reviewedAt solo si existen', async () => {
     useDetail();
     const first = mountApp(PATH);
@@ -218,6 +245,9 @@ describe('acciones de revisión en el detalle', () => {
       within(dialog).getByRole('button', { name: es.agencies.review.actions.approve }),
     );
     expect(await screen.findByText(es.agencies.review.conflict)).toBeInTheDocument();
+    expect(
+      screen.getByText(es.agencies.review.conflict).closest('[data-slot="alert"]'),
+    ).toHaveAttribute('data-variant', 'warning');
     expect(history.location.pathname).toBe(PATH);
     expect(detailCalls).toBeGreaterThan(1);
     expect(

@@ -1,6 +1,7 @@
 import { useIsMutating } from '@tanstack/react-query';
 import { Link, useNavigate, type HistoryState } from '@tanstack/react-router';
 import { useState } from 'react';
+import { PageHeader } from '@/components/shared/PageHeader';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { ErrorState } from '@/components/shared/ErrorState';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -29,7 +30,7 @@ export function AgencyDetailScreen({ agencyId, filter }: Props) {
   const busy = useIsMutating({ mutationKey: REVIEW_MUTATION_KEY }) > 0;
 
   const back = (
-    <Link to="/agencias" search={{ status: filter }} className="text-sm underline">
+    <Link to="/agencias" search={{ status: filter }} className="text-data underline">
       {es.agencies.detail.back}
     </Link>
   );
@@ -65,10 +66,9 @@ export function AgencyDetailScreen({ agencyId, filter }: Props) {
 
   return (
     <div className="flex flex-col gap-4 p-6">
-      {back}
-      <h1 className="text-lg font-semibold">{agency.tradeName}</h1>
+      <PageHeader title={agency.tradeName} backLink={back} />
       {conflict ? (
-        <Alert>
+        <Alert variant="warning">
           <AlertDescription>{es.agencies.review.conflict}</AlertDescription>
         </Alert>
       ) : null}

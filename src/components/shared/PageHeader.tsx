@@ -7,10 +7,10 @@ type PageHeaderProps = {
   backLink?: ReactNode;
 };
 
-/** Encabezado de página: enlace de regreso, título (único `h1`), descripción y acciones. */
+/** Encabezado de página (un `div`, no `header`, para no duplicar el landmark `banner`): enlace de regreso, título (único `h1`), descripción y acciones. */
 export function PageHeader({ title, description, actions, backLink }: PageHeaderProps) {
   return (
-    <header className="flex flex-col gap-1">
+    <div className="flex flex-col gap-1">
       {backLink}
       <div className="flex items-start justify-between gap-4">
         <div className="flex min-w-0 flex-col gap-0.5">
@@ -19,6 +19,6 @@ export function PageHeader({ title, description, actions, backLink }: PageHeader
         </div>
         {actions ? <div className="flex shrink-0 items-center gap-2">{actions}</div> : null}
       </div>
-    </header>
+    </div>
   );
 }
