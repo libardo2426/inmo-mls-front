@@ -40,13 +40,19 @@ function problem(status: number, code: string, headers: Record<string, string> =
   );
 }
 
-function setup() {
+function setup(reasonRequired = true) {
   const onDone = vi.fn();
   const onOpenChange = vi.fn();
   const client = createHttpClient({ config, origin: 'http://localhost:3000' });
   render(
     <Providers config={config} queryClient={createQueryClient()} http={client}>
-      <TerminateMemberDialog member={member} open onOpenChange={onOpenChange} onDone={onDone} />
+      <TerminateMemberDialog
+        member={member}
+        open
+        reasonRequired={reasonRequired}
+        onOpenChange={onOpenChange}
+        onDone={onDone}
+      />
     </Providers>,
   );
   return { onDone, onOpenChange };
@@ -116,5 +122,30 @@ describe('TerminateMemberDialog', () => {
     expect(submit()).toBeDisabled();
     await userEvent.click(submit());
     expect(seen.calls).toBe(1);
+  });
+
+  it('con motivo opcional se habilita sin motivo y envía un cuerpo vacío', async () => {
+    const seen = mockTerminate();
+    const { onDone } = setup(false);
+    expect(submit()).toBeEnabled();
+    expect(
+      screen.getByText(es.members.terminate.reasonOptionalHelp(REASON_MAX)),
+    ).toBeInTheDocument();
+    await userEvent.click(submit());
+    await vi.waitFor(() => expect(onDone).toHaveBeenCalledTimes(1));
+    expect(JSON.parse(seen.body)).toEqual({});
+  });
+
+  it('con motivo opcional y escrito lo envía recortado; el tope de 1000 sigue aplicando', async () => {
+    const seen = mockTerminate();
+    const { onDone } = setup(false);
+    await userEvent.click(reasonField());
+    await userEvent.paste('x'.repeat(REASON_MAX + 1));
+    expect(submit()).toBeDisabled();
+    await userEvent.clear(reasonField());
+    await userEvent.type(reasonField(), '  Cambio de agencia ');
+    await userEvent.click(submit());
+    await vi.waitFor(() => expect(onDone).toHaveBeenCalledTimes(1));
+    expect(JSON.parse(seen.body)).toEqual({ reason: 'Cambio de agencia' });
   });
 });

@@ -21,13 +21,21 @@ import { REASON_MAX } from '../terminate-rules';
 
 type Props = {
   member: Member;
+  /** Obligatorio solo para el `admin` del MLS; al broker se le deja opcional. */
+  reasonRequired: boolean;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onDone: () => void;
 };
 
 /** Confirmación de la terminación de un miembro; el motivo es obligatorio. */
-export function TerminateMemberDialog({ member, open, onOpenChange, onDone }: Props) {
+export function TerminateMemberDialog({
+  member,
+  reasonRequired,
+  open,
+  onOpenChange,
+  onDone,
+}: Props) {
   const text = es.members.terminate;
   const mutation = useTerminateMember();
   const countdown = useCountdown();
@@ -38,7 +46,7 @@ export function TerminateMemberDialog({ member, open, onOpenChange, onDone }: Pr
   );
 
   const trimmed = reason.trim();
-  const reasonOk = trimmed.length > 0 && trimmed.length <= REASON_MAX;
+  const reasonOk = trimmed.length <= REASON_MAX && (!reasonRequired || trimmed.length > 0);
   const waiting = countdown.remaining > 0;
   const canSubmit = reasonOk && !mutation.isPending && !waiting;
 
@@ -46,7 +54,7 @@ export function TerminateMemberDialog({ member, open, onOpenChange, onDone }: Pr
     event.preventDefault();
     if (!canSubmit) return;
     mutation.mutate(
-      { memberId: member.memberId, reason: trimmed },
+      { memberId: member.memberId, ...(trimmed ? { reason: trimmed } : {}) },
       {
         onSuccess: () => onDone(),
         onError: (error) => {
@@ -84,7 +92,7 @@ export function TerminateMemberDialog({ member, open, onOpenChange, onDone }: Pr
               aria-describedby="terminate-reason-help"
             />
             <p id="terminate-reason-help" className="text-muted-foreground text-xs">
-              {text.reasonHelp(REASON_MAX)}
+              {reasonRequired ? text.reasonHelp(REASON_MAX) : text.reasonOptionalHelp(REASON_MAX)}
             </p>
           </div>
           {mutation.isError ? (

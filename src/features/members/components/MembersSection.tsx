@@ -9,7 +9,7 @@ import { es } from '@/lib/i18n/es';
 import { useMe } from '@/lib/permissions';
 import { useMembers } from '../hooks/useMembers';
 import { TERMINATE_MUTATION_KEY } from '../hooks/useTerminateMember';
-import { canTerminateMember } from '../terminate-rules';
+import { canTerminateMember, reasonRequiredFor } from '../terminate-rules';
 import { MemberStatusBadge } from './MemberStatusBadge';
 import { TerminateMemberDialog } from './TerminateMemberDialog';
 
@@ -115,6 +115,7 @@ export function MembersSection({ agencyId }: { agencyId: string }) {
         <TerminateMemberDialog
           key={target.memberId}
           member={target}
+          reasonRequired={reasonRequiredFor(me)}
           open
           onOpenChange={(open) => (open ? undefined : setTarget(null))}
           onDone={() => {
