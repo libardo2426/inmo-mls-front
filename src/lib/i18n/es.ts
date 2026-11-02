@@ -12,6 +12,13 @@ export const es = {
   nav: {
     home: 'Inicio',
   },
+  states: {
+    forbiddenTitle: 'No tiene permiso para ver esta página',
+    forbiddenHelp: 'Si cree que debería tenerlo, pida acceso a un administrador.',
+    genericError: 'Ocurrió un error inesperado. Inténtelo de nuevo.',
+    reference: 'Referencia',
+    retry: 'Reintentar',
+  },
   config: {
     errorTitle: 'Error de configuración',
     errorHelp: 'La aplicación no puede iniciar. Revise las variables de entorno del despliegue.',
