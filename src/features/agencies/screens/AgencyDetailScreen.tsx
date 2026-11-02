@@ -1,6 +1,6 @@
 import { useIsMutating } from '@tanstack/react-query';
 import { Link, useNavigate, type HistoryState } from '@tanstack/react-router';
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { PageHeader } from '@/components/shared/PageHeader';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { ErrorState } from '@/components/shared/ErrorState';
@@ -17,10 +17,10 @@ import type { StatusFilter } from '../hooks/useAgencies';
 import { REVIEW_MUTATION_KEY } from '../hooks/useReviewAgency';
 import { reviewActionsFor, type ReviewAction } from '../review-rules';
 
-type Props = { agencyId: string; filter: StatusFilter };
+type Props = { agencyId: string; filter: StatusFilter; children?: ReactNode };
 
-/** Detalle de una solicitud de inmobiliaria. */
-export function AgencyDetailScreen({ agencyId, filter }: Props) {
+/** Detalle de una solicitud de inmobiliaria; `children` se muestra bajo la ficha (p. ej. miembros). */
+export function AgencyDetailScreen({ agencyId, filter, children }: Props) {
   const query = useAgency(agencyId);
   const agency = query.data;
   const me = useMe();
@@ -73,6 +73,7 @@ export function AgencyDetailScreen({ agencyId, filter }: Props) {
         </Alert>
       ) : null}
       <AgencyDetailCard agency={agency} />
+      {children}
       {actions.length > 0 ? (
         <div className="flex gap-2">
           {actions.map((action) => (
