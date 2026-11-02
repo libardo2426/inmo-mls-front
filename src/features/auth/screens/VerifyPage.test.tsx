@@ -67,7 +67,7 @@ describe('VerifyPage', () => {
     await userEvent.type(await screen.findByLabelText(es.auth.verify.code), '123456');
     await waitFor(() => expect(history.location.pathname).toBe('/'));
     expect(seen.totp).toEqual([{ code: '123456' }]);
-    expect(await screen.findByRole('heading', { name: es.app.name })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { level: 1, name: es.nav.home })).toBeInTheDocument();
   });
 
   it('respeta el redirect y descarta uno malicioso', async () => {
@@ -151,7 +151,7 @@ describe('VerifyPage', () => {
     const submit = screen.getByRole('button', { name: es.auth.verify.submit });
     await user.type(input, '123456');
     await user.click(submit);
-    await screen.findByRole('heading', { name: es.app.name });
+    await screen.findByRole('heading', { level: 1, name: es.nav.home });
     expect(seen.totp).toHaveLength(1);
   });
 });

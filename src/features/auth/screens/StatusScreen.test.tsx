@@ -54,7 +54,7 @@ describe('pantallas de estado', () => {
     mountApp('/');
     await userEvent.click(await screen.findByRole('button', { name: es.auth.status.retry }));
     await waitFor(() =>
-      expect(screen.getByRole('heading', { name: es.app.name })).toBeInTheDocument(),
+      expect(screen.getByRole('heading', { level: 1, name: es.nav.home })).toBeInTheDocument(),
     );
   });
 });

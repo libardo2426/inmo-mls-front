@@ -222,7 +222,7 @@ describe('ActivateTwoFactorPage — paso códigos', () => {
     await user.click(screen.getByRole('checkbox', { name: es.auth.activate.saved }));
     await user.click(screen.getByRole('button', { name: es.auth.activate.continue }));
     await waitFor(() => expect(history.location.pathname).toBe('/'));
-    expect(await screen.findByRole('heading', { name: es.app.name })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { level: 1, name: es.nav.home })).toBeInTheDocument();
   });
 
   it('ni los códigos ni la clave llegan a ningún almacenamiento ni a la consola', async () => {
@@ -231,7 +231,7 @@ describe('ActivateTwoFactorPage — paso códigos', () => {
     const user = await goToCodes();
     await user.click(screen.getByRole('checkbox', { name: es.auth.activate.saved }));
     await user.click(screen.getByRole('button', { name: es.auth.activate.continue }));
-    await screen.findByRole('heading', { name: es.app.name });
+    await screen.findByRole('heading', { level: 1, name: es.nav.home });
     expect(setItem.mock.calls.filter(([key]) => key !== 'innmo-theme')).toEqual([]);
     for (const spy of consoleSpies) {
       const logged = JSON.stringify(spy.mock.calls);

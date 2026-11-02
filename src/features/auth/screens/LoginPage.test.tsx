@@ -89,7 +89,7 @@ describe('LoginPage', () => {
     backend({ signIn: session });
     const { history } = mountApp('/iniciar-sesion');
     await fillAndSubmit();
-    expect(await screen.findByRole('heading', { name: es.app.name })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { level: 1, name: es.nav.home })).toBeInTheDocument();
     expect(history.location.pathname).toBe('/');
   });
 
@@ -172,7 +172,7 @@ describe('LoginPage', () => {
     await user.type(await screen.findByLabelText(es.auth.login.email), 'admin@innmo.test');
     await user.type(screen.getByLabelText(es.auth.login.password), 'una-clave-larga-1');
     await user.dblClick(screen.getByRole('button', { name: es.auth.login.submit }));
-    await screen.findByRole('heading', { name: es.app.name });
+    await screen.findByRole('heading', { level: 1, name: es.nav.home });
     expect(state.signInCalls).toBe(1);
   });
 
@@ -180,7 +180,7 @@ describe('LoginPage', () => {
     backend({ signIn: session });
     mountApp('/iniciar-sesion');
     await fillAndSubmit();
-    await screen.findByRole('heading', { name: es.app.name });
+    await screen.findByRole('heading', { level: 1, name: es.nav.home });
     const stored = setItem.mock.calls.filter(([key]) => key !== 'innmo-theme');
     expect(stored).toEqual([]);
     for (const spy of consoleSpies) {
@@ -193,7 +193,7 @@ describe('LoginPage', () => {
     server.use(http.get('*/v1/me', () => HttpResponse.json(meFixture())));
     const { history } = mountApp('/iniciar-sesion');
     await waitFor(() => expect(history.location.pathname).toBe('/'));
-    expect(await screen.findByRole('heading', { name: es.app.name })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { level: 1, name: es.nav.home })).toBeInTheDocument();
   });
 
   it('ofrece un enlace a /recuperar', async () => {

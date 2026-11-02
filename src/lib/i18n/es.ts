@@ -12,6 +12,13 @@ export const es = {
   nav: {
     home: 'Inicio',
   },
+  shell: {
+    toggleMenu: 'Plegar o desplegar el menú',
+    mainNav: 'Navegación principal',
+    userMenu: 'Menú de usuario',
+    country: 'País',
+    logout: 'Cerrar sesión',
+  },
   states: {
     forbiddenTitle: 'No tiene permiso para ver esta página',
     forbiddenHelp: 'Si cree que debería tenerlo, pida acceso a un administrador.',

@@ -24,7 +24,7 @@ describe('renderApp', () => {
   it('con config válida y sesión, / muestra el encabezado y el conmutador de tema', async () => {
     server.use(http.get('*/v1/me', () => HttpResponse.json(meFixture())));
     mount({ __APP_CONFIG__: validConfig }, '/');
-    expect(await screen.findByRole('heading', { name: es.app.name })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { level: 1, name: es.nav.home })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: es.theme.toggle })).toBeInTheDocument();
   });
 
@@ -36,7 +36,7 @@ describe('renderApp', () => {
   it('con config inválida muestra la pantalla de error y no monta el router', async () => {
     mount({ __APP_CONFIG__: { ...validConfig, TENANT_CODE: '' } }, '/');
     expect(await screen.findByRole('heading', { name: es.config.errorTitle })).toBeInTheDocument();
-    expect(screen.queryByRole('heading', { name: es.app.name })).toBeNull();
+    expect(screen.queryByRole('heading', { level: 1, name: es.nav.home })).toBeNull();
   });
 
   it('sin sesión, / redirige a /iniciar-sesion', async () => {

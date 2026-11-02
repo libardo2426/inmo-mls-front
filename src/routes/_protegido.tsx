@@ -1,4 +1,5 @@
-import { createFileRoute, Outlet } from '@tanstack/react-router';
+import { createFileRoute } from '@tanstack/react-router';
+import { AppShell } from '@/app/shell/AppShell';
 import { enforce } from '@/features/auth/session/enforce';
 
 export const Route = createFileRoute('/_protegido')({
@@ -8,5 +9,5 @@ export const Route = createFileRoute('/_protegido')({
     if (state.status !== 'authenticated') throw new Error('Sesión no autenticada');
     return { me: state.me };
   },
-  component: Outlet,
+  component: AppShell,
 });
