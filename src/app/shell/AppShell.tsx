@@ -23,7 +23,7 @@ export function AppShell() {
         <SidebarProvider open={open} onOpenChange={setOpen}>
           <AppSidebar me={me} />
           <SidebarInset>
-            <header className="flex h-12 items-center gap-2 border-b px-3">
+            <header className="bg-surface flex h-12 items-center gap-2 border-b px-3">
               <SidebarTrigger aria-label={es.shell.toggleMenu} />
               <div className="ml-auto flex items-center gap-1">
                 <ThemeToggle />
