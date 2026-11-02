@@ -4,3 +4,4 @@ export { Can } from './Can';
 export { useMe } from './context';
 export { PermissionsProvider } from './PermissionsProvider';
 export { useCan } from './useCan';
+export { assertCan, PermissionDeniedError } from './guard';

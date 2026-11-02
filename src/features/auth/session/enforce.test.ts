@@ -41,7 +41,10 @@ describe('enforce', () => {
     server.use(http.get(`${origin}/v1/me`, () => HttpResponse.json(meFixture())));
     await expect(
       enforce('protected', { context: context(), location: { href: '/' } }),
-    ).resolves.toBeUndefined();
+    ).resolves.toMatchObject({
+      status: 'authenticated',
+      me: { user: { email: 'admin@innmo.test' } },
+    });
   });
 
   it('public-only + sesión válida → redirect a /', async () => {
