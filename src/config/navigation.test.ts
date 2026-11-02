@@ -1,7 +1,7 @@
 import { Building2, House } from 'lucide-react';
 import { describe, expect, it } from 'vitest';
 import type { MeResponse } from '@/lib/api/schemas';
-import { meFixture } from '@/test/fixtures';
+import { agentMeFixture, brokerMeFixture, meFixture } from '@/test/fixtures';
 import { navigation, visibleNavigation, type NavItem } from './navigation';
 
 function meWith(permissions: Record<string, 'own' | 'agency' | 'network'>): MeResponse {
@@ -45,8 +45,8 @@ describe('visibleNavigation', () => {
 });
 
 describe('navigation', () => {
-  it('contiene Inicio (sin permiso) y Agencias (agency.list en red)', () => {
-    expect(navigation).toHaveLength(2);
+  it('contiene Inicio (sin permiso), Agencias (agency.list en red) y Equipo (member.invite de agencia)', () => {
+    expect(navigation).toHaveLength(3);
     expect(navigation[0]).toMatchObject({ to: '/', label: 'Inicio' });
     expect(navigation[0]?.permission).toBeUndefined();
     expect(navigation[1]).toMatchObject({
@@ -55,5 +55,20 @@ describe('navigation', () => {
       permission: 'agency.list',
       minScope: 'network',
     });
+    expect(navigation[2]).toMatchObject({
+      to: '/equipo',
+      label: 'Equipo',
+      permission: 'member.invite',
+      minScope: 'agency',
+    });
+  });
+});
+
+describe('menú real', () => {
+  it('el broker ve «Equipo»; un agent y el personal del MLS no', () => {
+    const labels = (me: MeResponse) => visibleNavigation(me).map((item) => item.label);
+    expect(labels(brokerMeFixture())).toContain('Equipo');
+    expect(labels(agentMeFixture())).not.toContain('Equipo');
+    expect(labels(meFixture())).not.toContain('Equipo');
   });
 });
