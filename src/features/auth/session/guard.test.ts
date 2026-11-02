@@ -29,6 +29,12 @@ describe('guardTarget', () => {
     ['no-access', noMembership, null],
     ['no-access', anonymous, { to: '/iniciar-sesion', search: { redirect: back } }],
     ['no-access', authenticated, { to: '/' }],
+    ['invitation', anonymous, null],
+    ['invitation', noMembership, null],
+    ['invitation', authenticated, null],
+    ['invitation', twoFactor, { to: '/activar-2fa' }],
+    ['invitation', unavailable, { to: '/mantenimiento' }],
+    ['invitation', offline, { to: '/sin-conexion' }],
   ] as const)('%s con %j → %j', (rule, state, expected) => {
     expect(guardTarget(rule, state, back)).toEqual(expected);
   });
