@@ -1,0 +1,346 @@
+<title>inmo-mls Detalle</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Lato:wght@400;700;900&display=swap">
+<style>
+/* Concepto: ficha de detalle de una propiedad dentro del panel AdminLTE de inmo-mls. Galería y datos a la izquierda; asesor, verificación y actividad en la columna derecha. */
+:root{
+  --base:#2B2E2B; --carbon:#44473F; --green:#3C7755; --green-d:#2D5D42; --leaf:#9BB96D; --sand:#DEC9B7; --pearl:#E2E2E2; --sky:#95D1FA; --white:#FFFFFF;
+  --bg:#EDEDEC; --line:#D3D3D0; --muted:#5D6159;
+  --sans:'Lato','Helvetica Neue',Arial,sans-serif; --mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--base);font-family:var(--sans);font-size:15px;line-height:1.5}
+svg{display:block}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit}
+.mono{font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+.app{display:grid;grid-template-columns:260px minmax(0,1fr);min-height:100vh}
+
+/* SIDEBAR */
+.side{background:var(--base);color:#E7E8E6;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+.brand{display:flex;align-items:center;gap:12px;padding:20px 22px;border-bottom:1px solid rgba(255,255,255,.1)}
+.brand svg{height:26px;width:auto}
+.brand b{font-size:23px;font-weight:900;letter-spacing:-.02em;color:#fff}
+.brand b em{font-style:normal;color:var(--leaf)}
+.user{display:flex;align-items:center;gap:12px;padding:18px 22px;border-bottom:1px solid rgba(255,255,255,.1)}
+.avatar{width:38px;height:38px;border-radius:50%;background:var(--sand);color:var(--base);display:grid;place-items:center;font-weight:900;font-size:14px;flex:none}
+.user div{min-width:0}.user strong{display:block;font-size:14px;color:#fff}.user span{font-size:12px;color:var(--sand)}
+.menu{padding:14px 12px 24px;display:flex;flex-direction:column;gap:2px}
+.menu h4{margin:18px 10px 8px;color:#A3A89F;font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+.menu a{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;font-weight:700;font-size:14.5px;color:#D8DAD6}
+.menu a svg{width:19px;height:19px;flex:none;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.menu a:hover{background:rgba(255,255,255,.07)}
+.menu a.on{background:var(--leaf);color:var(--base)}
+.menu a .n{margin-left:auto;font-family:var(--mono);font-size:11px;background:var(--carbon);color:#fff;padding:2px 8px;border-radius:999px}
+.sub{display:flex;flex-direction:column;margin:2px 0 6px 31px;border-left:1px solid rgba(255,255,255,.14)}
+.sub a{padding:7px 12px;font-weight:400;font-size:14px;border-radius:0 8px 8px 0}
+.sub a.cur{color:var(--leaf);font-weight:700;border-left:2px solid var(--leaf);margin-left:-1px;background:rgba(155,185,109,.1)}
+
+/* MAIN */
+.main{min-width:0;display:flex;flex-direction:column}
+.top{background:var(--white);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:16px;padding:12px 28px;position:sticky;top:0;z-index:5}
+.burger{display:none;border:0;background:none;padding:6px;cursor:pointer;color:var(--base)}
+.burger svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
+.gsearch{flex:1;max-width:420px;display:flex;align-items:center;gap:10px;background:var(--bg);border-radius:10px;padding:9px 14px;color:var(--muted)}
+.gsearch svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;flex:none}
+.gsearch input{border:0;background:none;font:inherit;color:var(--base);width:100%;outline:0}
+.gsearch input::placeholder{color:var(--muted)}
+.tools{margin-left:auto;display:flex;align-items:center;gap:18px}
+.bell{position:relative;width:22px;height:22px}
+.bell svg{width:22px;height:22px;stroke:var(--base);fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.bell i{position:absolute;top:-6px;right:-8px;background:var(--green);color:#fff;font:700 10px var(--sans);font-style:normal;border-radius:999px;padding:1px 5px}
+.who{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px}
+.who .avatar{width:34px;height:34px;font-size:13px}
+
+.content{padding:26px 28px 40px;display:flex;flex-direction:column;gap:22px}
+.pagehead{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+.pagehead .t{min-width:0}
+.crumbs{color:var(--muted);font-size:13px;margin-bottom:6px}.crumbs b{color:var(--green-d)}
+h1{margin:0;font-size:30px;font-weight:900;letter-spacing:-.02em;line-height:1.15;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.loc{color:var(--green-d);font-weight:700;margin-top:4px}
+.btns{display:flex;gap:10px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--green-d);color:#fff;font-weight:700;font-size:14.5px;padding:10px 18px;border-radius:10px;border:0;cursor:pointer}
+.btn.ghost{background:var(--white);color:var(--base);border:1px solid var(--line)}
+.btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+:is(.btn,button,a):focus-visible{outline:3px solid var(--sky);outline-offset:2px}
+.badge{display:inline-block;font-size:13px;font-weight:700;padding:3px 12px;border-radius:999px;font-family:var(--sans);letter-spacing:0}
+.b-act{background:var(--green);color:#fff}
+
+.cols{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:22px;align-items:start}
+.stack{display:flex;flex-direction:column;gap:20px;min-width:0}
+.card{background:var(--white);border-radius:14px;border:1px solid var(--line);min-width:0;overflow:hidden}
+.card>header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 22px;border-bottom:1px solid var(--line)}
+.card h3{margin:0;font-size:17px;font-weight:900;letter-spacing:-.01em}
+.card .body{padding:20px 22px}
+.card p{margin:0}
+
+/* GALERIA */
+.gal{position:relative;aspect-ratio:16/10;background:var(--sand)}
+.gal svg.scene{width:100%;height:100%}
+.gal .price{position:absolute;top:18px;left:18px;background:var(--carbon);color:#fff;font-weight:900;font-size:28px;padding:8px 18px;border-radius:12px}
+.gal .price small{font-weight:700;font-size:17px}
+.gal .tag{position:absolute;left:18px;bottom:18px;background:rgba(43,46,43,.82);color:#fff;padding:5px 12px;border-radius:8px}
+.nav{position:absolute;top:50%;transform:translateY(-50%);width:42px;height:42px;border-radius:50%;border:0;background:rgba(255,255,255,.92);color:var(--base);cursor:pointer;display:grid;place-items:center;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.nav svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.nav.l{left:14px}.nav.r{right:14px}
+.strip{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;padding:12px}
+.strip button{border:2px solid transparent;border-radius:10px;padding:0;background:none;cursor:pointer;overflow:hidden;aspect-ratio:4/3;opacity:.75}
+.strip button.on{border-color:var(--green);opacity:1}
+.strip svg{width:100%;height:100%}
+
+/* DATOS CLAVE */
+.facts{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:0}
+.fact{padding:16px 14px;border-right:1px solid var(--line);text-align:center}
+.fact:last-child{border-right:0}
+.fact strong{display:block;font-size:24px;font-weight:900;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1.1}
+.fact span{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.fact.g{background:var(--green);color:#fff}.fact.g span{color:#E4EEE8}
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chip{border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-weight:700;font-size:14px;display:flex;align-items:center;gap:8px}
+.chip i{width:8px;height:8px;border-radius:50%;background:var(--leaf)}
+dl{margin:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 28px}
+dl div{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid var(--bg)}
+dt{color:var(--muted)}
+dd{margin:0;font-weight:700;text-align:right;font-variant-numeric:tabular-nums}
+.map{position:relative;aspect-ratio:16/7;background:#E9E6DD}
+.map svg{width:100%;height:100%}
+
+/* COLUMNA DERECHA */
+.agent{display:flex;gap:14px;align-items:center}
+.agent .avatar{width:56px;height:56px;font-size:19px;background:var(--leaf)}
+.agent strong{font-size:18px;font-weight:900;display:block;line-height:1.2}
+.agent span{color:var(--muted);font-size:13.5px}
+.contact{display:grid;gap:10px;margin-top:16px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--bg);border-radius:10px;padding:10px 14px;font-size:14.5px;min-width:0}
+.row span{min-width:0;overflow-wrap:anywhere}
+.row button{border:0;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:5px 12px;font-weight:700;font-size:13px;cursor:pointer;flex:none}
+.tl{list-style:none;margin:0;padding:0;display:grid;gap:0}
+.tl li{display:grid;grid-template-columns:22px minmax(0,1fr);gap:12px;position:relative;padding-bottom:18px}
+.tl li:last-child{padding-bottom:0}
+.tl li::before{content:"";position:absolute;left:10px;top:22px;bottom:0;width:2px;background:var(--line)}
+.tl li:last-child::before{display:none}
+.tl i{width:22px;height:22px;border-radius:50%;background:var(--green);display:grid;place-items:center}
+.tl i::after{content:"";width:5px;height:9px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg) translate(-1px,-1px)}
+.tl strong{display:block;font-size:14.5px}
+.tl span{color:var(--muted);font-size:13px}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;text-align:center}
+.stats strong{display:block;font-size:26px;font-weight:900;font-variant-numeric:tabular-nums;line-height:1.1}
+.stats span{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.spark{width:100%;height:auto;margin-top:14px}
+.spark text{font-family:var(--sans);font-size:11px;fill:var(--muted)}
+.share{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.share .badge{background:var(--sand);color:var(--base)}
+.foot{padding:18px 28px;border-top:1px solid var(--line);background:var(--white);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:13px}
+
+@media (max-width:1180px){.cols{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:860px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{position:fixed;inset:0 auto 0 0;width:270px;z-index:20;transform:translateX(-100%);transition:transform .2s}
+  body.open .side{transform:none}
+  .burger{display:block}.who span{display:none}
+  .top,.content,.foot{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+  .facts{grid-template-columns:repeat(3,minmax(0,1fr))}.fact{border-bottom:1px solid var(--line)}
+  dl{grid-template-columns:minmax(0,1fr)}
+  .gal .price{font-size:22px}
+}
+@media (max-width:560px){h1{font-size:25px}.strip{gap:6px;padding:8px}}
+@media (prefers-reduced-motion:reduce){.side{transition:none}}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10"/></symbol>
+  <symbol id="i-build" viewBox="0 0 24 24"><path d="M4 21V5l8-2v18M12 9l8 2v10M2 21h20M8 8v.01M8 12v.01M8 16v.01M16 14v.01M16 18v.01"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6M16 4.8a3.5 3.5 0 010 6.4M18 14.4c2.2.6 3.5 2.5 3.5 5.6"/></symbol>
+  <symbol id="i-brief" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V4h6v3M3 13h18"/></symbol>
+  <symbol id="i-inbox" viewBox="0 0 24 24"><path d="M3 13l3-8h12l3 8v6H3zM3 13h5l1 3h6l1-3h5"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V4M4 20h16M8 16v-5M12 16V8M16 16v-3"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6zM8.5 12l2.5 2.5L16 9.5"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/></symbol>
+  <symbol id="i-logo" viewBox="0 0 100 76"><path fill="#fff" fill-rule="evenodd" d="M0 76V22A22 22 0 0 1 22 0H78A22 22 0 0 1 100 22V76Z M14 76V40A14 14 0 0 1 42 40V76Z M58 76V40A14 14 0 0 1 86 40V76Z"/><circle cx="36" cy="58" r="3.6" fill="#9BB96D"/></symbol>
+</svg>
+
+<div class="app">
+  <aside class="side" id="side">
+    <div class="brand"><svg viewBox="0 0 100 76" aria-hidden="true"><use href="#i-logo"/></svg><b>inmo<em>-</em>mls</b></div>
+    <div class="user"><div class="avatar">LB</div><div><strong>Libardo B.</strong><span>Administrador de la red</span></div></div>
+    <nav class="menu">
+      <h4>Red MLS</h4>
+      <a href="#"><svg><use href="#i-home"/></svg>Panel</a>
+      <a class="on" href="#"><svg><use href="#i-build"/></svg>Propiedades<span class="n">1.284</span></a>
+      <div class="sub"><a class="cur" href="#">Todas</a><a href="#">Nueva propiedad</a><a href="#">Por verificar</a></div>
+      <a href="#"><svg><use href="#i-users"/></svg>Asesores<span class="n">142</span></a>
+      <a href="#"><svg><use href="#i-brief"/></svg>Inmobiliarias</a>
+      <a href="#"><svg><use href="#i-inbox"/></svg>Solicitudes<span class="n">17</span></a>
+      <h4>Administración</h4>
+      <a href="#"><svg><use href="#i-check"/></svg>Verificaciones</a>
+      <a href="#"><svg><use href="#i-chart"/></svg>Reportes</a>
+      <a href="#"><svg><use href="#i-gear"/></svg>Configuración</a>
+    </nav>
+  </aside>
+
+  <div class="main">
+    <div class="top">
+      <button class="burger" id="burger" aria-label="Abrir menú"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+      <label class="gsearch"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input type="search" placeholder="Buscar por referencia, ciudad o asesor"></label>
+      <div class="tools"><div class="bell"><svg viewBox="0 0 24 24"><path d="M6 17V11a6 6 0 0112 0v6l2 2H4zM10 21h4"/></svg><i>5</i></div><div class="who"><div class="avatar">LB</div><span>Libardo B.</span></div></div>
+    </div>
+
+    <main class="content">
+      <div class="pagehead">
+        <div class="t">
+          <div class="crumbs">Inicio / Propiedades / <b>MLS-1284</b> · Datos de ejemplo</div>
+          <h1>Apartamento en venta cercano a CC Buenavista <span class="badge b-act">Activo</span></h1>
+          <div class="loc">San Pedro Alejandrino · Santa Marta, Magdalena</div>
+        </div>
+        <div class="btns">
+          <button class="btn ghost" type="button" id="copyLink"><svg viewBox="0 0 24 24"><path d="M10 14a4 4 0 005.7 0l3-3a4 4 0 00-5.7-5.7l-1 1M14 10a4 4 0 00-5.7 0l-3 3a4 4 0 005.7 5.7l1-1"/></svg>Copiar enlace</button>
+          <button class="btn ghost" type="button">Cambiar estado</button>
+          <button class="btn" type="button"><svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16zM13.5 6.5l4 4"/></svg>Editar</button>
+        </div>
+      </div>
+
+      <div class="cols">
+        <div class="stack">
+          <section class="card" aria-label="Fotografías">
+            <div class="gal">
+              <svg class="scene" id="scene" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Fotografía de ejemplo"></svg>
+              <div class="price">520 <small>millones</small></div>
+              <div class="tag mono" id="gtag">Sala · 1 / 5</div>
+              <button class="nav l" id="prev" type="button" aria-label="Foto anterior"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+              <button class="nav r" id="next" type="button" aria-label="Foto siguiente"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+            </div>
+            <div class="strip" id="strip"></div>
+          </section>
+
+          <section class="card">
+            <div class="facts">
+              <div class="fact g"><strong>122</strong><span>m²</span></div>
+              <div class="fact"><strong>3</strong><span>Habitaciones</span></div>
+              <div class="fact"><strong>3</strong><span>Baños</span></div>
+              <div class="fact"><strong>5</strong><span>Estrato</span></div>
+              <div class="fact"><strong>1</strong><span>Parqueadero</span></div>
+              <div class="fact"><strong>750 mil</strong><span>Administración</span></div>
+            </div>
+          </section>
+
+          <section class="card">
+            <header><h3>Descripción</h3></header>
+            <div class="body">
+              <p>Apartamento luminoso con balcón y vista a la vegetación, sala-comedor amplia y cocina integral. Piso en porcelanato, mueble de TV incorporado y habitación principal con baño privado. A pocos minutos del centro comercial Buenavista.</p>
+              <div class="chips" style="margin-top:18px"><span class="chip"><i></i>Parqueadero</span><span class="chip"><i></i>Balcón</span><span class="chip"><i></i>Ascensor</span><span class="chip"><i></i>Vigilancia 24 h</span><span class="chip"><i></i>Zona BBQ</span></div>
+            </div>
+          </section>
+
+          <section class="card">
+            <header><h3>Datos de la propiedad</h3></header>
+            <div class="body"><dl>
+              <div><dt>Referencia</dt><dd>MLS-1284</dd></div>
+              <div><dt>Operación</dt><dd>Venta</dd></div>
+              <div><dt>Tipo</dt><dd>Apartamento</dd></div>
+              <div><dt>Precio por m²</dt><dd>$4.262.000</dd></div>
+              <div><dt>Área construida</dt><dd>122 m²</dd></div>
+              <div><dt>Administración</dt><dd>$750.000</dd></div>
+              <div><dt>Piso</dt><dd>7</dd></div>
+              <div><dt>Antigüedad</dt><dd>8 años</dd></div>
+              <div><dt>Publicada</dt><dd>12 nov 2026</dd></div>
+              <div><dt>Actualizada</dt><dd>13 nov 2026</dd></div>
+            </dl></div>
+          </section>
+
+          <section class="card">
+            <header><h3>Ubicación</h3><span class="mono" style="color:var(--muted)">Mapa de ejemplo</span></header>
+            <div class="map">
+              <svg viewBox="0 0 800 350" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Mapa esquemático con la ubicación de la propiedad">
+                <rect width="800" height="350" fill="#E9E6DD"/>
+                <path d="M0 260 Q200 230 380 280 T800 250 V350 H0Z" fill="#CFE3EE"/>
+                <g fill="#CFDDBF"><rect x="60" y="40" width="160" height="90" rx="10"/><rect x="560" y="200" width="150" height="70" rx="10"/></g>
+                <g stroke="#fff" stroke-width="12" fill="none" stroke-linecap="round"><path d="M0 170H800M180 0V350M470 0V350M0 90L800 120M620 0L520 350"/></g>
+                <g stroke="#D6D2C6" stroke-width="2" fill="none"><path d="M0 170H800M180 0V350M470 0V350M0 90L800 120M620 0L520 350"/></g>
+                <g transform="translate(400 120)"><circle r="46" fill="#3C7755" opacity=".16"/><path d="M0 -34c-13 0-23 10-23 23 0 17 23 40 23 40s23-23 23-40c0-13-10-23-23-23z" fill="#2D5D42"/><circle cy="-11" r="8" fill="#9BB96D"/></g>
+                <text x="190" y="30" font-family="Lato" font-size="14" fill="#5D6159" font-weight="700">Av. Libertador</text>
+                <text x="480" y="160" font-family="Lato" font-size="14" fill="#5D6159" font-weight="700">CC Buenavista</text>
+              </svg>
+            </div>
+          </section>
+        </div>
+
+        <aside class="stack">
+          <section class="card">
+            <header><h3>Asesor responsable</h3></header>
+            <div class="body">
+              <div class="agent"><div class="avatar">MF</div><div><strong>Marcela Fuentes</strong><span>Inmobiliaria Costa Norte · 38 propiedades</span></div></div>
+              <div class="contact">
+                <div class="row"><span id="tel">+57 300 000 0000</span><button type="button" data-copy="tel">Copiar</button></div>
+                <div class="row"><span id="mail">marcela@costanorte.example</span><button type="button" data-copy="mail">Copiar</button></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="card">
+            <header><h3>Verificación</h3><span class="badge b-act">Completa</span></header>
+            <div class="body">
+              <ul class="tl">
+                <li><i></i><div><strong>Propiedad creada</strong><span>10 nov 2026 · M. Fuentes</span></div></li>
+                <li><i></i><div><strong>Documentos verificados</strong><span>11 nov 2026 · Equipo MLS</span></div></li>
+                <li><i></i><div><strong>Fotografías aprobadas</strong><span>12 nov 2026 · Equipo MLS</span></div></li>
+                <li><i></i><div><strong>Publicada en la red</strong><span>12 nov 2026 · Automático</span></div></li>
+              </ul>
+            </div>
+          </section>
+
+          <section class="card">
+            <header><h3>Rendimiento</h3><span class="mono" style="color:var(--muted)">Últimos 7 días</span></header>
+            <div class="body">
+              <div class="stats"><div><strong>1.248</strong><span>Vistas</span></div><div><strong>37</strong><span>Contactos</span></div><div><strong>12</strong><span>Favoritos</span></div></div>
+              <svg class="spark" id="spark" viewBox="0 0 320 110" role="img" aria-label="Vistas por día en los últimos 7 días"></svg>
+            </div>
+          </section>
+
+          <section class="card">
+            <header><h3>Compartida con la red</h3></header>
+            <div class="body share"><span class="badge">Toda la red MLS</span><span style="color:var(--muted)">142 asesores pueden verla</span></div>
+          </section>
+        </aside>
+      </div>
+    </main>
+    <footer class="foot"><span>inmo-mls · Todo el mercado, un solo lugar.</span><span class="mono">Panel v0 · maqueta con datos de ejemplo</span></footer>
+  </div>
+</div>
+
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id)};
+  $('burger').addEventListener('click',function(){document.body.classList.toggle('open')});
+  document.querySelector('.main').addEventListener('click',function(){document.body.classList.remove('open')});
+
+  // Galería de ejemplo: cinco escenas simples
+  var wall='#e8dfcf',floor='#DEC9B7';
+  var S=[
+    ['Sala','<rect width="800" height="500" fill="#e9e5db"/><rect width="800" height="120" fill="#f3f1ec"/><rect x="40" y="110" width="360" height="260" fill="#95D1FA"/><g fill="#4d8a4f"><circle cx="100" cy="300" r="70"/><circle cx="220" cy="290" r="80"/><circle cx="340" cy="305" r="62"/></g><g fill="#9BB96D"><circle cx="160" cy="260" r="52"/><circle cx="290" cy="255" r="56"/></g><rect x="40" y="110" width="360" height="260" fill="none" stroke="#f7f4ee" stroke-width="12"/><rect y="370" width="800" height="130" fill="'+floor+'"/><rect x="470" y="190" width="240" height="140" rx="4" fill="#6d5a4c"/><rect x="486" y="204" width="208" height="112" fill="#1f2527"/><ellipse cx="230" cy="440" rx="105" ry="62" fill="#ead9c0"/><ellipse cx="560" cy="450" rx="120" ry="66" fill="#d6bfa0"/>'],
+    ['Balcón','<rect width="800" height="500" fill="#95D1FA"/><path d="M0 300 Q200 220 400 290 T800 260 V500 H0Z" fill="#6aa35b"/><g fill="#4d8a4f"><circle cx="120" cy="330" r="110"/><circle cx="330" cy="340" r="130"/><circle cx="560" cy="330" r="120"/><circle cx="740" cy="350" r="100"/></g><path d="M0 220 Q120 150 240 200 T520 180 T800 210 V300 H0Z" fill="#7aa7a0" opacity=".6"/><rect y="400" width="800" height="100" fill="#d6d3cb"/><rect y="388" width="800" height="14" fill="#f7f4ee"/><g stroke="#f7f4ee" stroke-width="6"><path d="M60 400V470M160 400V470M260 400V470M360 400V470M460 400V470M560 400V470M660 400V470M760 400V470"/></g>'],
+    ['Cocina','<rect width="800" height="500" fill="#efece4"/><rect y="360" width="800" height="140" fill="'+floor+'"/><rect x="40" y="70" width="330" height="110" rx="6" fill="#44473F"/><rect x="40" y="230" width="720" height="130" rx="6" fill="#e2e2e2"/><rect x="40" y="215" width="720" height="22" fill="#fff"/><rect x="470" y="70" width="290" height="120" fill="#95D1FA"/><rect x="470" y="70" width="290" height="120" fill="none" stroke="#f7f4ee" stroke-width="10"/><circle cx="170" cy="300" r="22" fill="#44473F"/><circle cx="250" cy="300" r="22" fill="#44473F"/>'],
+    ['Habitación','<rect width="800" height="500" fill="#ece8de"/><rect y="370" width="800" height="130" fill="'+floor+'"/><rect x="60" y="190" width="440" height="190" rx="12" fill="#fff"/><rect x="60" y="150" width="440" height="70" rx="10" fill="#A8C1A6"/><rect x="90" y="215" width="150" height="70" rx="12" fill="#f1ede3"/><rect x="270" y="215" width="150" height="70" rx="12" fill="#f1ede3"/><rect x="560" y="90" width="200" height="240" fill="#95D1FA"/><rect x="560" y="90" width="200" height="240" fill="none" stroke="#f7f4ee" stroke-width="10"/>'],
+    ['Fachada','<rect width="800" height="500" fill="#bcd9e6"/><rect y="420" width="800" height="80" fill="#9cb98d"/><rect x="230" y="40" width="340" height="390" fill="#f1ede3"/><g fill="#95D1FA" stroke="#44473F" stroke-width="3"><rect x="262" y="70" width="60" height="50"/><rect x="370" y="70" width="60" height="50"/><rect x="478" y="70" width="60" height="50"/><rect x="262" y="160" width="60" height="50"/><rect x="370" y="160" width="60" height="50"/><rect x="478" y="160" width="60" height="50"/><rect x="262" y="250" width="60" height="50"/><rect x="370" y="250" width="60" height="50"/><rect x="478" y="250" width="60" height="50"/></g><rect x="370" y="340" width="60" height="90" fill="#44473F"/><g fill="#4d8a4f"><circle cx="110" cy="400" r="70"/><circle cx="700" cy="400" r="76"/></g>']
+  ];
+  var i=0,strip=$('strip');
+  S.forEach(function(s,k){var b=document.createElement('button');b.type='button';b.setAttribute('aria-label','Ver foto: '+s[0]);b.innerHTML='<svg viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice">'+s[1]+'</svg>';b.addEventListener('click',function(){go(k)});strip.appendChild(b)});
+  function go(n){i=(n+S.length)%S.length;$('scene').innerHTML=S[i][1];$('gtag').textContent=S[i][0]+' · '+(i+1)+' / '+S.length;Array.prototype.forEach.call(strip.children,function(b,k){b.classList.toggle('on',k===i)})}
+  $('prev').addEventListener('click',function(){go(i-1)});$('next').addEventListener('click',function(){go(i+1)});
+  document.addEventListener('keydown',function(e){if(e.key==='ArrowLeft')go(i-1);if(e.key==='ArrowRight')go(i+1)});
+  go(0);
+
+  // Vistas por día
+  var v=[120,148,190,232,205,174,179],d=['Vie','Sáb','Dom','Lun','Mar','Mié','Jue'],ns='http://www.w3.org/2000/svg',sp=$('spark'),W=320,H=110,B=88,max=250,bw=28,gap=(W-7*bw)/8;
+  v.forEach(function(x,k){var h=x/max*(B-14),xx=gap+k*(bw+gap);
+    var r=document.createElementNS(ns,'rect');r.setAttribute('x',xx);r.setAttribute('y',B-h);r.setAttribute('width',bw);r.setAttribute('height',h);r.setAttribute('rx',5);r.setAttribute('fill',k===3?'#3C7755':'#9BB96D');sp.appendChild(r);
+    var t=document.createElementNS(ns,'text');t.setAttribute('x',xx+bw/2);t.setAttribute('y',B+16);t.setAttribute('text-anchor','middle');t.textContent=d[k];sp.appendChild(t);
+    var n=document.createElementNS(ns,'text');n.setAttribute('x',xx+bw/2);n.setAttribute('y',B-h-4);n.setAttribute('text-anchor','middle');n.setAttribute('style','fill:#2B2E2B;font-weight:700');n.textContent=x;sp.appendChild(n)});
+
+  // Copiar
+  function copy(txt,btn){var old=btn.textContent;function ok(){btn.textContent='Copiado';setTimeout(function(){btn.textContent=old},1600)}
+    try{navigator.clipboard.writeText(txt).then(ok,function(){})}catch(e){}}
+  Array.prototype.forEach.call(document.querySelectorAll('[data-copy]'),function(b){b.addEventListener('click',function(){copy($(b.dataset.copy).textContent,b)})});
+  $('copyLink').addEventListener('click',function(){var b=$('copyLink');try{navigator.clipboard.writeText('inmo-mls.example/propiedades/MLS-1284').then(function(){b.lastChild.textContent='Enlace copiado';setTimeout(function(){b.lastChild.textContent='Copiar enlace'},1600)},function(){})}catch(e){}});
+})();
+</script>

@@ -1,0 +1,317 @@
+<title>inmo-mls Inmobiliarias</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Lato:wght@400;700;900&display=swap">
+<style>
+/* Concepto: listado de inmobiliarias del panel AdminLTE de inmo-mls. Resumen arriba, pestañas por estado, tabla con plan y vencimiento de membresía, aprobación inline de solicitudes y vista alterna de tarjetas. */
+:root{
+  --base:#2B2E2B; --carbon:#44473F; --green:#3C7755; --green-d:#2D5D42; --leaf:#9BB96D; --sand:#DEC9B7; --pearl:#E2E2E2; --sky:#95D1FA; --white:#FFFFFF;
+  --bg:#EDEDEC; --line:#D3D3D0; --muted:#5D6159;
+  --sans:'Lato','Helvetica Neue',Arial,sans-serif; --mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--base);font-family:var(--sans);font-size:15px;line-height:1.5}
+svg{display:block}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit}
+.mono{font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+.app{display:grid;grid-template-columns:260px minmax(0,1fr);min-height:100vh}
+
+/* SIDEBAR */
+.side{background:var(--base);color:#E7E8E6;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+.brand{display:flex;align-items:center;gap:12px;padding:20px 22px;border-bottom:1px solid rgba(255,255,255,.1)}
+.brand svg{height:26px;width:auto}
+.brand b{font-size:23px;font-weight:900;letter-spacing:-.02em;color:#fff}
+.brand b em{font-style:normal;color:var(--leaf)}
+.user{display:flex;align-items:center;gap:12px;padding:18px 22px;border-bottom:1px solid rgba(255,255,255,.1)}
+.avatar{width:38px;height:38px;border-radius:50%;background:var(--sand);color:var(--base);display:grid;place-items:center;font-weight:900;font-size:14px;flex:none}
+.user div{min-width:0}.user strong{display:block;font-size:14px;color:#fff}.user span{font-size:12px;color:var(--sand)}
+.menu{padding:14px 12px 24px;display:flex;flex-direction:column;gap:2px}
+.menu h4{margin:18px 10px 8px;color:#A3A89F;font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+.menu a{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;font-weight:700;font-size:14.5px;color:#D8DAD6}
+.menu a svg{width:19px;height:19px;flex:none;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.menu a:hover{background:rgba(255,255,255,.07)}
+.menu a.on{background:var(--leaf);color:var(--base)}
+.menu a .n{margin-left:auto;font-family:var(--mono);font-size:11px;background:var(--carbon);color:#fff;padding:2px 8px;border-radius:999px}
+.menu a.on .n{background:var(--base)}
+
+/* MAIN */
+.main{min-width:0;display:flex;flex-direction:column}
+.top{background:var(--white);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:16px;padding:12px 28px;position:sticky;top:0;z-index:5}
+.burger{display:none;border:0;background:none;padding:6px;cursor:pointer;color:var(--base)}
+.burger svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
+.gsearch,.fsearch{display:flex;align-items:center;gap:10px;color:var(--muted)}
+.gsearch{flex:1;max-width:420px;background:var(--bg);border-radius:10px;padding:9px 14px}
+.gsearch svg,.fsearch svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;flex:none}
+.gsearch input,.fsearch input{border:0;background:none;font:inherit;color:var(--base);width:100%;outline:0}
+.gsearch input::placeholder,.fsearch input::placeholder{color:#80857B}
+.tools{margin-left:auto;display:flex;align-items:center;gap:18px}
+.bell{position:relative;width:22px;height:22px}
+.bell svg{width:22px;height:22px;stroke:var(--base);fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.bell i{position:absolute;top:-6px;right:-8px;background:var(--green);color:#fff;font:700 10px var(--sans);font-style:normal;border-radius:999px;padding:1px 5px}
+.who{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px}
+.who .avatar{width:34px;height:34px;font-size:13px}
+
+.content{padding:26px 28px 40px;display:flex;flex-direction:column;gap:20px}
+.pagehead{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
+h1{margin:0;font-size:30px;font-weight:900;letter-spacing:-.02em;line-height:1.15}
+.crumbs{color:var(--muted);font-size:13px}.crumbs b{color:var(--green-d)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--green-d);color:#fff;font-weight:700;font-size:14.5px;padding:10px 18px;border-radius:10px;border:0;cursor:pointer}
+.btn.ghost{background:var(--white);color:var(--base);border:1px solid var(--line)}
+.btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.4;stroke-linecap:round}
+:is(.btn,button,input,select,a):focus-visible{outline:3px solid var(--sky);outline-offset:2px}
+
+/* RESUMEN */
+.boxes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.box{border-radius:14px;padding:16px 20px;display:flex;flex-direction:column}
+.box strong{font-size:32px;font-weight:900;letter-spacing:-.03em;line-height:1.05;font-variant-numeric:tabular-nums}
+.box span{font-weight:700;font-size:14px;margin-top:2px}
+.box.g{background:var(--green);color:#fff}.box.c{background:var(--carbon);color:#fff}.box.s{background:var(--sand)}.box.l{background:var(--leaf)}
+
+/* TABS + FILTROS */
+.tabs{display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+.tab{border:0;background:none;padding:11px 16px;font-weight:700;font-size:14.5px;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-1px;display:flex;gap:8px;align-items:center}
+.tab span{font-family:var(--mono);font-size:11px;background:var(--white);border:1px solid var(--line);padding:1px 8px;border-radius:999px;color:var(--carbon)}
+.tab.on{color:var(--green-d);border-bottom-color:var(--green)}
+.tab.on span{background:var(--green);border-color:var(--green);color:#fff}
+.filters{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.fsearch{background:var(--white);border:1px solid var(--line);border-radius:10px;padding:9px 14px;flex:1;min-width:220px;max-width:380px}
+select{border:1px solid var(--line);background:var(--white);border-radius:10px;padding:10px 12px;font:inherit;color:var(--base)}
+.view{margin-left:auto;display:inline-flex;background:var(--white);border:1px solid var(--line);border-radius:10px;padding:3px;gap:3px}
+.view button{border:0;background:none;padding:7px 10px;border-radius:7px;cursor:pointer;color:var(--muted)}
+.view button.on{background:var(--green-d);color:#fff}
+.view svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* TABLA */
+.card{background:var(--white);border-radius:14px;border:1px solid var(--line);min-width:0;overflow:hidden}
+.tablewrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:980px}
+th{text-align:left;font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:13px 16px;border-bottom:1px solid var(--line);white-space:nowrap;background:#F6F6F5}
+th.r,td.r{text-align:right}
+td{padding:12px 16px;border-bottom:1px solid var(--bg);font-size:14.5px;white-space:nowrap;vertical-align:middle}
+tbody tr:hover{background:#F6F6F5}
+tr:last-child td{border-bottom:0}
+td.r{font-variant-numeric:tabular-nums;font-weight:700}
+.ag{display:flex;align-items:center;gap:13px}
+
+.ag strong{display:block;font-weight:900;line-height:1.25}
+.ag span{color:var(--muted);font-size:13px}
+.badge{display:inline-block;font-size:12px;font-weight:700;padding:3px 11px;border-radius:999px}
+.b-act{background:var(--green);color:#fff}
+.b-pen{background:var(--sand);color:var(--base)}
+.b-sus{background:var(--carbon);color:#fff}
+.acts{display:flex;gap:6px;align-items:center;justify-content:flex-end}
+.acts .ic{border:0;background:none;width:34px;height:34px;border-radius:8px;display:grid;place-items:center;color:var(--carbon);cursor:pointer}
+.acts .ic:hover{background:var(--bg)}
+.acts svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.sm{border:0;border-radius:8px;padding:6px 13px;font-weight:700;font-size:13px;cursor:pointer}
+.sm.ok{background:var(--green-d);color:#fff}
+.sm.no{background:var(--white);border:1px solid var(--line);color:var(--base)}
+.empty{padding:50px 20px;text-align:center;color:var(--muted)}
+.empty strong{display:block;color:var(--base);font-size:18px;margin-bottom:4px}
+
+/* TARJETAS */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px;padding:20px}
+.ac{border:1px solid var(--line);border-radius:14px;background:var(--white);display:flex;flex-direction:column;overflow:hidden}
+.ac .head{padding:22px 18px 16px;text-align:center;background:var(--pearl)}
+.ac .head .avatar{width:68px;height:68px;font-size:24px;margin:0 auto 10px}
+.ac h4{margin:0;font-size:17px;font-weight:900}
+.ac .head p{margin:0;color:var(--green-d);font-weight:700;font-size:14px}
+.ac .head small{color:var(--muted);font-size:13px}
+.ac .nums{display:grid;grid-template-columns:repeat(3,1fr);text-align:center;padding:14px 8px;border-bottom:1px solid var(--line)}
+.ac .nums strong{display:block;font-size:20px;font-weight:900;font-variant-numeric:tabular-nums}
+.ac .nums span{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.ac .foot2{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;gap:10px}
+
+.logo{width:44px;height:44px;border-radius:11px;display:grid;place-items:center;font-weight:900;font-size:16px;flex:none}
+.plan{display:inline-block;font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:3px 10px;border-radius:6px;border:1px solid var(--carbon)}
+.plan.p1{background:var(--white)}.plan.p2{background:var(--sand);border-color:var(--sand)}.plan.p3{background:var(--carbon);color:#fff}
+.venc{font-size:13px;color:var(--muted)}.venc b{color:var(--base)}.venc.warn b{background:var(--sand);padding:1px 8px;border-radius:999px}
+.pager{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;padding:14px 20px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}
+.pages{display:flex;gap:6px}
+.pages button{min-width:36px;height:36px;border-radius:9px;border:1px solid var(--line);background:var(--white);font-weight:700;cursor:pointer;color:var(--base)}
+.pages button.on{background:var(--green-d);border-color:var(--green-d);color:#fff}
+.pages button:disabled{opacity:.4;cursor:default}
+.foot{padding:18px 28px;border-top:1px solid var(--line);background:var(--white);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:13px}
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:var(--base);color:#fff;padding:12px 20px;border-radius:12px;font-weight:700;opacity:0;pointer-events:none;transition:.25s;z-index:30;max-width:90vw}
+#toast.on{opacity:1;transform:translateX(-50%)}
+
+@media (max-width:1100px){.boxes{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:860px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{position:fixed;inset:0 auto 0 0;width:270px;z-index:20;transform:translateX(-100%);transition:transform .2s}
+  body.open .side{transform:none}
+  .burger{display:block}.who span{display:none}
+  .top,.content,.foot{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+  .view{margin-left:0}
+}
+@media (max-width:560px){.boxes{grid-template-columns:minmax(0,1fr)}h1{font-size:25px}}
+@media (prefers-reduced-motion:reduce){.side,#toast{transition:none}}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10"/></symbol>
+  <symbol id="i-build" viewBox="0 0 24 24"><path d="M4 21V5l8-2v18M12 9l8 2v10M2 21h20M8 8v.01M8 12v.01M8 16v.01M16 14v.01M16 18v.01"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6M16 4.8a3.5 3.5 0 010 6.4M18 14.4c2.2.6 3.5 2.5 3.5 5.6"/></symbol>
+  <symbol id="i-brief" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V4h6v3M3 13h18"/></symbol>
+  <symbol id="i-inbox" viewBox="0 0 24 24"><path d="M3 13l3-8h12l3 8v6H3zM3 13h5l1 3h6l1-3h5"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V4M4 20h16M8 16v-5M12 16V8M16 16v-3"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6zM8.5 12l2.5 2.5L16 9.5"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/></symbol>
+  <symbol id="i-logo" viewBox="0 0 100 76"><path fill="#fff" fill-rule="evenodd" d="M0 76V22A22 22 0 0 1 22 0H78A22 22 0 0 1 100 22V76Z M14 76V40A14 14 0 0 1 42 40V76Z M58 76V40A14 14 0 0 1 86 40V76Z"/><circle cx="36" cy="58" r="3.6" fill="#9BB96D"/></symbol>
+  <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></symbol>
+  <symbol id="i-dots" viewBox="0 0 24 24"><path d="M12 5v.01M12 12v.01M12 19v.01"/></symbol>
+</svg>
+
+<div class="app">
+  <aside class="side" id="side">
+    <div class="brand"><svg viewBox="0 0 100 76" aria-hidden="true"><use href="#i-logo"/></svg><b>inmo<em>-</em>mls</b></div>
+    <div class="user"><div class="avatar">LB</div><div><strong>Libardo B.</strong><span>Administrador de la red</span></div></div>
+    <nav class="menu">
+      <h4>Red MLS</h4>
+      <a href="#"><svg><use href="#i-home"/></svg>Panel</a>
+      <a href="#"><svg><use href="#i-build"/></svg>Propiedades<span class="n">1.284</span></a>
+      <a href="#"><svg><use href="#i-users"/></svg>Asesores<span class="n">142</span></a>
+      <a class="on" href="#"><svg><use href="#i-brief"/></svg>Inmobiliarias<span class="n">24</span></a>
+      <a href="#"><svg><use href="#i-inbox"/></svg>Solicitudes<span class="n">17</span></a>
+      <h4>Administración</h4>
+      <a href="#"><svg><use href="#i-check"/></svg>Verificaciones</a>
+      <a href="#"><svg><use href="#i-chart"/></svg>Reportes</a>
+      <a href="#"><svg><use href="#i-gear"/></svg>Configuración</a>
+    </nav>
+  </aside>
+
+  <div class="main">
+    <div class="top">
+      <button class="burger" id="burger" aria-label="Abrir menú"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+      <label class="gsearch"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input type="search" placeholder="Buscar por referencia, ciudad o asesor"></label>
+      <div class="tools"><div class="bell"><svg viewBox="0 0 24 24"><path d="M6 17V11a6 6 0 0112 0v6l2 2H4zM10 21h4"/></svg><i>5</i></div><div class="who"><div class="avatar">LB</div><span>Libardo B.</span></div></div>
+    </div>
+
+    <main class="content">
+      <div class="pagehead">
+        <div><h1>Inmobiliarias</h1><div class="crumbs">Inicio / <b>Inmobiliarias</b> · Datos de ejemplo al 13 nov 2026</div></div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <button class="btn ghost" type="button">Exportar CSV</button>
+          <button class="btn" type="button" id="invite"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Nueva inmobiliaria</button>
+        </div>
+      </div>
+
+      <section class="boxes" aria-label="Resumen">
+        <div class="box g"><strong id="kAct">0</strong><span>Inmobiliarias activas</span></div>
+        <div class="box c"><strong id="kRev">0</strong><span>En revisión</span></div>
+        <div class="box s"><strong id="kVen">0</strong><span>Membresías por vencer (30 días)</span></div>
+        <div class="box l"><strong id="kProp">0</strong><span>Propiedades publicadas</span></div>
+      </section>
+
+      <div class="tabs" id="tabs" role="tablist"></div>
+
+      <div class="filters">
+        <label class="fsearch"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="q" type="search" placeholder="Buscar nombre, NIT o ciudad" aria-label="Buscar inmobiliarias"></label>
+        <select id="fPlan" aria-label="Plan"><option value="">Todos los planes</option><option>Básico</option><option>Pro</option><option>Premium</option></select>
+        <select id="fCiudad" aria-label="Ciudad"><option value="">Todas las ciudades</option></select>
+        <select id="fOrden" aria-label="Ordenar por"><option value="props">Más propiedades</option><option value="ases">Más asesores</option><option value="venc">Vence primero</option><option value="nombre">Nombre A-Z</option></select>
+        <div class="view" role="group" aria-label="Vista">
+          <button id="vTabla" class="on" type="button" aria-label="Vista de tabla" aria-pressed="true"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+          <button id="vCards" type="button" aria-label="Vista de tarjetas" aria-pressed="false"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg></button>
+        </div>
+      </div>
+
+      <section class="card">
+        <div id="tableView" class="tablewrap">
+          <table>
+            <thead><tr><th>Inmobiliaria</th><th>Ciudad</th><th>Plan</th><th class="r">Asesores</th><th class="r">Propiedades</th><th class="r">Cierres mes</th><th>Membresía</th><th>Estado</th><th style="width:160px"></th></tr></thead>
+            <tbody id="rows"></tbody>
+          </table>
+        </div>
+        <div id="cardView" class="cards" hidden></div>
+        <div class="empty" id="empty" hidden><strong>Ninguna inmobiliaria coincide</strong>Cambia los filtros o la búsqueda.</div>
+        <div class="pager"><span id="count"></span><div class="pages" id="pages"></div></div>
+      </section>
+    </main>
+    <footer class="foot"><span>inmo-mls · Todo el mercado, un solo lugar.</span><span class="mono">Panel v0 · maqueta con datos de ejemplo</span></footer>
+  </div>
+</div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id)};
+  $('burger').addEventListener('click',function(){document.body.classList.toggle('open')});
+  document.querySelector('.main').addEventListener('click',function(){document.body.classList.remove('open')});
+  var tm;function toast(m){var el=$('toast');el.textContent=m;el.classList.add('on');clearTimeout(tm);tm=setTimeout(function(){el.classList.remove('on')},2400)}
+
+  var HOY=new Date(2026,10,13);
+  // [nombre, NIT, ciudad, plan, asesores, propiedades, cierres, vencimiento(aaaa-mm-dd), estado, bg, fg]
+  var D=[
+    ['Bahía Propiedades','900.412.118-3','Barranquilla','Premium',18,212,12,'2027-03-02','Activa','#3C7755','#fff'],
+    ['Costa Norte','900.377.205-1','Santa Marta','Premium',14,164,9,'2027-01-20','Activa','#9BB96D','#2B2E2B'],
+    ['Caribe Real','901.020.664-8','Cartagena','Pro',11,128,8,'2026-12-01','Activa','#DEC9B7','#2B2E2B'],
+    ['Mar y Sol','900.865.931-4','Ciénaga','Pro',6,52,3,'2026-11-26','Activa','#95D1FA','#2B2E2B'],
+    ['Altos del Caribe','901.144.790-2','Barranquilla','Pro',9,97,6,'2027-02-14','Activa','#44473F','#fff'],
+    ['Rodadero Hogar','900.598.340-6','Santa Marta','Básico',4,31,2,'2026-12-18','Activa','#E2E2E2','#2B2E2B'],
+    ['Puerto Seguro','901.233.087-5','Cartagena','Básico',3,0,0,'2027-11-13','En revisión','#DEC9B7','#2B2E2B'],
+    ['Casa Viva','901.310.552-9','Santa Marta','Básico',2,0,0,'2027-11-13','En revisión','#9BB96D','#2B2E2B'],
+    ['Magdalena Raíces','900.702.419-0','Santa Marta','Pro',7,74,4,'2026-11-22','Activa','#3C7755','#fff'],
+    ['Horizonte Bienes Raíces','900.215.883-7','Barranquilla','Básico',5,22,1,'2026-10-30','Suspendida','#44473F','#fff'],
+    ['Palmeras Inmobiliaria','901.087.126-1','Cartagena','Pro',8,85,5,'2027-04-09','Activa','#95D1FA','#2B2E2B'],
+    ['Sierra Nevada Inmuebles','900.934.671-2','Santa Marta','Premium',13,148,7,'2027-05-21','Activa','#DEC9B7','#2B2E2B']
+  ].map(function(r,i){var p=r[7].split('-');return{id:i,n:r[0],nit:r[1],ciu:r[2],plan:r[3],ases:r[4],props:r[5],cie:r[6],v:new Date(+p[0],p[1]-1,+p[2]),est:r[8],bg:r[9],fg:r[10]}});
+  var cls={'Activa':'b-act','En revisión':'b-pen','Suspendida':'b-sus'},pc={'Básico':'p1','Pro':'p2','Premium':'p3'};
+  var estados=['Todas','Activa','En revisión','Suspendida'],lab={'Todas':'Todas','Activa':'Activas','En revisión':'En revisión','Suspendida':'Suspendidas'};
+  var st={estado:'Todas',q:'',plan:'',ciu:'',ord:'props',page:1,per:8,vista:'tabla'};
+  [...new Set(D.map(function(p){return p.ciu}))].sort().forEach(function(c){var o=document.createElement('option');o.textContent=c;$('fCiudad').appendChild(o)});
+  var fm=new Intl.DateTimeFormat('es-CO',{day:'numeric',month:'short',year:'numeric'});
+  function ini(n){var w=n.split(' ');return (w[0][0]+(w[1]?w[1][0]:'')).toUpperCase()}
+  function dias(p){return Math.round((p.v-HOY)/864e5)}
+  function venc(p){if(p.est==='En revisión')return '<span class="venc">Sin iniciar</span>';var d=dias(p);
+    if(d<0)return '<span class="venc warn"><b>Vencida hace '+(-d)+' días</b></span>';
+    return '<span class="venc'+(d<=30?' warn':'')+'">'+fm.format(p.v)+(d<=30?'<br><b>vence en '+d+' días</b>':'')+'</span>'}
+  function base(){var q=st.q.toLowerCase();return D.filter(function(p){return (!st.plan||p.plan===st.plan)&&(!st.ciu||p.ciu===st.ciu)&&(!q||(p.n+' '+p.nit+' '+p.ciu).toLowerCase().indexOf(q)>-1)})}
+  function filtered(){var f=base().filter(function(p){return st.estado==='Todas'||p.est===st.estado});var k=st.ord;
+    f.sort(function(a,b){return k==='nombre'?a.n.localeCompare(b.n):k==='ases'?b.ases-a.ases:k==='venc'?a.v-b.v:b.props-a.props});return f}
+  function actions(p){return p.est==='En revisión'?'<button class="sm ok" type="button" data-a="ok" data-i="'+p.id+'">Aprobar</button><button class="sm no" type="button" data-a="no" data-i="'+p.id+'">Rechazar</button>':
+    p.est!=='En revisión'&&dias(p)<=30&&p.est==='Activa'?'<button class="sm no" type="button" data-a="ren" data-i="'+p.id+'">Renovar</button><button class="ic" type="button" aria-label="Más acciones"><svg viewBox="0 0 24 24"><use href="#i-dots"/></svg></button>':
+    '<button class="ic" type="button" aria-label="Ver detalle"><svg viewBox="0 0 24 24"><use href="#i-eye"/></svg></button><button class="ic" type="button" aria-label="Enviar correo"><svg viewBox="0 0 24 24"><use href="#i-mail"/></svg></button><button class="ic" type="button" aria-label="Más acciones"><svg viewBox="0 0 24 24"><use href="#i-dots"/></svg></button>'}
+  function draw(){
+    var b=base();
+    $('tabs').innerHTML=estados.map(function(e){var n=e==='Todas'?b.length:b.filter(function(p){return p.est===e}).length;
+      return '<button class="tab'+(e===st.estado?' on':'')+'" role="tab" aria-selected="'+(e===st.estado)+'" data-e="'+e+'">'+lab[e]+'<span>'+n+'</span></button>'}).join('');
+    var f=filtered(),pages=Math.max(1,Math.ceil(f.length/st.per));if(st.page>pages)st.page=pages;
+    var s=(st.page-1)*st.per,cur=f.slice(s,s+st.per);
+    $('kAct').textContent=D.filter(function(p){return p.est==='Activa'}).length;
+    $('kRev').textContent=D.filter(function(p){return p.est==='En revisión'}).length;
+    $('kVen').textContent=D.filter(function(p){return p.est==='Activa'&&dias(p)<=30}).length;
+    $('kProp').textContent=D.reduce(function(a,p){return a+p.props},0);
+    $('empty').hidden=f.length>0;
+    $('tableView').hidden=st.vista!=='tabla'||!f.length;$('cardView').hidden=st.vista!=='cards'||!f.length;
+    $('rows').innerHTML=cur.map(function(p){return '<tr><td><div class="ag"><div class="logo" style="background:'+p.bg+';color:'+p.fg+'">'+ini(p.n)+'</div><div><strong>'+p.n+'</strong><span>NIT '+p.nit+'</span></div></div></td>'+
+      '<td>'+p.ciu+'</td><td><span class="plan '+pc[p.plan]+'">'+p.plan+'</span></td><td class="r">'+p.ases+'</td><td class="r">'+p.props+'</td><td class="r">'+p.cie+'</td><td>'+venc(p)+'</td><td><span class="badge '+cls[p.est]+'">'+p.est+'</span></td><td><div class="acts">'+actions(p)+'</div></td></tr>'}).join('');
+    $('cardView').innerHTML=cur.map(function(p){return '<article class="ac"><div class="head"><div class="logo" style="background:'+p.bg+';color:'+p.fg+';width:64px;height:64px;font-size:22px;margin:0 auto 10px">'+ini(p.n)+'</div><h4>'+p.n+'</h4><p>'+p.ciu+'</p><small>NIT '+p.nit+'</small></div>'+
+      '<div class="nums"><div><strong>'+p.ases+'</strong><span>Asesores</span></div><div><strong>'+p.props+'</strong><span>Props.</span></div><div><strong>'+p.cie+'</strong><span>Cierres</span></div></div>'+
+      '<div class="foot2"><div style="display:flex;flex-direction:column;gap:6px;align-items:flex-start"><span class="plan '+pc[p.plan]+'">'+p.plan+'</span><span class="badge '+cls[p.est]+'">'+p.est+'</span></div><div style="text-align:right">'+venc(p)+'<div class="acts" style="margin-top:6px">'+actions(p)+'</div></div></div></article>'}).join('');
+    $('count').textContent=f.length?'Mostrando '+(s+1)+' a '+(s+cur.length)+' de '+f.length+' inmobiliarias':'0 inmobiliarias';
+    var pg='<button type="button" data-p="'+(st.page-1)+'"'+(st.page==1?' disabled':'')+' aria-label="Anterior">‹</button>';
+    for(var i=1;i<=pages;i++)pg+='<button type="button" data-p="'+i+'" class="'+(i==st.page?'on':'')+'">'+i+'</button>';
+    pg+='<button type="button" data-p="'+(st.page+1)+'"'+(st.page==pages?' disabled':'')+' aria-label="Siguiente">›</button>';
+    $('pages').innerHTML=pg;
+  }
+  $('tabs').addEventListener('click',function(e){var b=e.target.closest('.tab');if(b){st.estado=b.dataset.e;st.page=1;draw()}});
+  $('pages').addEventListener('click',function(e){var b=e.target.closest('button');if(b&&!b.disabled){st.page=+b.dataset.p;draw()}});
+  $('q').addEventListener('input',function(e){st.q=e.target.value;st.page=1;draw()});
+  $('fPlan').addEventListener('change',function(e){st.plan=e.target.value;st.page=1;draw()});
+  $('fCiudad').addEventListener('change',function(e){st.ciu=e.target.value;st.page=1;draw()});
+  $('fOrden').addEventListener('change',function(e){st.ord=e.target.value;draw()});
+  function act(e){var b=e.target.closest('[data-a]');if(!b)return;var p=D[+b.dataset.i];
+    if(b.dataset.a==='ok'){p.est='Activa';p.v=new Date(2027,10,13);toast(p.n+' aprobada (maqueta)')}
+    else if(b.dataset.a==='ren'){p.v=new Date(p.v.getFullYear()+1,p.v.getMonth(),p.v.getDate());toast('Membresía de '+p.n+' renovada un año (maqueta)')}
+    else{D.splice(D.indexOf(p),1);toast('Solicitud de '+p.n+' rechazada (maqueta)')}
+    D.forEach(function(x,i){x.id=i});draw()}
+  $('rows').addEventListener('click',act);$('cardView').addEventListener('click',act);
+  function setV(v){st.vista=v;$('vTabla').classList.toggle('on',v==='tabla');$('vCards').classList.toggle('on',v==='cards');$('vTabla').setAttribute('aria-pressed',v==='tabla');$('vCards').setAttribute('aria-pressed',v==='cards');draw()}
+  $('vTabla').addEventListener('click',function(){setV('tabla')});$('vCards').addEventListener('click',function(){setV('cards')});
+  $('invite').addEventListener('click',function(){toast('Maqueta: aquí se abriría el alta de inmobiliaria')});
+  draw();
+})();
+</script>
