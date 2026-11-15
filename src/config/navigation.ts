@@ -1,4 +1,4 @@
-import { Building2, House, type LucideIcon } from 'lucide-react';
+import { Building2, House, Landmark, type LucideIcon } from 'lucide-react';
 import { es } from '@/lib/i18n/es';
 import type { MeResponse } from '@/lib/api/schemas';
 import { can, type Permission, type Scope } from '@/lib/permissions';
@@ -23,6 +23,13 @@ export const navigation: readonly NavItem[] = [
     label: es.nav.agencies,
     icon: Building2,
     permission: 'agency.list',
+    minScope: 'network',
+  },
+  {
+    to: '/inmuebles',
+    label: es.nav.properties,
+    icon: Landmark,
+    permission: 'property.read',
     minScope: 'network',
   },
 ];

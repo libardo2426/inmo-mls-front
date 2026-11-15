@@ -12,6 +12,7 @@ export const es = {
   nav: {
     home: 'Inicio',
     agencies: 'Agencias',
+    properties: 'Inmuebles',
   },
   shell: {
     toggleMenu: 'Plegar o desplegar el menú',
@@ -135,6 +136,51 @@ export const es = {
         seconds !== undefined && Number.isFinite(seconds) && seconds >= 0
           ? `Demasiados intentos. Espere ${seconds} s antes de volver a intentarlo.`
           : 'Demasiados intentos. Espere un momento antes de volver a intentarlo.',
+    },
+  },
+  properties: {
+    list: {
+      title: 'Inmuebles',
+      caption: 'Inmuebles de la red',
+      emptyTitle: 'No hay inmuebles con estos filtros',
+      emptyHelp: 'Pruebe quitando algún filtro.',
+      columns: {
+        identifier: 'Identificador',
+        type: 'Tipo',
+        status: 'Estado',
+        territory: 'Municipio',
+        address: 'Dirección',
+        agency: 'Agencia editora',
+        createdAt: 'Creado',
+      },
+    },
+    filters: {
+      label: 'Filtros de inmuebles',
+      type: 'Tipo',
+      status: 'Estado',
+      territory: 'Código de municipio',
+      agency: 'Agencia editora',
+      all: 'Todos',
+      allAgencies: 'Todas',
+    },
+    unknownAgency: 'Agencia no disponible',
+    types: {
+      apartment: 'Apartamento',
+      house: 'Casa',
+      lot: 'Lote',
+      retail: 'Local',
+      office: 'Oficina',
+      warehouse: 'Bodega',
+      farm: 'Finca',
+    },
+    status: {
+      draft: 'Borrador',
+      active: 'Activo',
+      reserved: 'Reservado',
+      closed: 'Cerrado',
+      suspended: 'Suspendido',
+      withdrawn: 'Retirado',
+      expired: 'Vencido',
     },
   },
   agencies: {

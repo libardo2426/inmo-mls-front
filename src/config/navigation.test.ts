@@ -45,8 +45,14 @@ describe('visibleNavigation', () => {
 });
 
 describe('navigation', () => {
-  it('contiene Inicio (sin permiso) y Agencias (agency.list en red)', () => {
-    expect(navigation).toHaveLength(2);
+  it('contiene Inicio (sin permiso), Agencias (agency.list) e Inmuebles (property.read) en red', () => {
+    expect(navigation).toHaveLength(3);
+    expect(navigation[2]).toMatchObject({
+      to: '/inmuebles',
+      label: 'Inmuebles',
+      permission: 'property.read',
+      minScope: 'network',
+    });
     expect(navigation[0]).toMatchObject({ to: '/', label: 'Inicio' });
     expect(navigation[0]?.permission).toBeUndefined();
     expect(navigation[1]).toMatchObject({
