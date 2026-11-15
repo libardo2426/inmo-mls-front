@@ -43,7 +43,7 @@ describe('accesibilidad de agencias', () => {
     for (const control of [...screen.getAllByRole('button'), ...screen.getAllByRole('link')]) {
       expect(accessibleName(control), control.outerHTML).not.toBe('');
     }
-    expect(screen.getByRole('combobox', { name: es.agencies.list.filterLabel })).toBeVisible();
+    expect(screen.getByRole('tablist', { name: es.agencies.list.filterLabel })).toBeVisible();
   });
 
   it('cada fila tiene un enlace real al detalle, alcanzable y activable con el teclado', async () => {
