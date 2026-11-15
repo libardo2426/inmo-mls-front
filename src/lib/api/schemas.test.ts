@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest';
+import { memberFixture } from '@/test/fixtures';
 import me from '@/lib/api/__fixtures__/me.json';
 import {
+  memberListSchema,
+  memberResponseSchema,
   meResponseSchema,
   problemDetailsSchema,
   propertyDetailResponseSchema,
@@ -63,5 +66,17 @@ describe('propertyDetailResponseSchema', () => {
       { operation: 'sale', price: { amountMinor: 250000000000, currency: 'COP' } },
     ]);
     expect(result.success).toBe(false);
+  });
+});
+
+describe('esquemas de miembros', () => {
+  it('memberListSchema acepta una lista de miembros', () => {
+    const list = memberListSchema.parse([memberFixture()]);
+    expect(list).toHaveLength(1);
+    expect(list[0]?.role).toBe('agent');
+  });
+
+  it('memberResponseSchema rechaza un estado fuera del contrato', () => {
+    expect(memberResponseSchema.safeParse({ ...memberFixture(), status: 'x' }).success).toBe(false);
   });
 });

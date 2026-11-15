@@ -3,7 +3,7 @@ import { Section } from '@/components/shared/Section';
 import { useTerritoryName } from '@/lib/territory/useTerritoryName';
 import type { AgencyApplication } from '@/lib/api/schemas';
 import { es } from '@/lib/i18n/es';
-import { formatDate } from '../format';
+import { formatDate } from '@/lib/format';
 import { AgencyStatusBadge } from './AgencyStatusBadge';
 
 const f = es.agencies.detail.fields;

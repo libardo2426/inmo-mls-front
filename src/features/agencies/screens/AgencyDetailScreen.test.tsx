@@ -3,7 +3,7 @@ import { http, HttpResponse } from 'msw';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { es } from '@/lib/i18n/es';
-import { agencyDetailFixture, meWithPermissions } from '@/test/fixtures';
+import { agencyDetailFixture, memberFixture, meWithPermissions } from '@/test/fixtures';
 import { mountApp } from '@/test/mount';
 import { server } from '@/test/server';
 
@@ -272,5 +272,34 @@ describe('acciones de revisión en el detalle', () => {
         screen.getByRole('button', { name: es.agencies.review.actions.reject, hidden: true }),
       ).toBeDisabled(),
     );
+  });
+});
+
+describe('miembros en el detalle', () => {
+  const members = [memberFixture()];
+
+  it('con member.read aparece la región «Miembros» con la tabla', async () => {
+    useMe(meWithPermissions({ 'agency.list': 'network', 'member.read': 'network' }));
+    useDetail();
+    server.use(http.get(`*/v1/agencies/${ID}/members`, () => HttpResponse.json(members)));
+    mountApp(PATH);
+    const region = await screen.findByRole('region', { name: es.members.title });
+    expect(await within(region).findByText('Luis Demo')).toBeInTheDocument();
+    expect(within(region).getByRole('table', { name: es.members.caption })).toBeVisible();
+  });
+
+  it('sin member.read no hay región ni se piden los miembros', async () => {
+    let requested = false;
+    useDetail();
+    server.use(
+      http.get(`*/v1/agencies/${ID}/members`, () => {
+        requested = true;
+        return HttpResponse.json(members);
+      }),
+    );
+    mountApp(PATH);
+    await screen.findByRole('heading', { level: 1, name: 'Inmobiliaria Demo' });
+    expect(screen.queryByRole('region', { name: es.members.title })).not.toBeInTheDocument();
+    expect(requested).toBe(false);
   });
 });

@@ -21,6 +21,8 @@ import { Route as VerificarRouteImport } from './routes/verificar'
 import { Route as ProtegidoIndexRouteImport } from './routes/_protegido/index'
 import { Route as ProtegidoAgenciasIndexRouteImport } from './routes/_protegido/agencias/index'
 import { Route as ProtegidoAgenciasAgencyIdRouteImport } from './routes/_protegido/agencias/$agencyId'
+import { Route as ProtegidoInmueblesIndexRouteImport } from './routes/_protegido/inmuebles/index'
+import { Route as ProtegidoInmueblesPropertyIdRouteImport } from './routes/_protegido/inmuebles/$propertyId'
 
 const ProtegidoRoute = ProtegidoRouteImport.update({
   id: '/_protegido',
@@ -82,6 +84,17 @@ const ProtegidoAgenciasAgencyIdRoute =
     path: '/agencias/$agencyId',
     getParentRoute: () => ProtegidoRoute,
   } as any)
+const ProtegidoInmueblesIndexRoute = ProtegidoInmueblesIndexRouteImport.update({
+  id: '/inmuebles/',
+  path: '/inmuebles/',
+  getParentRoute: () => ProtegidoRoute,
+} as any)
+const ProtegidoInmueblesPropertyIdRoute =
+  ProtegidoInmueblesPropertyIdRouteImport.update({
+    id: '/inmuebles/$propertyId',
+    path: '/inmuebles/$propertyId',
+    getParentRoute: () => ProtegidoRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof ProtegidoIndexRoute
@@ -94,7 +107,9 @@ export interface FileRoutesByFullPath {
   '/sin-conexion': typeof SinConexionRoute
   '/verificar': typeof VerificarRoute
   '/agencias/$agencyId': typeof ProtegidoAgenciasAgencyIdRoute
+  '/inmuebles/$propertyId': typeof ProtegidoInmueblesPropertyIdRoute
   '/agencias/': typeof ProtegidoAgenciasIndexRoute
+  '/inmuebles/': typeof ProtegidoInmueblesIndexRoute
 }
 export interface FileRoutesByTo {
   '/activar-2fa': typeof Activar2faRoute
@@ -107,7 +122,9 @@ export interface FileRoutesByTo {
   '/verificar': typeof VerificarRoute
   '/': typeof ProtegidoIndexRoute
   '/agencias/$agencyId': typeof ProtegidoAgenciasAgencyIdRoute
+  '/inmuebles/$propertyId': typeof ProtegidoInmueblesPropertyIdRoute
   '/agencias': typeof ProtegidoAgenciasIndexRoute
+  '/inmuebles': typeof ProtegidoInmueblesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -122,7 +139,9 @@ export interface FileRoutesById {
   '/verificar': typeof VerificarRoute
   '/_protegido/': typeof ProtegidoIndexRoute
   '/_protegido/agencias/$agencyId': typeof ProtegidoAgenciasAgencyIdRoute
+  '/_protegido/inmuebles/$propertyId': typeof ProtegidoInmueblesPropertyIdRoute
   '/_protegido/agencias/': typeof ProtegidoAgenciasIndexRoute
+  '/_protegido/inmuebles/': typeof ProtegidoInmueblesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -137,7 +156,9 @@ export interface FileRouteTypes {
     | '/sin-conexion'
     | '/verificar'
     | '/agencias/$agencyId'
+    | '/inmuebles/$propertyId'
     | '/agencias/'
+    | '/inmuebles/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/activar-2fa'
@@ -150,7 +171,9 @@ export interface FileRouteTypes {
     | '/verificar'
     | '/'
     | '/agencias/$agencyId'
+    | '/inmuebles/$propertyId'
     | '/agencias'
+    | '/inmuebles'
   id:
     | '__root__'
     | '/_protegido'
@@ -164,7 +187,9 @@ export interface FileRouteTypes {
     | '/verificar'
     | '/_protegido/'
     | '/_protegido/agencias/$agencyId'
+    | '/_protegido/inmuebles/$propertyId'
     | '/_protegido/agencias/'
+    | '/_protegido/inmuebles/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -265,19 +290,37 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtegidoAgenciasAgencyIdRouteImport
       parentRoute: typeof ProtegidoRoute
     }
+    '/_protegido/inmuebles/': {
+      id: '/_protegido/inmuebles/'
+      path: '/inmuebles'
+      fullPath: '/inmuebles/'
+      preLoaderRoute: typeof ProtegidoInmueblesIndexRouteImport
+      parentRoute: typeof ProtegidoRoute
+    }
+    '/_protegido/inmuebles/$propertyId': {
+      id: '/_protegido/inmuebles/$propertyId'
+      path: '/inmuebles/$propertyId'
+      fullPath: '/inmuebles/$propertyId'
+      preLoaderRoute: typeof ProtegidoInmueblesPropertyIdRouteImport
+      parentRoute: typeof ProtegidoRoute
+    }
   }
 }
 
 interface ProtegidoRouteChildren {
   ProtegidoIndexRoute: typeof ProtegidoIndexRoute
   ProtegidoAgenciasAgencyIdRoute: typeof ProtegidoAgenciasAgencyIdRoute
+  ProtegidoInmueblesPropertyIdRoute: typeof ProtegidoInmueblesPropertyIdRoute
   ProtegidoAgenciasIndexRoute: typeof ProtegidoAgenciasIndexRoute
+  ProtegidoInmueblesIndexRoute: typeof ProtegidoInmueblesIndexRoute
 }
 
 const ProtegidoRouteChildren: ProtegidoRouteChildren = {
   ProtegidoIndexRoute: ProtegidoIndexRoute,
   ProtegidoAgenciasAgencyIdRoute: ProtegidoAgenciasAgencyIdRoute,
+  ProtegidoInmueblesPropertyIdRoute: ProtegidoInmueblesPropertyIdRoute,
   ProtegidoAgenciasIndexRoute: ProtegidoAgenciasIndexRoute,
+  ProtegidoInmueblesIndexRoute: ProtegidoInmueblesIndexRoute,
 }
 
 const ProtegidoRouteWithChildren = ProtegidoRoute._addFileChildren(

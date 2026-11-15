@@ -1,0 +1,276 @@
+<title>inmo-mls Panel</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Lato:wght@400;700;900&display=swap">
+<style>
+/* Concepto: panel de administración estilo AdminLTE. Sidebar oscura fija, navbar blanca, small-boxes de color, tarjetas blancas sobre fondo gris perla. Paleta medida de ref1.jpg. */
+:root{
+  --base:#2B2E2B; --carbon:#44473F; --green:#3C7755; --green-d:#2D5D42; --leaf:#9BB96D; --sand:#DEC9B7; --pearl:#E2E2E2; --sky:#95D1FA; --white:#FFFFFF;
+  --bg:#EDEDEC; --line:#D9D9D7; --muted:#5D6159;
+  --sans:'Lato','Helvetica Neue',Arial,sans-serif; --mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--base);font-family:var(--sans);font-size:15px;line-height:1.5}
+svg{display:block}
+.mono{font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+a{color:inherit;text-decoration:none}
+
+.app{display:grid;grid-template-columns:260px minmax(0,1fr);min-height:100vh}
+
+/* SIDEBAR */
+.side{background:var(--base);color:#E7E8E6;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+.brand{display:flex;align-items:center;gap:12px;padding:20px 22px;border-bottom:1px solid rgba(255,255,255,.1)}
+.brand svg{height:26px;width:auto}
+.brand b{font-size:23px;font-weight:900;letter-spacing:-.02em;color:#fff}
+.brand b em{font-style:normal;color:var(--leaf)}
+.user{display:flex;align-items:center;gap:12px;padding:18px 22px;border-bottom:1px solid rgba(255,255,255,.1)}
+.avatar{width:38px;height:38px;border-radius:50%;background:var(--sand);color:var(--base);display:grid;place-items:center;font-weight:900;font-size:14px;flex:none}
+.user div{min-width:0}.user strong{display:block;font-size:14px;color:#fff}.user span{font-size:12px;color:var(--sand)}
+.menu{padding:14px 12px 24px;display:flex;flex-direction:column;gap:2px}
+.menu h4{margin:18px 10px 8px;color:#A3A89F;font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+.menu a{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;font-weight:700;font-size:14.5px;color:#D8DAD6}
+.menu a svg{width:19px;height:19px;flex:none;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.menu a:hover{background:rgba(255,255,255,.07)}
+.menu a.on{background:var(--leaf);color:var(--base)}
+.menu a .n{margin-left:auto;font-family:var(--mono);font-size:11px;background:var(--carbon);color:#fff;padding:2px 8px;border-radius:999px}
+.menu a.on .n{background:var(--base)}
+.sub{display:flex;flex-direction:column;margin:2px 0 6px 31px;border-left:1px solid rgba(255,255,255,.14)}
+.sub a{padding:7px 12px;font-weight:400;font-size:14px;border-radius:0 8px 8px 0}
+
+/* MAIN */
+.main{min-width:0;display:flex;flex-direction:column}
+.top{background:var(--white);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:16px;padding:12px 28px;position:sticky;top:0;z-index:5}
+.burger{display:none;border:0;background:none;padding:6px;cursor:pointer;color:var(--base)}
+.burger svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
+.search{flex:1;max-width:420px;display:flex;align-items:center;gap:10px;background:var(--bg);border-radius:10px;padding:9px 14px;color:var(--muted)}
+.search svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;flex:none}
+.search input{border:0;background:none;font:inherit;color:var(--base);width:100%;outline:0}
+.search input::placeholder{color:var(--muted)}
+.tools{margin-left:auto;display:flex;align-items:center;gap:18px}
+.bell{position:relative;width:22px;height:22px}
+.bell svg{width:22px;height:22px;stroke:var(--base);fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.bell i{position:absolute;top:-6px;right:-8px;background:var(--green);color:#fff;font:700 10px var(--sans);font-style:normal;border-radius:999px;padding:1px 5px}
+.who{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px}
+.who .avatar{width:34px;height:34px;font-size:13px}
+
+.content{padding:26px 28px 40px;display:flex;flex-direction:column;gap:24px}
+.pagehead{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
+h1{margin:0;font-size:30px;font-weight:900;letter-spacing:-.02em;line-height:1.15}
+.crumbs{color:var(--muted);font-size:13px}
+.crumbs b{color:var(--green-d)}
+.btn{display:inline-flex;align-items:center;gap:8px;background:var(--green-d);color:#fff;font-weight:700;font-size:14.5px;padding:10px 18px;border-radius:10px;border:0;cursor:pointer;font-family:inherit}
+.btn.ghost{background:var(--white);color:var(--base);border:1px solid var(--line)}
+.btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.4;stroke-linecap:round}
+
+/* SMALL BOXES */
+.boxes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px}
+.box{border-radius:14px;padding:20px 22px 0;position:relative;overflow:hidden;display:flex;flex-direction:column;min-height:150px}
+.box strong{font-size:40px;font-weight:900;letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums}
+.box span{margin-top:6px;font-weight:700;font-size:15px}
+.box svg.ic{position:absolute;right:16px;top:16px;width:58px;height:58px;stroke:currentColor;fill:none;stroke-width:1.5;opacity:.28;stroke-linecap:round;stroke-linejoin:round}
+.box a{margin:auto -22px 0;padding:9px 22px;font-size:13px;font-weight:700;background:rgba(0,0,0,.14);display:block}
+.box.g{background:var(--green);color:#fff}
+.box.c{background:var(--carbon);color:#fff}
+.box.s{background:var(--sand);color:var(--base)}.box.s a{background:rgba(0,0,0,.08)}
+.box.l{background:var(--leaf);color:var(--base)}.box.l a{background:rgba(0,0,0,.09)}
+
+/* CARDS */
+.row{display:grid;gap:20px;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr)}
+.card{background:var(--white);border-radius:14px;border:1px solid var(--line);min-width:0}
+.card>header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 20px;border-bottom:1px solid var(--line)}
+.card h3{margin:0;font-size:17px;font-weight:900;letter-spacing:-.01em}
+.card .body{padding:18px 20px}
+.legend{display:flex;gap:16px;font-size:13px;color:var(--muted);font-weight:700}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.chart{width:100%;height:auto}
+.chart text{font-family:var(--sans);font-size:12px;fill:var(--muted)}
+.donutwrap{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+.donut{width:170px;height:170px;flex:none}
+.donut text{font-family:var(--sans)}
+.dl{list-style:none;margin:0;padding:0;display:grid;gap:9px;flex:1;min-width:150px;font-size:14px}
+.dl li{display:flex;align-items:center;gap:10px}
+.dl i{width:11px;height:11px;border-radius:3px;flex:none}
+.dl b{margin-left:auto;font-variant-numeric:tabular-nums}
+
+.tablewrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:640px}
+th{text-align:left;font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:12px 20px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:13px 20px;border-bottom:1px solid var(--bg);font-size:14.5px;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+td.ref{font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--muted)}
+td.p{font-weight:900;font-variant-numeric:tabular-nums}
+td strong{font-weight:700}
+.badge{display:inline-block;font-size:12px;font-weight:700;padding:3px 11px;border-radius:999px}
+.b-act{background:var(--green);color:#fff}
+.b-rev{background:var(--sand);color:var(--base)}
+.b-ven{background:var(--carbon);color:#fff}
+
+.ver{list-style:none;margin:0;padding:0;display:grid;gap:16px}
+.ver li{display:grid;gap:7px}
+.ver .t{display:flex;justify-content:space-between;gap:10px;font-weight:700;font-size:14.5px}
+.ver .t span{font-family:var(--mono);font-size:12px;color:var(--muted);font-weight:500}
+.bar{height:8px;background:var(--bg);border-radius:999px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--green);border-radius:999px}
+.bar i.l{background:var(--leaf)}
+
+.foot{padding:18px 28px;border-top:1px solid var(--line);background:var(--white);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:13px}
+
+@media (max-width:1100px){.boxes{grid-template-columns:repeat(2,minmax(0,1fr))}.row{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:860px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{position:fixed;inset:0 auto 0 0;width:270px;z-index:20;transform:translateX(-100%);transition:transform .2s}
+  body.open .side{transform:none}
+  .burger{display:block}
+  .who span{display:none}
+  .top,.content,.foot{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+}
+@media (max-width:560px){.boxes{grid-template-columns:minmax(0,1fr)}h1{font-size:25px}}
+@media (prefers-reduced-motion:reduce){.side{transition:none}}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10"/></symbol>
+  <symbol id="i-build" viewBox="0 0 24 24"><path d="M4 21V5l8-2v18M12 9l8 2v10M2 21h20M8 8v.01M8 12v.01M8 16v.01M16 14v.01M16 18v.01"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6M16 4.8a3.5 3.5 0 010 6.4M18 14.4c2.2.6 3.5 2.5 3.5 5.6"/></symbol>
+  <symbol id="i-brief" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V4h6v3M3 13h18"/></symbol>
+  <symbol id="i-inbox" viewBox="0 0 24 24"><path d="M3 13l3-8h12l3 8v6H3zM3 13h5l1 3h6l1-3h5"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V4M4 20h16M8 16v-5M12 16V8M16 16v-3"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6zM8.5 12l2.5 2.5L16 9.5"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/></symbol>
+  <symbol id="i-logo" viewBox="0 0 100 76"><path fill="#fff" fill-rule="evenodd" d="M0 76V22A22 22 0 0 1 22 0H78A22 22 0 0 1 100 22V76Z M14 76V40A14 14 0 0 1 42 40V76Z M58 76V40A14 14 0 0 1 86 40V76Z"/><circle cx="36" cy="58" r="3.6" fill="#9BB96D"/></symbol>
+</svg>
+
+<div class="app">
+  <aside class="side" id="side">
+    <div class="brand">
+      <svg viewBox="0 0 100 76" aria-hidden="true"><use href="#i-logo"/></svg>
+      <b>inmo<em>-</em>mls</b>
+    </div>
+    <div class="user">
+      <div class="avatar">LB</div>
+      <div><strong>Libardo B.</strong><span>Administrador de la red</span></div>
+    </div>
+    <nav class="menu">
+      <h4>Red MLS</h4>
+      <a class="on" href="#"><svg><use href="#i-home"/></svg>Panel</a>
+      <a href="#"><svg><use href="#i-build"/></svg>Propiedades<span class="n">1.284</span></a>
+      <div class="sub"><a href="#">Todas</a><a href="#">Nueva propiedad</a><a href="#">Por verificar</a></div>
+      <a href="#"><svg><use href="#i-users"/></svg>Asesores<span class="n">142</span></a>
+      <a href="#"><svg><use href="#i-brief"/></svg>Inmobiliarias</a>
+      <a href="#"><svg><use href="#i-inbox"/></svg>Solicitudes<span class="n">17</span></a>
+      <h4>Administración</h4>
+      <a href="#"><svg><use href="#i-check"/></svg>Verificaciones</a>
+      <a href="#"><svg><use href="#i-chart"/></svg>Reportes</a>
+      <a href="#"><svg><use href="#i-gear"/></svg>Configuración</a>
+    </nav>
+  </aside>
+
+  <div class="main">
+    <div class="top">
+      <button class="burger" id="burger" aria-label="Abrir menú"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+      <label class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="q" type="search" placeholder="Buscar por referencia, ciudad o asesor"></label>
+      <div class="tools">
+        <div class="bell"><svg viewBox="0 0 24 24"><path d="M6 17V11a6 6 0 0112 0v6l2 2H4zM10 21h4"/></svg><i>5</i></div>
+        <div class="who"><div class="avatar">LB</div><span>Libardo B.</span></div>
+      </div>
+    </div>
+
+    <main class="content">
+      <div class="pagehead">
+        <div>
+          <h1>Panel de la red</h1>
+          <div class="crumbs">Inicio / <b>Panel</b> · Datos de ejemplo al 13 nov 2026</div>
+        </div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <button class="btn ghost" type="button">Exportar reporte</button>
+          <button class="btn" type="button"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Nueva propiedad</button>
+        </div>
+      </div>
+
+      <section class="boxes" aria-label="Indicadores">
+        <div class="box g"><strong>1.284</strong><span>Propiedades activas</span><svg class="ic" viewBox="0 0 24 24"><use href="#i-build"/></svg><a href="#">Ver propiedades →</a></div>
+        <div class="box c"><strong>86</strong><span>Nuevas esta semana</span><svg class="ic" viewBox="0 0 24 24"><use href="#i-inbox"/></svg><a href="#">Ver publicaciones →</a></div>
+        <div class="box s"><strong>142</strong><span>Asesores en la red</span><svg class="ic" viewBox="0 0 24 24"><use href="#i-users"/></svg><a href="#">Ver asesores →</a></div>
+        <div class="box l"><strong>31</strong><span>Cierres del mes</span><svg class="ic" viewBox="0 0 24 24"><use href="#i-check"/></svg><a href="#">Ver reportes →</a></div>
+      </section>
+
+      <section class="row">
+        <article class="card">
+          <header><h3>Publicaciones y cierres por mes</h3>
+            <div class="legend"><span><i style="background:var(--green)"></i>Publicaciones</span><span><i style="background:var(--leaf)"></i>Cierres</span></div></header>
+          <div class="body"><svg class="chart" id="bars" viewBox="0 0 640 280" role="img" aria-label="Publicaciones y cierres de junio a noviembre"></svg></div>
+        </article>
+        <article class="card">
+          <header><h3>Inventario por tipo</h3><span class="mono" style="color:var(--muted)">1.284 total</span></header>
+          <div class="body donutwrap">
+            <svg class="donut" id="donut" viewBox="0 0 120 120" role="img" aria-label="Inventario por tipo de inmueble"></svg>
+            <ul class="dl" id="dl"></ul>
+          </div>
+        </article>
+      </section>
+
+      <section class="row">
+        <article class="card">
+          <header><h3>Últimas propiedades publicadas</h3><a class="mono" style="color:var(--green-d)" href="#">Ver todas →</a></header>
+          <div class="tablewrap"><table>
+            <thead><tr><th>Ref.</th><th>Inmueble</th><th>Ciudad</th><th>Precio</th><th>Asesor</th><th>Estado</th></tr></thead>
+            <tbody>
+              <tr><td class="ref">MLS-1284</td><td><strong>Apartamento 122 m²</strong></td><td>Santa Marta</td><td class="p">$520 M</td><td>M. Fuentes</td><td><span class="badge b-act">Activo</span></td></tr>
+              <tr><td class="ref">MLS-1283</td><td><strong>Casa 96 m²</strong></td><td>Cartagena</td><td class="p">$3,2 M/mes</td><td>D. Ortega</td><td><span class="badge b-rev">En revisión</span></td></tr>
+              <tr><td class="ref">MLS-1282</td><td><strong>Oficina 340 m²</strong></td><td>Barranquilla</td><td class="p">$1.850 M</td><td>A. Lozano</td><td><span class="badge b-act">Activo</span></td></tr>
+              <tr><td class="ref">MLS-1281</td><td><strong>Local 58 m²</strong></td><td>Santa Marta</td><td class="p">$410 M</td><td>M. Fuentes</td><td><span class="badge b-ven">Vendido</span></td></tr>
+              <tr><td class="ref">MLS-1280</td><td><strong>Lote 1.200 m²</strong></td><td>Ciénaga</td><td class="p">$760 M</td><td>J. Pardo</td><td><span class="badge b-rev">En revisión</span></td></tr>
+              <tr><td class="ref">MLS-1279</td><td><strong>Apartamento 74 m²</strong></td><td>Barranquilla</td><td class="p">$335 M</td><td>S. Mendoza</td><td><span class="badge b-act">Activo</span></td></tr>
+            </tbody>
+          </table></div>
+        </article>
+        <article class="card">
+          <header><h3>Verificaciones pendientes</h3><span class="badge b-rev">17</span></header>
+          <div class="body"><ul class="ver">
+            <li><div class="t">Documentos de propiedad<span>9 / 12</span></div><div class="bar"><i style="width:75%"></i></div></li>
+            <li><div class="t">Fotografías aprobadas<span>21 / 28</span></div><div class="bar"><i style="width:75%"></i></div></li>
+            <li><div class="t">Datos del asesor<span>4 / 17</span></div><div class="bar"><i class="l" style="width:24%"></i></div></li>
+            <li><div class="t">Avalúo registrado<span>6 / 10</span></div><div class="bar"><i class="l" style="width:60%"></i></div></li>
+          </ul></div>
+        </article>
+      </section>
+    </main>
+    <footer class="foot"><span>inmo-mls · Todo el mercado, un solo lugar.</span><span class="mono">Panel v0 · maqueta con datos de ejemplo</span></footer>
+  </div>
+</div>
+
+<script>
+(function(){
+  document.getElementById('burger').addEventListener('click',function(){document.body.classList.toggle('open')});
+  document.querySelector('.main').addEventListener('click',function(){document.body.classList.remove('open')});
+
+  // Barras agrupadas: publicaciones y cierres, escala 0-160
+  var ns='http://www.w3.org/2000/svg',svg=document.getElementById('bars');
+  var meses=['Jun','Jul','Ago','Sep','Oct','Nov'],pub=[92,110,128,119,143,86],cie=[18,22,27,24,33,31];
+  var L=38,R=630,T=14,B=250,max=160,h=B-T;
+  function el(n,a,t){var e=document.createElementNS(ns,n);for(var k in a)e.setAttribute(k,a[k]);if(t!=null)e.textContent=t;svg.appendChild(e);return e}
+  [0,40,80,120,160].forEach(function(v){var y=B-v/max*h;el('line',{x1:L,x2:R,y1:y,y2:y,stroke:'#D9D9D7','stroke-width':1});el('text',{x:L-8,y:y+4,'text-anchor':'end'},v)});
+  var slot=(R-L)/meses.length,bw=Math.min(34,slot*.26);
+  meses.forEach(function(m,i){
+    var cx=L+slot*i+slot/2;
+    [[pub[i],'#3C7755',-bw-2],[cie[i],'#9BB96D',2]].forEach(function(s){
+      var hh=s[0]/max*h;el('rect',{x:cx+s[2],y:B-hh,width:bw,height:hh,rx:4,fill:s[1]});
+      el('text',{x:cx+s[2]+bw/2,y:B-hh-6,'text-anchor':'middle','font-weight':700,fill:'#2B2E2B'},s[0]).style.fill='#2B2E2B';
+    });
+    el('text',{x:cx,y:B+22,'text-anchor':'middle'},m+(i==5?' (en curso)':''));
+  });
+
+  // Dona: inventario por tipo
+  var data=[['Apartamentos',48,'#3C7755'],['Casas',26,'#9BB96D'],['Locales',12,'#DEC9B7'],['Lotes',8,'#44473F'],['Oficinas',6,'#95D1FA']];
+  var d=document.getElementById('donut'),r=46,c=2*Math.PI*r,off=0,ul=document.getElementById('dl');
+  var bg=document.createElementNS(ns,'circle');['cx','cy'].forEach(function(k){bg.setAttribute(k,60)});bg.setAttribute('r',r);bg.setAttribute('fill','none');bg.setAttribute('stroke','#EDEDEC');bg.setAttribute('stroke-width',18);d.appendChild(bg);
+  data.forEach(function(x){
+    var len=x[1]/100*c,s=document.createElementNS(ns,'circle');
+    s.setAttribute('cx',60);s.setAttribute('cy',60);s.setAttribute('r',r);s.setAttribute('fill','none');s.setAttribute('stroke',x[2]);s.setAttribute('stroke-width',18);
+    s.setAttribute('stroke-dasharray',(len-1.5)+' '+(c-len+1.5));s.setAttribute('stroke-dashoffset',-off);s.setAttribute('transform','rotate(-90 60 60)');
+    d.appendChild(s);off+=len;
+    var li=document.createElement('li');li.innerHTML='<i style="background:'+x[2]+'"></i>'+x[0]+'<b>'+x[1]+'%</b>';ul.appendChild(li);
+  });
+  var t=document.createElementNS(ns,'text');t.setAttribute('x',60);t.setAttribute('y',66);t.setAttribute('text-anchor','middle');t.setAttribute('font-size',20);t.setAttribute('font-weight',900);t.setAttribute('fill','#2B2E2B');t.textContent='1.284';d.appendChild(t);
+})();
+</script>

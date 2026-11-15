@@ -13,6 +13,7 @@ const pairs: Pair[] = [
   ['text', 'background', 4.5],
   ['text', 'surface', 4.5],
   ['text-muted', 'surface', 4.5],
+  ['text-muted', 'background', 4.5],
   ['primary-foreground', 'primary', 4.5],
   ['primary-foreground', 'primary-hover', 4.5],
   ['border', 'background', 1.2],
@@ -21,6 +22,9 @@ const pairs: Pair[] = [
   ['sidebar-foreground', 'sidebar', 4.5],
   ['sidebar-foreground', 'sidebar-accent', 4.5],
   ['sidebar-primary-foreground', 'sidebar-primary', 4.5],
+  ['leaf-foreground', 'leaf', 4.5],
+  ['sand-foreground', 'sand', 4.5],
+  ['leaf', 'sidebar', 3],
   ...TONES.flatMap((tone): Pair[] => [
     [`${tone}-foreground`, `${tone}-subtle`, 4.5],
     [tone, 'background', 3],

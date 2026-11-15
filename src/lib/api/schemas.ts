@@ -7,6 +7,8 @@ import {
   zAgencyApplicationResponse,
   zAgencyPageResponse,
   zMeResponse,
+  zMemberResponse,
+  zMembersControllerListResponse,
   zProblemDetails,
   zPropertyDetailResponse,
   zTerritoryPageResponse,
@@ -17,6 +19,8 @@ export const problemDetailsSchema = zProblemDetails;
 export const propertyDetailResponseSchema = zPropertyDetailResponse;
 export const agencyApplicationResponseSchema = zAgencyApplicationResponse;
 export const agencyPageResponseSchema = zAgencyPageResponse;
+export const memberResponseSchema = zMemberResponse;
+export const memberListSchema = zMembersControllerListResponse;
 export const territoryPageResponseSchema = zTerritoryPageResponse;
 
 export type MeResponse = z.infer<typeof meResponseSchema>;
@@ -26,4 +30,7 @@ export type AgencyApplication = z.infer<typeof agencyApplicationResponseSchema>;
 export type AgencyPage = z.infer<typeof agencyPageResponseSchema>;
 export type AgencySummary = AgencyPage['items'][number];
 export type AgencyStatus = AgencyApplication['status'];
+export type Member = z.infer<typeof memberResponseSchema>;
+export type MemberStatus = Member['status'];
+export type MemberRole = Member['role'];
 export type TerritoryPage = z.infer<typeof territoryPageResponseSchema>;

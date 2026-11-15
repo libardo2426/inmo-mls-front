@@ -1,0 +1,326 @@
+<title>inmo-mls Solicitudes</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Lato:wght@400;700;900&display=swap">
+<style>
+/* Concepto: bandeja de solicitudes de compradores y arrendatarios en el panel AdminLTE de inmo-mls. Lista a la izquierda, detalle de la solicitud con la ficha de la propiedad, seguimiento y notas a la derecha. */
+:root{
+  --base:#2B2E2B; --carbon:#44473F; --green:#3C7755; --green-d:#2D5D42; --leaf:#9BB96D; --sand:#DEC9B7; --pearl:#E2E2E2; --sky:#95D1FA; --white:#FFFFFF;
+  --bg:#EDEDEC; --line:#D3D3D0; --muted:#5D6159;
+  --sans:'Lato','Helvetica Neue',Arial,sans-serif; --mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--base);font-family:var(--sans);font-size:15px;line-height:1.5}
+svg{display:block}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit}
+.mono{font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+.app{display:grid;grid-template-columns:260px minmax(0,1fr);min-height:100vh}
+
+/* SIDEBAR */
+.side{background:var(--base);color:#E7E8E6;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+.brand{display:flex;align-items:center;gap:12px;padding:20px 22px;border-bottom:1px solid rgba(255,255,255,.1)}
+.brand svg{height:26px;width:auto}
+.brand b{font-size:23px;font-weight:900;letter-spacing:-.02em;color:#fff}
+.brand b em{font-style:normal;color:var(--leaf)}
+.user{display:flex;align-items:center;gap:12px;padding:18px 22px;border-bottom:1px solid rgba(255,255,255,.1)}
+.avatar{width:38px;height:38px;border-radius:50%;background:var(--sand);color:var(--base);display:grid;place-items:center;font-weight:900;font-size:14px;flex:none}
+.user div{min-width:0}.user strong{display:block;font-size:14px;color:#fff}.user span{font-size:12px;color:var(--sand)}
+.menu{padding:14px 12px 24px;display:flex;flex-direction:column;gap:2px}
+.menu h4{margin:18px 10px 8px;color:#A3A89F;font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+.menu a{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;font-weight:700;font-size:14.5px;color:#D8DAD6}
+.menu a svg{width:19px;height:19px;flex:none;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.menu a:hover{background:rgba(255,255,255,.07)}
+.menu a.on{background:var(--leaf);color:var(--base)}
+.menu a .n{margin-left:auto;font-family:var(--mono);font-size:11px;background:var(--carbon);color:#fff;padding:2px 8px;border-radius:999px}
+.menu a.on .n{background:var(--base)}
+
+/* MAIN */
+.main{min-width:0;display:flex;flex-direction:column}
+.top{background:var(--white);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:16px;padding:12px 28px;position:sticky;top:0;z-index:5}
+.burger{display:none;border:0;background:none;padding:6px;cursor:pointer;color:var(--base)}
+.burger svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
+.gsearch,.fsearch{display:flex;align-items:center;gap:10px;color:var(--muted)}
+.gsearch{flex:1;max-width:420px;background:var(--bg);border-radius:10px;padding:9px 14px}
+.gsearch svg,.fsearch svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;flex:none}
+.gsearch input,.fsearch input{border:0;background:none;font:inherit;color:var(--base);width:100%;outline:0}
+.gsearch input::placeholder,.fsearch input::placeholder{color:#80857B}
+.tools{margin-left:auto;display:flex;align-items:center;gap:18px}
+.bell{position:relative;width:22px;height:22px}
+.bell svg{width:22px;height:22px;stroke:var(--base);fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.bell i{position:absolute;top:-6px;right:-8px;background:var(--green);color:#fff;font:700 10px var(--sans);font-style:normal;border-radius:999px;padding:1px 5px}
+.who{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px}
+.who .avatar{width:34px;height:34px;font-size:13px}
+
+.content{padding:26px 28px 40px;display:flex;flex-direction:column;gap:20px}
+.pagehead{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
+h1{margin:0;font-size:30px;font-weight:900;letter-spacing:-.02em;line-height:1.15}
+.crumbs{color:var(--muted);font-size:13px}.crumbs b{color:var(--green-d)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--green-d);color:#fff;font-weight:700;font-size:14.5px;padding:10px 18px;border-radius:10px;border:0;cursor:pointer}
+.btn.ghost{background:var(--white);color:var(--base);border:1px solid var(--line)}
+.btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+:is(.btn,button,input,select,textarea,a,.item):focus-visible{outline:3px solid var(--sky);outline-offset:2px}
+
+.boxes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.box{border-radius:14px;padding:16px 20px;display:flex;flex-direction:column}
+.box strong{font-size:32px;font-weight:900;letter-spacing:-.03em;line-height:1.05;font-variant-numeric:tabular-nums}
+.box span{font-weight:700;font-size:14px;margin-top:2px}
+.box.g{background:var(--green);color:#fff}.box.c{background:var(--carbon);color:#fff}.box.s{background:var(--sand)}.box.l{background:var(--leaf)}
+
+.badge{display:inline-block;font-size:12px;font-weight:700;padding:3px 11px;border-radius:999px;white-space:nowrap}
+.s-Nueva{background:var(--leaf);color:var(--base)}
+.s-Seg{background:var(--sand);color:var(--base)}
+.s-Vis{background:var(--green);color:#fff}
+.s-Cer{background:var(--carbon);color:#fff}
+.s-Per{background:var(--white);color:var(--base);border:1px solid var(--carbon)}
+.tipo{font-family:var(--mono);font-weight:500;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+
+/* BANDEJA */
+.inbox{display:grid;grid-template-columns:minmax(300px,420px) minmax(0,1fr);background:var(--white);border:1px solid var(--line);border-radius:14px;overflow:hidden;min-height:640px}
+.listcol{border-right:1px solid var(--line);display:flex;flex-direction:column;min-width:0}
+.lhead{padding:14px;border-bottom:1px solid var(--line);display:grid;gap:10px}
+.fsearch{background:var(--bg);border-radius:10px;padding:9px 14px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chipb{border:1px solid var(--line);background:var(--white);border-radius:999px;padding:5px 12px;font-weight:700;font-size:13px;color:var(--muted);cursor:pointer;display:flex;gap:6px;align-items:center}
+.chipb span{font-family:var(--mono);font-size:11px}
+.chipb.on{background:var(--green-d);border-color:var(--green-d);color:#fff}
+.lsel{display:flex;gap:8px}
+select{border:1px solid var(--line);background:var(--white);border-radius:10px;padding:8px 10px;font:inherit;color:var(--base);min-width:0;flex:1}
+.items{overflow-y:auto;max-height:560px;flex:1}
+.item{display:grid;grid-template-columns:40px minmax(0,1fr) auto;gap:12px;padding:14px;border-bottom:1px solid var(--bg);cursor:pointer;width:100%;text-align:left;background:none;border-left:4px solid transparent;border-top:0;border-right:0;color:inherit}
+.item:hover{background:#F6F6F5}
+.item.on{background:#EAF1EC;border-left-color:var(--green)}
+.item .avatar{width:40px;height:40px;font-size:14px}
+.item strong{display:block;font-weight:900;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item .pr{color:var(--muted);font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item .msg{color:var(--carbon);font-size:13.5px;margin-top:2px;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+.item .meta{display:flex;flex-direction:column;align-items:flex-end;gap:6px;font-size:12px;color:var(--muted)}
+.item.unread strong::after{content:"";display:inline-block;width:8px;height:8px;background:var(--green);border-radius:50%;margin-left:8px;vertical-align:1px}
+.late{color:var(--base);font-weight:700;background:var(--sand);padding:1px 8px;border-radius:999px}
+.none{padding:40px 20px;text-align:center;color:var(--muted)}
+.none strong{display:block;color:var(--base);font-size:17px;margin-bottom:4px}
+
+/* DETALLE */
+.detail{min-width:0;display:flex;flex-direction:column}
+.dback{display:none;margin:12px 16px 0;border:0;background:none;font-weight:700;color:var(--green-d);cursor:pointer;padding:6px 0;text-align:left}
+.dhead{padding:20px 24px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.dhead .who2{display:flex;gap:14px;align-items:center;min-width:0}
+.dhead .avatar{width:52px;height:52px;font-size:18px}
+.dhead h2{margin:0;font-size:22px;font-weight:900;line-height:1.2}
+.dhead p{margin:0;color:var(--muted);font-size:14px;overflow-wrap:anywhere}
+.dbody{padding:22px 24px;display:grid;gap:22px;overflow-y:auto}
+.sec h3{margin:0 0 10px;font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.bubble{background:var(--pearl);border-radius:4px 14px 14px 14px;padding:14px 16px}
+.bubble small{display:block;color:var(--muted);margin-top:8px;font-size:12.5px}
+.prop{display:grid;grid-template-columns:150px minmax(0,1fr);gap:16px;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.prop .ph{position:relative;min-height:120px}
+.prop .ph svg{width:100%;height:100%;position:absolute;inset:0}
+.prop .pt{position:absolute;left:8px;top:8px;background:var(--carbon);color:#fff;font-weight:900;font-size:14px;padding:3px 9px;border-radius:7px}
+.prop .pi{padding:14px 14px 14px 0;min-width:0}
+.prop .pi strong{font-size:17px;font-weight:900;display:block;line-height:1.25}
+.prop .pi .lc{color:var(--green-d);font-weight:700;font-size:14px}
+.prop .dt{display:inline-block;margin-top:8px;background:var(--green);color:#fff;border-radius:8px;padding:6px 12px;font-weight:700;font-size:13.5px}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+label.f{display:flex;flex-direction:column;gap:6px;min-width:0}
+label.f>span{font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font:inherit;color:var(--base);resize:vertical;min-height:84px}
+.tl{list-style:none;margin:0;padding:0;display:grid}
+.tl li{display:grid;grid-template-columns:20px minmax(0,1fr);gap:12px;position:relative;padding-bottom:14px}
+.tl li:last-child{padding-bottom:0}
+.tl li::before{content:"";position:absolute;left:9px;top:20px;bottom:0;width:2px;background:var(--line)}
+.tl li:last-child::before{display:none}
+.tl i{width:20px;height:20px;border-radius:50%;background:var(--leaf);border:3px solid var(--white);box-shadow:0 0 0 2px var(--leaf)}
+.tl strong{display:block;font-size:14.5px}
+.tl span{color:var(--muted);font-size:13px;overflow-wrap:anywhere}
+.dact{display:flex;gap:10px;flex-wrap:wrap;padding:16px 24px;border-top:1px solid var(--line);background:#F6F6F5}
+.foot{padding:18px 28px;border-top:1px solid var(--line);background:var(--white);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:13px}
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:var(--base);color:#fff;padding:12px 20px;border-radius:12px;font-weight:700;opacity:0;pointer-events:none;transition:.25s;z-index:30;max-width:90vw}
+#toast.on{opacity:1;transform:translateX(-50%)}
+
+@media (max-width:1100px){.boxes{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:860px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{position:fixed;inset:0 auto 0 0;width:270px;z-index:20;transform:translateX(-100%);transition:transform .2s}
+  body.open .side{transform:none}
+  .burger{display:block}.who span{display:none}
+  .top,.content,.foot{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+  .inbox{grid-template-columns:minmax(0,1fr)}
+  .listcol{border-right:0}
+  .inbox.sel .listcol{display:none}
+  .inbox:not(.sel) .detail{display:none}
+  .dback{display:block}
+  .two{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:560px){.boxes{grid-template-columns:minmax(0,1fr)}h1{font-size:25px}.prop{grid-template-columns:minmax(0,1fr)}.prop .ph{min-height:130px}.prop .pi{padding:0 14px 14px}}
+@media (prefers-reduced-motion:reduce){.side,#toast{transition:none}}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10"/></symbol>
+  <symbol id="i-build" viewBox="0 0 24 24"><path d="M4 21V5l8-2v18M12 9l8 2v10M2 21h20M8 8v.01M8 12v.01M8 16v.01M16 14v.01M16 18v.01"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6M16 4.8a3.5 3.5 0 010 6.4M18 14.4c2.2.6 3.5 2.5 3.5 5.6"/></symbol>
+  <symbol id="i-brief" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V4h6v3M3 13h18"/></symbol>
+  <symbol id="i-inbox" viewBox="0 0 24 24"><path d="M3 13l3-8h12l3 8v6H3zM3 13h5l1 3h6l1-3h5"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V4M4 20h16M8 16v-5M12 16V8M16 16v-3"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6zM8.5 12l2.5 2.5L16 9.5"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/></symbol>
+  <symbol id="i-logo" viewBox="0 0 100 76"><path fill="#fff" fill-rule="evenodd" d="M0 76V22A22 22 0 0 1 22 0H78A22 22 0 0 1 100 22V76Z M14 76V40A14 14 0 0 1 42 40V76Z M58 76V40A14 14 0 0 1 86 40V76Z"/><circle cx="36" cy="58" r="3.6" fill="#9BB96D"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol>
+</svg>
+
+<div class="app">
+  <aside class="side" id="side">
+    <div class="brand"><svg viewBox="0 0 100 76" aria-hidden="true"><use href="#i-logo"/></svg><b>inmo<em>-</em>mls</b></div>
+    <div class="user"><div class="avatar">LB</div><div><strong>Libardo B.</strong><span>Administrador de la red</span></div></div>
+    <nav class="menu">
+      <h4>Red MLS</h4>
+      <a href="#"><svg><use href="#i-home"/></svg>Panel</a>
+      <a href="#"><svg><use href="#i-build"/></svg>Propiedades<span class="n">1.284</span></a>
+      <a href="#"><svg><use href="#i-users"/></svg>Asesores<span class="n">142</span></a>
+      <a href="#"><svg><use href="#i-brief"/></svg>Inmobiliarias<span class="n">24</span></a>
+      <a class="on" href="#"><svg><use href="#i-inbox"/></svg>Solicitudes<span class="n" id="navN">17</span></a>
+      <h4>Administración</h4>
+      <a href="#"><svg><use href="#i-check"/></svg>Verificaciones</a>
+      <a href="#"><svg><use href="#i-chart"/></svg>Reportes</a>
+      <a href="#"><svg><use href="#i-gear"/></svg>Configuración</a>
+    </nav>
+  </aside>
+
+  <div class="main">
+    <div class="top">
+      <button class="burger" id="burger" aria-label="Abrir menú"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+      <label class="gsearch"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input type="search" placeholder="Buscar por referencia, ciudad o asesor"></label>
+      <div class="tools"><div class="bell"><svg viewBox="0 0 24 24"><path d="M6 17V11a6 6 0 0112 0v6l2 2H4zM10 21h4"/></svg><i>5</i></div><div class="who"><div class="avatar">LB</div><span>Libardo B.</span></div></div>
+    </div>
+
+    <main class="content">
+      <div class="pagehead">
+        <div><h1>Solicitudes</h1><div class="crumbs">Inicio / <b>Solicitudes</b> · Consultas de compradores y arrendatarios · Datos de ejemplo</div></div>
+        <button class="btn ghost" type="button">Exportar CSV</button>
+      </div>
+
+      <section class="boxes" aria-label="Resumen">
+        <div class="box g"><strong id="kNue">0</strong><span>Solicitudes nuevas</span></div>
+        <div class="box c"><strong id="kTar">0</strong><span>Sin responder hace más de 24 h</span></div>
+        <div class="box s"><strong id="kVis">0</strong><span>Visitas agendadas</span></div>
+        <div class="box l"><strong id="kCer">0</strong><span>Cerradas este mes</span></div>
+      </section>
+
+      <section class="inbox" id="inbox">
+        <div class="listcol">
+          <div class="lhead">
+            <label class="fsearch"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="q" type="search" placeholder="Buscar cliente, referencia o asesor" aria-label="Buscar solicitudes"></label>
+            <div class="chips" id="chips"></div>
+            <div class="lsel"><select id="fTipo" aria-label="Tipo"><option value="">Todos los tipos</option><option>Visita</option><option>Información</option><option>Oferta</option></select><select id="fAse" aria-label="Asesor"><option value="">Todos los asesores</option></select></div>
+          </div>
+          <div class="items" id="items"></div>
+        </div>
+        <div class="detail" id="detail"></div>
+      </section>
+    </main>
+    <footer class="foot"><span>inmo-mls · Todo el mercado, un solo lugar.</span><span class="mono">Panel v0 · maqueta con datos de ejemplo</span></footer>
+  </div>
+</div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id)};
+  $('burger').addEventListener('click',function(){document.body.classList.toggle('open')});
+  document.querySelector('.main').addEventListener('click',function(){document.body.classList.remove('open')});
+  var tm;function toast(m){var el=$('toast');el.textContent=m;el.classList.add('on');clearTimeout(tm);tm=setTimeout(function(){el.classList.remove('on')},2400)}
+  var esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})};
+
+  var PR={
+    'MLS-1284':{t:'Apartamento en venta',lc:'San Pedro Alejandrino · Santa Marta',pt:'520 millones',dt:'122 m² · 3 hab. · 3 baños · Estrato 5',c:'#DEC9B7'},
+    'MLS-1283':{t:'Casa en arriendo',lc:'Bocagrande · Cartagena',pt:'$3.200.000 / mes',dt:'96 m² · 2 hab. · 2 baños',c:'#9BB96D'},
+    'MLS-1282':{t:'Oficina en venta',lc:'Zona norte · Barranquilla',pt:'1.850 millones',dt:'340 m² · 4 parqueaderos',c:'#95D1FA'},
+    'MLS-1279':{t:'Apartamento en venta',lc:'El Prado · Barranquilla',pt:'335 millones',dt:'74 m² · 2 hab. · 2 baños',c:'#DEC9B7'},
+    'MLS-1275':{t:'Apartamento en venta',lc:'Rodadero · Santa Marta',pt:'640 millones',dt:'105 m² · 3 hab. · 2 baños',c:'#9BB96D'},
+    'MLS-1273':{t:'Casa en venta',lc:'Gaira · Santa Marta',pt:'720 millones',dt:'180 m² · 3 hab. · 3 baños',c:'#DEC9B7'},
+    'MLS-1271':{t:'Apartamento en venta',lc:'Alto Prado · Barranquilla',pt:'470 millones',dt:'92 m² · 3 hab. · 2 baños',c:'#95D1FA'},
+    'MLS-1278':{t:'Apartamento en arriendo',lc:'Pozos Colorados · Santa Marta',pt:'$2.400.000 / mes',dt:'68 m² · 2 hab. · 2 baños',c:'#95D1FA'}
+  };
+  // [cliente, correo, teléfono, tipo, ref, mensaje, horas desde que llegó, estado, asesor, bg, fg]
+  var D=[
+    ['Carolina Suárez','carolina.suarez@correo.example','+57 300 111 2233','Visita','MLS-1284','Hola, me interesa el apartamento. ¿Puedo verlo este sábado en la mañana? Somos dos adultos y una niña.',2,'Nueva','Marcela Fuentes','#9BB96D','#2B2E2B'],
+    ['Jorge Villamizar','jorge.v@correo.example','+57 301 222 3344','Oferta','MLS-1282','Quisiera presentar una oferta por la oficina. ¿El precio es negociable y qué incluye la administración?',5,'Nueva','Andrea Lozano','#DEC9B7','#2B2E2B'],
+    ['Natalia Ospina','natalia.o@correo.example','+57 302 333 4455','Información','MLS-1283','¿Aceptan mascotas? ¿Cuál es el depósito y el tiempo mínimo del contrato?',30,'Nueva','Diego Ortega','#95D1FA','#2B2E2B'],
+    ['Felipe Argüello','felipe.a@correo.example','+57 304 444 5566','Visita','MLS-1275','Me gustaría una visita entre semana después de las 5 p. m. Estoy buscando comprar en Rodadero.',52,'Nueva','Julián Pardo','#E2E2E2','#2B2E2B'],
+    ['Mónica Pineda','monica.p@correo.example','+57 305 555 6677','Visita','MLS-1273','Gracias por la información. Confirmo la visita del viernes.',20,'Visita agendada','Diego Ortega','#3C7755','#fff'],
+    ['Ricardo Londoño','ricardo.l@correo.example','+57 306 666 7788','Oferta','MLS-1271','Mi oferta es 455 millones, pago de contado. ¿La pueden revisar con el propietario?',26,'En seguimiento','Sofía Mendoza','#44473F','#fff'],
+    ['Alejandra Muñoz','alejandra.m@correo.example','+57 307 777 8899','Información','MLS-1279','¿El apartamento tiene gas natural y cuál es el valor del predial?',48,'En seguimiento','Sofía Mendoza','#DEC9B7','#2B2E2B'],
+    ['Santiago Rueda','santiago.r@correo.example','+57 308 888 9900','Visita','MLS-1278','Visité el apartamento y me encantó. Quiero firmar el contrato.',72,'Cerrada','Diego Ortega','#9BB96D','#2B2E2B'],
+    ['Paola Cifuentes','paola.c@correo.example','+57 309 999 0011','Información','MLS-1284','Encontré uno más económico en otra zona, gracias.',96,'Perdida','Marcela Fuentes','#E2E2E2','#2B2E2B'],
+    ['Héctor Barrera','hector.b@correo.example','+57 310 000 1122','Visita','MLS-1275','¿Podemos ver el apartamento el domingo? Vamos con mi esposa.',8,'Visita agendada','Julián Pardo','#95D1FA','#2B2E2B']
+  ].map(function(r,i){return{id:i,n:r[0],m:r[1],tel:r[2],tipo:r[3],ref:r[4],msg:r[5],h:r[6],est:r[7],ase:r[8],bg:r[9],fg:r[10],read:r[7]!=='Nueva',notes:[]}});
+  var cls={'Nueva':'s-Nueva','En seguimiento':'s-Seg','Visita agendada':'s-Vis','Cerrada':'s-Cer','Perdida':'s-Per'};
+  var ESTS=['Nueva','En seguimiento','Visita agendada','Cerrada','Perdida'];
+  var ASES=[...new Set(D.map(function(p){return p.ase}))].sort();
+  ASES.forEach(function(a){var o=document.createElement('option');o.textContent=a;$('fAse').appendChild(o)});
+  var st={tab:'Todas',q:'',tipo:'',ase:'',sel:0};
+  function ini(n){var p=n.split(' ');return p[0][0]+p[1][0]}
+  function hace(h){return h<1?'Hace minutos':h<24?'Hace '+h+' h':'Hace '+Math.round(h/24)+(Math.round(h/24)==1?' día':' días')}
+  function late(p){return p.est==='Nueva'&&p.h>24}
+  function base(){var q=st.q.toLowerCase();return D.filter(function(p){return (!st.tipo||p.tipo===st.tipo)&&(!st.ase||p.ase===st.ase)&&(!q||(p.n+' '+p.ref+' '+p.ase).toLowerCase().indexOf(q)>-1)})}
+  function filtered(){return base().filter(function(p){return st.tab==='Todas'||p.est===st.tab}).sort(function(a,b){return a.h-b.h})}
+
+  function timeline(p){
+    var t=[{a:'Solicitud recibida',b:hace(p.h)+' · por el portal'}];
+    if(p.est!=='Nueva')t.push({a:'Asignada a '+p.ase,b:'Automático · red MLS'});
+    if(p.est==='Visita agendada')t.push({a:'Visita agendada',b:'Con '+p.ase});
+    if(p.est==='Cerrada')t.push({a:'Cerrada con éxito',b:'Contrato en proceso'});
+    if(p.est==='Perdida')t.push({a:'Marcada como perdida',b:'El cliente eligió otra opción'});
+    p.notes.forEach(function(n){t.push({a:'Nota interna',b:esc(n)})});
+    return t.map(function(x){return '<li><i></i><div><strong>'+x.a+'</strong><span>'+x.b+'</span></div></li>'}).join('')}
+
+  function drawList(){
+    var b=base(),tabs=['Todas'].concat(ESTS);
+    $('chips').innerHTML=tabs.map(function(e){var n=e==='Todas'?b.length:b.filter(function(p){return p.est===e}).length;return '<button type="button" class="chipb'+(e===st.tab?' on':'')+'" data-t="'+e+'">'+e+'<span>'+n+'</span></button>'}).join('');
+    var f=filtered();
+    $('items').innerHTML=f.length?f.map(function(p){var pr=PR[p.ref];
+      return '<button type="button" class="item'+(p.id===st.sel?' on':'')+(p.read?'':' unread')+'" data-i="'+p.id+'"><div class="avatar" style="background:'+p.bg+';color:'+p.fg+'">'+ini(p.n)+'</div>'+
+      '<div style="min-width:0"><strong>'+p.n+'</strong><div class="pr">'+p.tipo+' · '+p.ref+' · '+pr.lc.split(' · ')[1]+'</div><div class="msg">'+esc(p.msg)+'</div></div>'+
+      '<div class="meta"><span>'+hace(p.h).replace('Hace ','')+'</span>'+(late(p)?'<span class="late">+24 h</span>':'<span class="badge '+cls[p.est]+'" style="font-size:11px;padding:2px 8px">'+p.est+'</span>')+'</div></button>'}).join(''):
+      '<div class="none"><strong>Ninguna solicitud coincide</strong>Cambia los filtros o la búsqueda.</div>';
+    $('kNue').textContent=D.filter(function(p){return p.est==='Nueva'}).length;
+    $('kTar').textContent=D.filter(late).length;
+    $('kVis').textContent=D.filter(function(p){return p.est==='Visita agendada'}).length;
+    $('kCer').textContent=D.filter(function(p){return p.est==='Cerrada'}).length;
+  }
+  function drawDetail(){
+    var p=D[st.sel];if(!p){$('detail').innerHTML='<div class="none" style="margin:auto"><strong>Selecciona una solicitud</strong>Aquí verás el detalle y el seguimiento.</div>';return}
+    var pr=PR[p.ref];
+    $('detail').innerHTML='<button class="dback" id="dback" type="button">← Volver a la bandeja</button>'+
+    '<div class="dhead"><div class="who2"><div class="avatar" style="background:'+p.bg+';color:'+p.fg+'">'+ini(p.n)+'</div><div style="min-width:0"><h2>'+p.n+'</h2><p>'+p.m+' · '+p.tel+'</p></div></div><div style="text-align:right"><span class="badge '+cls[p.est]+'">'+p.est+'</span><div class="tipo" style="margin-top:6px">'+p.tipo+' · '+hace(p.h)+'</div></div></div>'+
+    '<div class="dbody">'+
+      '<div class="sec"><h3>Mensaje del cliente</h3><div class="bubble">'+esc(p.msg)+'<small>Enviado desde la ficha pública de '+p.ref+'</small></div></div>'+
+      '<div class="sec"><h3>Propiedad consultada</h3><div class="prop"><div class="ph"><svg viewBox="0 0 150 120" preserveAspectRatio="xMidYMid slice"><rect width="150" height="120" fill="'+pr.c+'"/><path d="M40 110V30h50v80z" fill="#00000030"/><path d="M52 44h10M72 44h10M52 60h10M72 60h10M52 76h10M72 76h10" stroke="#ffffff99" stroke-width="5"/></svg><div class="pt">'+pr.pt+'</div></div><div class="pi"><span class="mono" style="color:var(--muted)">'+p.ref+'</span><strong>'+pr.t+'</strong><div class="lc">'+pr.lc+'</div><span class="dt">'+pr.dt+'</span></div></div></div>'+
+      '<div class="two"><label class="f"><span>Estado</span><select id="sEst">'+ESTS.map(function(e){return '<option'+(e===p.est?' selected':'')+'>'+e+'</option>'}).join('')+'</select></label>'+
+      '<label class="f"><span>Asesor asignado</span><select id="sAse">'+ASES.map(function(a){return '<option'+(a===p.ase?' selected':'')+'>'+a+'</option>'}).join('')+'</select></label></div>'+
+      '<div class="sec"><h3>Seguimiento</h3><ul class="tl" id="tl">'+timeline(p)+'</ul></div>'+
+      '<label class="f"><span>Nota interna (no la ve el cliente)</span><textarea id="note" placeholder="Ej.: El cliente prefiere que lo llamen después de las 5 p. m."></textarea></label>'+
+    '</div>'+
+    '<div class="dact"><button class="btn" type="button" data-x="mail"><svg viewBox="0 0 24 24"><use href="#i-mail"/></svg>Responder por correo</button><button class="btn ghost" type="button" data-x="cal"><svg viewBox="0 0 24 24"><use href="#i-cal"/></svg>Agendar visita</button><button class="btn ghost" type="button" data-x="note">Guardar nota</button></div>';
+  }
+  function open(i){st.sel=i;D[i].read=true;$('inbox').classList.add('sel');drawList();drawDetail()}
+  $('chips').addEventListener('click',function(e){var b=e.target.closest('.chipb');if(b){st.tab=b.dataset.t;drawList()}});
+  $('items').addEventListener('click',function(e){var b=e.target.closest('.item');if(b)open(+b.dataset.i)});
+  $('q').addEventListener('input',function(e){st.q=e.target.value;drawList()});
+  $('fTipo').addEventListener('change',function(e){st.tipo=e.target.value;drawList()});
+  $('fAse').addEventListener('change',function(e){st.ase=e.target.value;drawList()});
+  $('detail').addEventListener('click',function(e){
+    if(e.target.id==='dback'){$('inbox').classList.remove('sel');return}
+    var b=e.target.closest('[data-x]');if(!b)return;var p=D[st.sel];
+    if(b.dataset.x==='mail')toast('Maqueta: se abriría un correo a '+p.m);
+    if(b.dataset.x==='cal'){p.est='Visita agendada';toast('Visita agendada con '+p.ase+' (maqueta)');drawList();drawDetail()}
+    if(b.dataset.x==='note'){var v=$('note').value.trim();if(!v){toast('Escribe una nota primero');return}p.notes.push(v);toast('Nota guardada');drawDetail()}});
+  $('detail').addEventListener('change',function(e){var p=D[st.sel];
+    if(e.target.id==='sEst'){p.est=e.target.value;toast('Estado: '+p.est);drawList();drawDetail()}
+    if(e.target.id==='sAse'){p.ase=e.target.value;toast('Asignada a '+p.ase);drawList();drawDetail()}});
+  D[0].read=true;drawList();drawDetail();
+  // en pantallas anchas el detalle se ve siempre; en móvil se abre al tocar
+  if(window.matchMedia('(max-width:860px)').matches)$('inbox').classList.remove('sel');
+})();
+</script>

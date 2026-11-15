@@ -1,0 +1,189 @@
+<title>inmo-mls Portada</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Lato:wght@400;700;900&display=swap">
+<style>
+/* Concepto: portada de portal MLS. Hero a pantalla completa con velo carbón, listón naranja vertical como motivo, buscador que cruza el borde del hero, fichas de datos en verde. */
+:root{
+  /* paleta medida de ref1.jpg. --orange = hoja (acento), --orange-d = verde profundo (botones), --sage = arena */
+  --charcoal:#2B2E2B; --charcoal-2:#44473F; --orange:#9BB96D; --orange-d:#2D5D42;
+  --green:#3C7755; --green-d:#2D5D42; --sage:#DEC9B7; --pearl:#E2E2E2; --white:#FFFFFF;
+  --sans:'Lato','Helvetica Neue',Arial,sans-serif; --mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--pearl);color:var(--charcoal);font-family:var(--sans);font-size:16px;line-height:1.6;
+  padding-left:max(0px,env(safe-area-inset-left,0px));padding-right:max(0px,env(safe-area-inset-right,0px))}
+.wrap{width:100%;max-width:1240px;margin:0 auto;padding-left:max(24px,env(safe-area-inset-left,0px));padding-right:max(24px,env(safe-area-inset-right,0px))}
+a{color:inherit}
+.mono{font-family:var(--mono);font-weight:500;font-size:12px;letter-spacing:.14em;text-transform:uppercase}
+
+/* HERO */
+.hero{position:relative;background:var(--charcoal);color:var(--white);min-height:640px;overflow:hidden;display:flex;flex-direction:column}
+.scene{position:absolute;inset:0;width:100%;height:100%}
+.veil{position:absolute;inset:0;background:linear-gradient(to top,rgba(43,46,48,.92) 0%,rgba(43,46,48,.62) 38%,rgba(43,46,48,.18) 75%,rgba(43,46,48,.38) 100%)}
+.slat{position:absolute;top:0;bottom:0;right:7%;width:46px;display:flex;gap:3px;opacity:.95}
+.slat i{flex:1;background:var(--orange)}
+.slat-label{position:absolute;right:calc(7% + 62px);bottom:150px;writing-mode:vertical-rl;transform:rotate(180deg);color:var(--sage)}
+nav{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:28px}
+.logo{display:flex;align-items:center;gap:12px;text-decoration:none}
+.logo svg{height:30px;width:auto;display:block}
+.logo b{font-size:26px;font-weight:900;letter-spacing:-.02em}
+.logo b em{font-style:normal;color:var(--orange)}
+nav ul{display:flex;gap:30px;list-style:none;margin:0;padding:0;font-weight:700;font-size:15px}
+nav ul a{text-decoration:none;opacity:.88}
+.nav-cta{font-weight:700;font-size:14px;text-decoration:none;border:1.5px solid rgba(255,255,255,.7);padding:9px 18px;border-radius:999px}
+.hero-body{position:relative;z-index:2;flex:1;display:flex;align-items:flex-end;padding-block:80px 150px}
+.hero-body .wrap{display:block}
+.eyebrow{color:var(--sage);margin:0 0 20px}
+h1{font-size:clamp(44px,7.2vw,92px);line-height:1.02;letter-spacing:-.035em;font-weight:900;margin:0;max-width:11.5ch;text-wrap:balance}
+h1 span{color:var(--orange)}
+.sub{font-size:20px;max-width:34ch;margin:22px 0 32px;color:#E8EBEA}
+.btns{display:flex;flex-wrap:wrap;gap:22px;align-items:center}
+.btn{display:inline-block;background:var(--orange-d);color:var(--white);font-weight:700;font-size:17px;padding:16px 30px;border-radius:999px;text-decoration:none}
+.hero .btns .btn,.close .btn{background:var(--orange);color:var(--charcoal)}
+.ghost{font-weight:700;text-decoration:underline;text-underline-offset:5px}
+
+/* BUSCADOR */
+.search-wrap{position:relative;z-index:3;margin-top:-56px}
+.search{background:var(--white);border-radius:20px;box-shadow:0 18px 50px rgba(43,46,48,.22);display:grid;grid-template-columns:repeat(4,1fr) auto;gap:0;align-items:stretch;padding:10px}
+.f{padding:12px 22px;border-right:1px solid var(--pearl);min-width:0}
+.f:nth-child(4){border-right:0}
+.f small{display:block;color:var(--green-d);font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:500}
+.f div{font-weight:700;font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.search .btn{border-radius:14px;display:flex;align-items:center;padding-inline:36px}
+.trust{display:flex;flex-wrap:wrap;gap:12px 36px;padding:26px 6px 0;color:var(--charcoal-2)}
+
+/* LISTADOS */
+section.list{padding-block:90px 100px}
+.head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;margin-bottom:38px}
+h2{font-size:clamp(32px,4.4vw,52px);line-height:1.05;letter-spacing:-.03em;font-weight:900;margin:0;max-width:16ch;text-wrap:balance}
+.more{font-weight:700;text-decoration:underline;text-underline-offset:5px}
+.grid{display:grid;grid-template-columns:1.35fr 1fr 1fr;gap:26px;align-items:start}
+.card{background:var(--white);border-radius:18px;overflow:hidden;position:relative}
+.card:nth-child(2){margin-top:46px}
+.card:nth-child(3){margin-top:16px}
+.photo{position:relative;aspect-ratio:4/3.1;overflow:hidden}
+.card:first-child .photo{aspect-ratio:4/3.6}
+.photo svg{width:100%;height:100%;display:block}
+.price{position:absolute;top:18px;left:18px;background:var(--charcoal-2);color:var(--white);font-weight:900;font-size:22px;padding:8px 16px;border-radius:10px}
+.price small{font-weight:700;font-size:15px}
+.data{position:absolute;left:18px;bottom:18px;background:rgba(60,119,85,.94);color:var(--white);border-radius:10px;padding:12px 18px;font-weight:700;font-size:15px;line-height:1.55}
+.data strong{display:block;font-size:22px;font-weight:900}
+.info{padding:20px 22px 24px}
+.info h3{margin:0;font-size:22px;line-height:1.2;font-weight:900;letter-spacing:-.01em}
+.info p{margin:4px 0 14px;color:var(--green-d);font-weight:700}
+.ref{color:var(--charcoal-2)}
+
+/* CIERRE */
+.close{position:relative;background:var(--charcoal);color:var(--white);text-align:center;padding-block:96px;overflow:hidden}
+.close .slat{right:auto;left:50%;transform:translateX(-50%);width:120px;opacity:.16}
+.close h2{position:relative;margin:0 auto 28px;max-width:none}
+.close .btn{position:relative}
+.close .mono{position:relative;display:block;margin-top:30px;color:var(--sage)}
+
+@media (max-width:900px){
+  nav ul,.nav-cta{display:none}
+  .slat{right:20px;width:26px}.slat-label{display:none}
+  .search{grid-template-columns:1fr 1fr}.f{border-right:0;border-bottom:1px solid var(--pearl)}
+  .search .btn{grid-column:1/-1;justify-content:center;padding-block:16px;margin-top:8px}
+  .grid{grid-template-columns:1fr}.card:nth-child(n){margin-top:0}
+}
+</style>
+
+<header class="hero">
+  <svg class="scene" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <defs>
+      <linearGradient id="wall" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#cfcabf"/><stop offset="1" stop-color="#e6dccb"/></linearGradient>
+      <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bcd9e6"/><stop offset="1" stop-color="#e3eef0"/></linearGradient>
+      <linearGradient id="floor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d8cdb7"/><stop offset="1" stop-color="#efe6d2"/></linearGradient>
+      <linearGradient id="ceil" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f3f1ec"/><stop offset="1" stop-color="#dcd7cc"/></linearGradient>
+    </defs>
+    <rect width="1600" height="900" fill="url(#wall)"/>
+    <rect width="1600" height="190" fill="url(#ceil)"/>
+    <rect y="560" width="1600" height="340" fill="url(#floor)"/>
+    <g stroke="#cabf9f" stroke-width="2" opacity=".6"><path d="M0 700 L1600 640 M0 800 L1600 770 M300 560 L-200 900 M700 560 L560 900 M1100 560 L1180 900 M1500 560 L1800 900"/></g>
+    <rect x="80" y="210" width="640" height="400" fill="url(#sky)"/>
+    <path d="M80 450 Q200 360 330 420 T560 380 T720 430 V610 H80Z" fill="#6f9a8b" opacity=".55"/>
+    <g fill="#4d8a4f"><circle cx="180" cy="520" r="90"/><circle cx="320" cy="500" r="110"/><circle cx="480" cy="530" r="100"/><circle cx="630" cy="510" r="90"/></g>
+    <g fill="#6aa35b"><circle cx="250" cy="470" r="70"/><circle cx="420" cy="460" r="80"/><circle cx="560" cy="470" r="60"/></g>
+    <rect x="80" y="210" width="640" height="400" fill="none" stroke="#f7f4ee" stroke-width="14"/>
+    <path d="M293 210V610M507 210V610" stroke="#f7f4ee" stroke-width="10"/>
+    <rect x="80" y="585" width="640" height="26" fill="#c9c2b3"/>
+    <rect x="880" y="300" width="300" height="190" rx="4" fill="#7b5c43"/>
+    <rect x="900" y="320" width="260" height="150" fill="#1f2527"/>
+    <ellipse cx="520" cy="740" rx="150" ry="95" fill="#d9c3a5"/><path d="M390 740 Q420 620 520 630 Q620 640 650 740Z" fill="#e5d0b3"/>
+    <ellipse cx="930" cy="790" rx="130" ry="85" fill="#cdb594"/><path d="M820 790 Q850 690 930 696 Q1010 704 1040 790Z" fill="#dcc7a8"/>
+    <rect x="1230" y="620" width="300" height="12" rx="6" fill="#efeae0"/>
+  </svg>
+  <div class="veil"></div>
+  <div class="slat" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="slat-label mono">Red MLS · Nº 0142</div>
+
+  <div class="wrap">
+    <nav>
+      <a class="logo" href="#">
+        <svg viewBox="0 0 100 76" aria-hidden="true"><path fill="#fff" fill-rule="evenodd" d="M0 76V22A22 22 0 0 1 22 0H78A22 22 0 0 1 100 22V76Z M14 76V40A14 14 0 0 1 42 40V76Z M58 76V40A14 14 0 0 1 86 40V76Z"/><circle cx="36" cy="58" r="3.6" fill="#9BB96D"/></svg>
+        <b>inmo<em>-</em>mls</b>
+      </a>
+      <ul><li><a href="#">Comprar</a></li><li><a href="#">Arrendar</a></li><li><a href="#">Servicios</a></li><li><a href="#">Asesores</a></li></ul>
+      <a class="nav-cta" href="#">Soy asesor</a>
+    </nav>
+  </div>
+
+  <div class="hero-body"><div class="wrap">
+    <p class="eyebrow mono">Red de inmuebles verificados</p>
+    <h1>Todo el mercado, <span>un solo lugar.</span></h1>
+    <p class="sub">Inmuebles verificados, compartidos entre asesores.</p>
+    <div class="btns"><a class="btn" href="#">Explorar propiedades</a><a class="ghost" href="#">Soy asesor →</a></div>
+  </div></div>
+</header>
+
+<div class="wrap search-wrap">
+  <div class="search" role="search">
+    <div class="f"><small>Ciudad</small><div>Santa Marta</div></div>
+    <div class="f"><small>Tipo</small><div>Apartamento</div></div>
+    <div class="f"><small>Presupuesto</small><div>Hasta 600 millones</div></div>
+    <div class="f"><small>Estrato</small><div>5 o más</div></div>
+    <a class="btn" href="#">Buscar</a>
+  </div>
+  <div class="trust mono"><span>Inmuebles verificados</span><span>Red de asesores</span><span>Datos al día</span></div>
+</div>
+
+<section class="list"><div class="wrap">
+  <div class="head"><h2>Propiedades destacadas de la red</h2><a class="more" href="#">Ver todas las propiedades →</a></div>
+  <div class="grid">
+    <article class="card">
+      <div class="photo">
+        <svg viewBox="0 0 800 620" preserveAspectRatio="xMidYMid slice"><rect width="800" height="620" fill="#e8dfcf"/><rect width="800" height="150" fill="#f3f1ec"/><rect x="50" y="130" width="380" height="270" fill="#bcd9e6"/><g fill="#4d8a4f"><circle cx="120" cy="330" r="80"/><circle cx="260" cy="320" r="90"/><circle cx="380" cy="340" r="70"/></g><rect x="50" y="130" width="380" height="270" fill="none" stroke="#f7f4ee" stroke-width="12"/><rect y="400" width="800" height="220" fill="#ecdfc6"/><ellipse cx="260" cy="500" rx="110" ry="70" fill="#d9c3a5"/><ellipse cx="560" cy="540" rx="120" ry="75" fill="#cdb594"/></svg>
+        <div class="price">520 <small>millones</small></div>
+        <div class="data"><strong>122 m²</strong>3 habitaciones · 3 baños<br>Estrato 5 · Parqueadero</div>
+      </div>
+      <div class="info"><h3>Apartamento en venta</h3><p>Santa Marta · cerca de CC Buenavista</p><span class="mono ref">MLS-0142</span></div>
+    </article>
+    <article class="card">
+      <div class="photo">
+        <svg viewBox="0 0 600 470" preserveAspectRatio="xMidYMid slice"><rect width="600" height="470" fill="#4a4f51"/><rect x="250" y="0" width="70" height="470" fill="#9BB96D"/><g stroke="#3C7755" stroke-width="3"><path d="M262 0V470M274 0V470M286 0V470M298 0V470M310 0V470"/></g><rect y="360" width="600" height="110" fill="#e9e4d8"/><ellipse cx="140" cy="380" rx="90" ry="55" fill="#DEC9B7"/><ellipse cx="460" cy="395" rx="90" ry="55" fill="#3C7755"/><rect x="40" y="300" width="200" height="14" rx="4" fill="#fff"/></svg>
+        <div class="price">1.850 <small>millones</small></div>
+        <div class="data"><strong>340 m²</strong>Oficinas · 4 puestos<br>Estrato 4</div>
+      </div>
+      <div class="info"><h3>Oficina en venta</h3><p>Barranquilla · zona norte</p><span class="mono ref">MLS-0187</span></div>
+    </article>
+    <article class="card">
+      <div class="photo">
+        <svg viewBox="0 0 600 470" preserveAspectRatio="xMidYMid slice"><rect width="600" height="470" fill="#d7ddd0"/><rect width="600" height="120" fill="#bcd9e6"/><g fill="#6aa35b"><circle cx="90" cy="150" r="90"/><circle cx="520" cy="140" r="100"/></g><rect x="150" y="150" width="300" height="230" fill="#f1ede3"/><path d="M130 160 L300 70 L470 160Z" fill="#3F4345"/><rect x="270" y="270" width="60" height="110" fill="#7b5c43"/><rect x="180" y="200" width="60" height="60" fill="#bcd9e6"/><rect x="360" y="200" width="60" height="60" fill="#bcd9e6"/><rect y="380" width="600" height="90" fill="#9cb98d"/></svg>
+        <div class="price">3.200.000 <small>/ mes</small></div>
+        <div class="data"><strong>96 m²</strong>2 habitaciones · 2 baños<br>Estrato 4 · Arriendo</div>
+      </div>
+      <div class="info"><h3>Casa en arriendo</h3><p>Cartagena · Bocagrande</p><span class="mono ref">MLS-0203</span></div>
+    </article>
+  </div>
+</div></section>
+
+<footer class="close">
+  <div class="slat" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="wrap">
+    <h2>Únete a la red.</h2>
+    <a class="btn" href="#">Registrar mi inmobiliaria</a>
+    <span class="mono">inmo-mls · Todo el mercado, un solo lugar.</span>
+  </div>
+</footer>
