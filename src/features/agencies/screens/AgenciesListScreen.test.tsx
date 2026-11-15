@@ -114,6 +114,24 @@ describe('listado de agencias', () => {
     mountApp('/agencias?status=basura');
     await screen.findByText(es.agencies.list.emptyTitle);
     expect(seen[0]?.searchParams.get('status')).toBe('pending');
+    expect(screen.getByRole('tab', { name: es.agencies.status.pending })).toHaveAttribute(
+      'aria-selected',
+      'true',
+    );
+  });
+
+  it('la lista de pestañas crece con sus filas y las inactivas usan el texto atenuado del tema', async () => {
+    useMe();
+    useAgencies(() => HttpResponse.json({ items: [], nextCursor: null }));
+    mountApp('/agencias');
+    await screen.findByText(es.agencies.list.emptyTitle);
+    expect(screen.getByRole('tablist').className).toContain('group-data-horizontal/tabs:h-auto');
+    expect(screen.getByRole('tab', { name: es.agencies.status.active }).className).toContain(
+      'text-muted-foreground',
+    );
+    expect(screen.getByRole('tab', { name: es.agencies.status.active }).className).not.toContain(
+      'text-foreground/60',
+    );
   });
 
   it('cambiar a «Todos» pone status=all en la URL y no envía status', async () => {

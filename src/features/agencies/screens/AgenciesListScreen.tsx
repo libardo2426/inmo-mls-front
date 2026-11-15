@@ -78,13 +78,13 @@ export function AgenciesListScreen({ filter }: { filter: StatusFilter }) {
         <TabsList
           variant="line"
           aria-label={es.agencies.list.filterLabel}
-          className="h-auto w-full flex-wrap justify-start"
+          className="h-auto w-full flex-wrap justify-start group-data-horizontal/tabs:h-auto"
         >
           {STATUS_FILTERS.map((option) => (
             <TabsTrigger
               key={option}
               value={option}
-              className="flex-none px-3 py-2 data-active:text-primary group-data-[variant=line]/tabs-list:data-active:after:bg-primary"
+              className="text-muted-foreground flex-none px-3 py-2 data-active:text-primary dark:data-active:text-primary group-data-[variant=line]/tabs-list:data-active:after:bg-primary"
             >
               {filterLabel(option)}
             </TabsTrigger>

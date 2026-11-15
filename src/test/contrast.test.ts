@@ -13,6 +13,7 @@ const pairs: Pair[] = [
   ['text', 'background', 4.5],
   ['text', 'surface', 4.5],
   ['text-muted', 'surface', 4.5],
+  ['text-muted', 'background', 4.5],
   ['primary-foreground', 'primary', 4.5],
   ['primary-foreground', 'primary-hover', 4.5],
   ['border', 'background', 1.2],
