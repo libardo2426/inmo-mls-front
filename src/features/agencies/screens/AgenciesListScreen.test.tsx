@@ -6,7 +6,7 @@ import { es } from '@/lib/i18n/es';
 import { agencySummaryFixture, meWithPermissions } from '@/test/fixtures';
 import { mountApp } from '@/test/mount';
 import { server } from '@/test/server';
-import { parseStatusFilter } from '../hooks/useAgencies';
+import { parseStatusFilter, STATUS_FILTERS } from '../hooks/useAgencies';
 
 const LIST_ME = meWithPermissions({ 'agency.list': 'network' });
 
@@ -69,7 +69,34 @@ describe('listado de agencias', () => {
     await screen.findByText(es.agencies.list.emptyTitle);
     expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
     expect(screen.getByRole('heading', { level: 1, name: es.agencies.list.title })).toBeVisible();
-    expect(screen.getByLabelText(es.agencies.list.filterLabel)).toBeVisible();
+    expect(screen.getByRole('tablist', { name: es.agencies.list.filterLabel })).toBeVisible();
+  });
+
+  it('muestra una pestaña por estado, sin contadores, y «pending» seleccionada', async () => {
+    useMe();
+    useAgencies(() => HttpResponse.json({ items: [], nextCursor: null }));
+    mountApp('/agencias');
+    await screen.findByText(es.agencies.list.emptyTitle);
+    const tabs = screen.getAllByRole('tab');
+    expect(tabs).toHaveLength(STATUS_FILTERS.length);
+    for (const tab of tabs) expect(tab.textContent).not.toMatch(/\d/);
+    expect(screen.getByRole('tab', { name: es.agencies.status.pending })).toHaveAttribute(
+      'aria-selected',
+      'true',
+    );
+    expect(screen.getByRole('tabpanel')).toBeVisible();
+  });
+
+  it('las flechas mueven la selección y cambian el filtro de la URL', async () => {
+    useMe();
+    const seen = useAgencies(() => HttpResponse.json({ items: [], nextCursor: null }));
+    const { history } = mountApp('/agencias');
+    await screen.findByText(es.agencies.list.emptyTitle);
+    screen.getByRole('tab', { name: es.agencies.status.pending }).focus();
+    await userEvent.keyboard('{ArrowRight}');
+    await screen.findByText(es.agencies.list.emptyTitle);
+    expect(history.location.search).toContain('status=changes_requested');
+    expect(seen.at(-1)?.searchParams.get('status')).toBe('changes_requested');
   });
 
   it('abre en pending con limit=50', async () => {
@@ -87,6 +114,24 @@ describe('listado de agencias', () => {
     mountApp('/agencias?status=basura');
     await screen.findByText(es.agencies.list.emptyTitle);
     expect(seen[0]?.searchParams.get('status')).toBe('pending');
+    expect(screen.getByRole('tab', { name: es.agencies.status.pending })).toHaveAttribute(
+      'aria-selected',
+      'true',
+    );
+  });
+
+  it('la lista de pestañas crece con sus filas y las inactivas usan el texto atenuado del tema', async () => {
+    useMe();
+    useAgencies(() => HttpResponse.json({ items: [], nextCursor: null }));
+    mountApp('/agencias');
+    await screen.findByText(es.agencies.list.emptyTitle);
+    expect(screen.getByRole('tablist').className).toContain('group-data-horizontal/tabs:h-auto');
+    expect(screen.getByRole('tab', { name: es.agencies.status.active }).className).toContain(
+      'text-muted-foreground',
+    );
+    expect(screen.getByRole('tab', { name: es.agencies.status.active }).className).not.toContain(
+      'text-foreground/60',
+    );
   });
 
   it('cambiar a «Todos» pone status=all en la URL y no envía status', async () => {
@@ -94,10 +139,7 @@ describe('listado de agencias', () => {
     const seen = useAgencies(() => HttpResponse.json({ items: [], nextCursor: null }));
     const { history } = mountApp('/agencias');
     await screen.findByText(es.agencies.list.emptyTitle);
-    await userEvent.selectOptions(
-      screen.getByRole('combobox', { name: es.agencies.list.filterLabel }),
-      es.agencies.list.filterAll,
-    );
+    await userEvent.click(screen.getByRole('tab', { name: es.agencies.list.filterAll }));
     await screen.findByText(es.agencies.list.emptyTitle);
     expect(history.location.search).toContain('status=all');
     expect(seen.at(-1)?.searchParams.has('status')).toBe(false);

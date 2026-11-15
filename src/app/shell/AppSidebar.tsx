@@ -10,6 +10,7 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from '@/components/ui/sidebar';
+import { BrandMark } from '@/components/shared/BrandMark';
 import { visibleNavigation } from '@/config/navigation';
 import type { MeResponse } from '@/lib/api/schemas';
 import { es } from '@/lib/i18n/es';
@@ -20,7 +21,12 @@ export function AppSidebar({ me }: { me: MeResponse }) {
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
-        <span className="type-section-title truncate px-2 py-1">{es.app.name}</span>
+        <div className="flex items-center gap-2 px-2 py-1">
+          <BrandMark className="size-7" />
+          <span className="type-section-title truncate group-data-[collapsible=icon]:hidden">
+            {es.app.name}
+          </span>
+        </div>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>

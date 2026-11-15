@@ -71,6 +71,15 @@ describe('AppShell', () => {
     }
   });
 
+  it('la cabecera del menú muestra el símbolo de marca junto al nombre', async () => {
+    backend();
+    mountApp('/');
+    await screen.findByRole('navigation');
+    const header = document.querySelector('[data-slot="sidebar-header"]');
+    expect(header?.querySelector('svg[aria-hidden="true"]')).not.toBeNull();
+    expect(within(header as HTMLElement).getByText(es.app.name)).toBeInTheDocument();
+  });
+
   it('el menú tiene Inicio como página actual', async () => {
     backend();
     mountApp('/');
