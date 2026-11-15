@@ -55,4 +55,24 @@ describe('get', () => {
     expect(result.uniqueIdentifier).toBe('50C-1557984');
     expect(result.listPrices[0]?.price.amountMinor).toBe('35000000000');
   });
+
+  it('tolera un estado nuevo del inmueble y un campo nuevo del historial', async () => {
+    const detail = propertyDetailFixture({
+      status: 'archived',
+      history: [
+        {
+          field: 'nuevo_campo',
+          oldValue: null,
+          newValue: 'x',
+          agencyId: null,
+          userId: null,
+          changedAt: '2026-10-22T10:00:00.000Z',
+        },
+      ],
+    });
+    server.use(http.get(`${origin}/v1/properties/${detail.id}`, () => HttpResponse.json(detail)));
+    const result = await api.get(detail.id);
+    expect(result.status).toBe('archived');
+    expect(result.history[0]?.field).toBe('nuevo_campo');
+  });
 });

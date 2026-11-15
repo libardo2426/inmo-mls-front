@@ -9,9 +9,9 @@ import { Section } from '@/components/shared/Section';
 import { Skeleton } from '@/components/ui/skeleton';
 import { formatDate } from '@/lib/format';
 import { ApiError } from '@/lib/http';
-import type { PropertyDetailResponse } from '@/lib/api/schemas';
 import { es } from '@/lib/i18n/es';
 import { useTerritoryName } from '@/lib/territory/useTerritoryName';
+import type { PropertyDetail } from '../api/property-detail-schema';
 import { PropertyStatusBadge } from '../components/PropertyStatusBadge';
 import { formatMinorAmount } from '../format-money';
 import { formatHistoryValue } from '../history';
@@ -19,10 +19,10 @@ import { useAgencyDirectory } from '../hooks/useAgencyDirectory';
 import { useProperty } from '../hooks/useProperty';
 import type { PropertyFilters } from '../model';
 
-type Mandate = PropertyDetailResponse['mandates'][number];
-type HistoryEntry = PropertyDetailResponse['history'][number];
-type PropertyDocument = PropertyDetailResponse['documents'][number];
-type ListPrice = PropertyDetailResponse['listPrices'][number];
+type Mandate = PropertyDetail['mandates'][number];
+type HistoryEntry = PropertyDetail['history'][number];
+type PropertyDocument = PropertyDetail['documents'][number];
+type ListPrice = PropertyDetail['listPrices'][number];
 
 const text = es.properties.detail;
 const lookup = (map: Record<string, string>, key: string) => map[key] ?? key;

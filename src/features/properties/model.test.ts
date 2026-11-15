@@ -16,6 +16,10 @@ describe('parsePropertyFilters', () => {
     ).toEqual({});
   });
 
+  it('acepta un municipio numérico (el router convierte `?territory=11001` en número)', () => {
+    expect(parsePropertyFilters({ territory: 11001 })).toEqual({ territory: '11001' });
+  });
+
   it('descarta valores que no son texto', () => {
     expect(parsePropertyFilters({ type: 3, status: ['active'], agency: null })).toEqual({});
   });

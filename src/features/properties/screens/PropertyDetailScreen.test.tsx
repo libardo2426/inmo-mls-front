@@ -167,4 +167,11 @@ describe('ficha del inmueble', () => {
       expect(await region(name)).toBeVisible();
     }
   });
+
+  it('un estado desconocido se muestra crudo y la ficha no se rompe', async () => {
+    setup(() => HttpResponse.json(propertyDetailFixture({ status: 'archived' })));
+    mountApp(`/inmuebles/${ID}`);
+    const data = await region(es.properties.detail.sections.data);
+    expect(within(data).getByText('archived')).toBeVisible();
+  });
 });

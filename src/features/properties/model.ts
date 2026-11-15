@@ -36,9 +36,12 @@ const oneOf = (value: unknown, allowed: readonly string[]): string | undefined =
 export function parsePropertyFilters(search: Record<string, unknown>): PropertyFilters {
   const type = oneOf(search.type, PROPERTY_TYPES);
   const status = oneOf(search.status, PROPERTY_STATUSES);
+  // El router pasa cada valor de la URL por `JSON.parse`: `?territory=11001` llega como número.
+  const rawTerritory =
+    typeof search.territory === 'number' ? String(search.territory) : search.territory;
   const territory =
-    typeof search.territory === 'string' && search.territory.trim() !== ''
-      ? search.territory.trim()
+    typeof rawTerritory === 'string' && rawTerritory.trim() !== ''
+      ? rawTerritory.trim()
       : undefined;
   const agency =
     typeof search.agency === 'string' && UUID.test(search.agency) ? search.agency : undefined;

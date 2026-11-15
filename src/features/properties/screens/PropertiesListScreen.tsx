@@ -73,6 +73,7 @@ export function PropertiesListScreen({ filters }: { filters: PropertyFilters }) 
       <PropertyFiltersBar
         filters={filters}
         agencies={directory.isError ? null : directory.activeAgencies}
+        agencyLabel={filters.agency ? directory.byId.get(filters.agency) : undefined}
       />
       <DataTable
         columns={columns}

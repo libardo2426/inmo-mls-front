@@ -1,6 +1,6 @@
-import { propertyDetailResponseSchema, type PropertyDetailResponse } from '@/lib/api/schemas';
 import type { HttpClient } from '@/lib/http';
 import type { PropertyFilters } from '../model';
+import { propertyDetailSchema, type PropertyDetail } from './property-detail-schema';
 import { propertyPageSchema, type PropertyPage } from './property-list-schema';
 
 export type PropertyListInput = PropertyFilters & {
@@ -11,7 +11,7 @@ export type PropertyListInput = PropertyFilters & {
 
 export type PropertiesApi = {
   list(input?: PropertyListInput): Promise<PropertyPage>;
-  get(id: string, signal?: AbortSignal): Promise<PropertyDetailResponse>;
+  get(id: string, signal?: AbortSignal): Promise<PropertyDetail>;
 };
 
 /** Cliente de `/v1/properties*` (solo lectura) sobre el cliente HTTP único. */
@@ -36,7 +36,7 @@ export function createPropertiesApi(http: HttpClient): PropertiesApi {
       http.request({
         host: 'country',
         path: `/properties/${encodeURIComponent(id)}`,
-        schema: propertyDetailResponseSchema,
+        schema: propertyDetailSchema,
         ...(signal ? { signal } : {}),
       }),
   };

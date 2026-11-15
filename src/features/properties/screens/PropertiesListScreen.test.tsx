@@ -195,6 +195,49 @@ describe('listado de inmuebles', () => {
     );
   });
 
+  it('escribir el municipio no navega ni pide en cada tecla: se aplica con Enter', async () => {
+    useMe();
+    useAgencies();
+    const seen = useProperties(empty);
+    const { history } = mountApp('/inmuebles');
+    await screen.findByText(es.properties.list.emptyTitle);
+    const before = seen.length;
+    const field = screen.getByRole('textbox', { name: es.properties.filters.territory });
+    await userEvent.type(field, '05001');
+    expect(seen.length).toBe(before);
+    await userEvent.keyboard('{Enter}');
+    await screen.findByText(es.properties.list.emptyTitle);
+    expect(seen.at(-1)?.searchParams.get('territorialUnitCode')).toBe('05001');
+    expect(seen.length).toBe(before + 1);
+    expect(history.location.search).toContain('territory');
+  });
+
+  it('con una agencia suspendida en la URL el selector la muestra y permite quitarla', async () => {
+    useMe();
+    useAgencies();
+    useProperties(empty);
+    mountApp('/inmuebles?agency=0192a3b4-0000-7000-8000-0000000000aa');
+    const select = await screen.findByRole('combobox', { name: es.properties.filters.agency });
+    await screen.findByRole('option', { name: 'Agencia Suspendida' });
+    expect((select as HTMLSelectElement).selectedOptions[0]?.textContent).toBe(
+      'Agencia Suspendida',
+    );
+    await userEvent.selectOptions(select, es.properties.filters.allAgencies);
+    expect((select as HTMLSelectElement).value).toBe('');
+  });
+
+  it('con /v1/agencies caído y una agencia en la URL el selector sigue habilitado para quitarla', async () => {
+    useMe();
+    useAgencies(() =>
+      HttpResponse.json({ title: 'x', status: 500, code: 'internal' }, { status: 500 }),
+    );
+    useProperties(empty);
+    mountApp('/inmuebles?agency=0192a3b4-5c6d-7e8f-9a0b-1c2d3e4f5a6c');
+    const select = await screen.findByRole('combobox', { name: es.properties.filters.agency });
+    await screen.findByText(es.properties.list.emptyTitle);
+    expect(select).toBeEnabled();
+  });
+
   it('un estado y un tipo desconocidos se muestran crudos', async () => {
     useMe();
     useAgencies();
