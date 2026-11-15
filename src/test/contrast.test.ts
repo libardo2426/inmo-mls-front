@@ -21,6 +21,9 @@ const pairs: Pair[] = [
   ['sidebar-foreground', 'sidebar', 4.5],
   ['sidebar-foreground', 'sidebar-accent', 4.5],
   ['sidebar-primary-foreground', 'sidebar-primary', 4.5],
+  ['leaf-foreground', 'leaf', 4.5],
+  ['sand-foreground', 'sand', 4.5],
+  ['leaf', 'sidebar', 3],
   ...TONES.flatMap((tone): Pair[] => [
     [`${tone}-foreground`, `${tone}-subtle`, 4.5],
     [tone, 'background', 3],
