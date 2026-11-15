@@ -4,7 +4,7 @@ import { DataTable, type Column } from '@/components/shared/DataTable';
 import { Section } from '@/components/shared/Section';
 import { Button } from '@/components/ui/button';
 import { formatDate } from '@/lib/format';
-import type { Member } from '@/lib/api/schemas';
+import type { AgencyStatus, Member } from '@/lib/api/schemas';
 import { es } from '@/lib/i18n/es';
 import { useMe } from '@/lib/permissions';
 import { useMembers } from '../hooks/useMembers';
@@ -22,7 +22,13 @@ function sortMembers(members: readonly Member[]): Member[] {
 }
 
 /** Miembros de una inmobiliaria; el `admin` del MLS puede terminar a los activos. */
-export function MembersSection({ agencyId }: { agencyId: string }) {
+export function MembersSection({
+  agencyId,
+  agencyStatus,
+}: {
+  agencyId: string;
+  agencyStatus: AgencyStatus;
+}) {
   const query = useMembers(agencyId);
   const me = useMe();
   const busy = useIsMutating({ mutationKey: TERMINATE_MUTATION_KEY }) > 0;
@@ -36,7 +42,7 @@ export function MembersSection({ agencyId }: { agencyId: string }) {
   }, [notice]);
 
   const rows = useMemo(() => sortMembers(query.data ?? []), [query.data]);
-  const showActions = rows.some((member) => canTerminateMember(me, member));
+  const showActions = rows.some((member) => canTerminateMember(me, member, agencyStatus));
   const dim = (member: Member) => (member.status === 'active' ? '' : 'text-text-muted');
 
   const columns: Column<Member>[] = [
@@ -75,7 +81,7 @@ export function MembersSection({ agencyId }: { agencyId: string }) {
             id: 'actions',
             header: es.members.columns.actions,
             cell: (member: Member) =>
-              canTerminateMember(me, member) ? (
+              canTerminateMember(me, member, agencyStatus) ? (
                 <Button
                   variant="outline"
                   size="sm"

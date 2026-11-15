@@ -18,7 +18,12 @@ export function useTerminateMember() {
     mutationFn: ({ memberId, reason }: TerminateInput) => api.terminate(memberId, reason),
     onSuccess: invalidate,
     onError: (error) => {
-      if (error instanceof ApiError && error.code === 'member_not_active') void invalidate();
+      if (
+        error instanceof ApiError &&
+        (error.code === 'member_not_active' || error.code === 'member_not_found')
+      ) {
+        void invalidate();
+      }
     },
   });
 }

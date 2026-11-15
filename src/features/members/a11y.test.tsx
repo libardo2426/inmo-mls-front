@@ -21,7 +21,9 @@ function accessibleName(element: Element): string {
 function useBackend() {
   server.use(
     http.get('*/v1/me', () => HttpResponse.json(ADMIN)),
-    http.get(`*/v1/agencies/${ID}`, () => HttpResponse.json(agencyDetailFixture())),
+    http.get(`*/v1/agencies/${ID}`, () =>
+      HttpResponse.json(agencyDetailFixture({ status: 'active' })),
+    ),
     http.get(`*/v1/agencies/${ID}/members`, () => HttpResponse.json([memberFixture()])),
     http.get('*/v1/territory/units/co/:level', () =>
       HttpResponse.json({ items: [], nextCursor: null }),

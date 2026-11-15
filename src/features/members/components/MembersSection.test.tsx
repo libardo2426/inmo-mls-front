@@ -4,7 +4,7 @@ import { http, HttpResponse } from 'msw';
 import { describe, expect, it } from 'vitest';
 import { Providers } from '@/app/providers';
 import { createQueryClient } from '@/app/query-client';
-import type { MeResponse } from '@/lib/api/schemas';
+import type { AgencyStatus, MeResponse } from '@/lib/api/schemas';
 import { loadConfig } from '@/lib/config';
 import { createHttpClient } from '@/lib/http';
 import { es } from '@/lib/i18n/es';
@@ -39,12 +39,12 @@ function useMembers(respond: () => Response | Promise<Response>) {
   server.use(http.get(`*/v1/agencies/${AID}/members`, respond));
 }
 
-function setup(me: MeResponse = ADMIN) {
+function setup(me: MeResponse = ADMIN, agencyStatus: AgencyStatus = 'active') {
   const client = createHttpClient({ config, origin: 'http://localhost:3000' });
   render(
     <Providers config={config} queryClient={createQueryClient()} http={client}>
       <PermissionsProvider me={me}>
-        <MembersSection agencyId={AID} />
+        <MembersSection agencyId={AID} agencyStatus={agencyStatus} />
       </PermissionsProvider>
     </Providers>,
   );
@@ -85,6 +85,16 @@ describe('MembersSection', () => {
       within(grid).queryByRole('columnheader', { name: es.members.columns.actions }),
     ).not.toBeInTheDocument();
   });
+
+  it.each(['pending', 'suspended'] as const)(
+    'con la agencia %s no se ofrece «Terminar»',
+    async (agencyStatus) => {
+      useMembers(() => HttpResponse.json([active]));
+      setup(ADMIN, agencyStatus);
+      const grid = await table();
+      expect(within(grid).queryByRole('button')).not.toBeInTheDocument();
+    },
+  );
 
   it('una agencia sin miembros muestra el estado vacío', async () => {
     useMembers(() => HttpResponse.json([]));
@@ -148,5 +158,35 @@ describe('MembersSection', () => {
         within(screen.getByRole('table', { name: es.members.caption })).queryByRole('button'),
       ).not.toBeInTheDocument(),
     );
+  });
+
+  it('si el miembro ya no existe (404 member_not_found) se recarga el listado', async () => {
+    let listCalls = 0;
+    useMembers(() => {
+      listCalls += 1;
+      return HttpResponse.json([active]);
+    });
+    server.use(
+      http.post(`*/v1/members/${active.memberId}/terminate`, () =>
+        HttpResponse.json(
+          { title: 'x', status: 404, code: 'member_not_found' },
+          { status: 404, headers: { 'content-type': 'application/problem+json' } },
+        ),
+      ),
+    );
+    setup();
+    const grid = await table();
+    await userEvent.click(
+      within(grid).getByRole('button', { name: es.members.terminate.actionFor('Luis Demo') }),
+    );
+    const dialog = await screen.findByRole('dialog');
+    await userEvent.type(
+      within(dialog).getByRole('textbox', { name: es.members.terminate.reasonLabel }),
+      'Motivo',
+    );
+    await userEvent.click(
+      within(dialog).getByRole('button', { name: es.members.terminate.submit }),
+    );
+    await waitFor(() => expect(listCalls).toBe(2));
   });
 });
